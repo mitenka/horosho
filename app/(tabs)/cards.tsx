@@ -1,9 +1,9 @@
 import { StyleSheet, Text, View } from "react-native";
 
-export default function Index() {
+export default function Cards() {
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Практикуем сегодня</Text>
+      <Text style={styles.text}>Карточки</Text>
     </View>
   );
 }
