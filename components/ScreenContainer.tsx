@@ -1,4 +1,11 @@
-import React from "react";
+import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
+import {
+  ParamListBase,
+  useFocusEffect,
+  useNavigation,
+  useRoute,
+} from "@react-navigation/native";
+import React, { useEffect, useRef } from "react";
 import { ScrollView, StyleSheet, View, ViewStyle } from "react-native";
 
 type ScreenContainerProps = {
@@ -14,6 +21,53 @@ export default function ScreenContainer({
   style,
   contentContainerStyle,
 }: ScreenContainerProps) {
+  const scrollViewRef = useRef<ScrollView>(null);
+  const navigation = useNavigation<BottomTabNavigationProp<ParamListBase>>();
+  const route = useRoute();
+
+  useFocusEffect(
+    React.useCallback(() => {
+      if (scrollViewRef.current) {
+        scrollViewRef.current.scrollTo({ x: 0, y: 0, animated: false });
+      }
+
+      return () => {};
+    }, [])
+  );
+
+  const isScreenFocused = useRef(false);
+
+  useEffect(() => {
+    const handleTabPress = (e: any) => {
+      const currentRoute = route.name;
+      const targetRoute = e.target?.split("-")[0] || "";
+
+      if (currentRoute === targetRoute && isScreenFocused.current) {
+        if (scrollViewRef.current) {
+          scrollViewRef.current.scrollTo({ x: 0, y: 0, animated: true });
+        }
+      }
+    };
+
+    const focusUnsubscribe = navigation.addListener("focus", () => {
+      isScreenFocused.current = true;
+    });
+
+    const blurUnsubscribe = navigation.addListener("blur", () => {
+      isScreenFocused.current = false;
+    });
+
+    const tabPressUnsubscribe = navigation.addListener(
+      "tabPress",
+      handleTabPress
+    );
+
+    return () => {
+      focusUnsubscribe();
+      blurUnsubscribe();
+      tabPressUnsubscribe();
+    };
+  }, [navigation, route.name]);
   const containerStyle = {
     ...styles.container,
     ...style,
@@ -23,6 +77,7 @@ export default function ScreenContainer({
     return (
       <View style={containerStyle}>
         <ScrollView
+          ref={scrollViewRef}
           style={styles.scrollView}
           contentContainerStyle={[styles.scrollContent, contentContainerStyle]}
           showsVerticalScrollIndicator={false}
