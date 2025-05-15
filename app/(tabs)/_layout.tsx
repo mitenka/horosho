@@ -5,19 +5,18 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        headerStyle: {
-          backgroundColor: "#323248",
-        },
-        headerTitleStyle: {
-          color: "#f0f0f0",
-        },
-        headerShadowVisible: false,
+        headerShown: false,
         tabBarStyle: {
           backgroundColor: "#323248",
           borderTopWidth: 0,
+          paddingTop: 6,
+          height: 64,
         },
         tabBarActiveTintColor: "#ffd700",
         tabBarInactiveTintColor: "#cccccc",
+        tabBarLabelStyle: {
+          fontSize: 12,
+        },
       }}
     >
       <Tabs.Screen
@@ -53,6 +52,19 @@ export default function TabLayout() {
           tabBarIcon: ({ focused, color }) => (
             <Ionicons
               name={focused ? "game-controller" : "game-controller-outline"}
+              size={24}
+              color={color}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="dictionary"
+        options={{
+          title: "Словарь",
+          tabBarIcon: ({ focused, color }) => (
+            <Ionicons
+              name={focused ? "book" : "book-outline"}
               size={24}
               color={color}
             />

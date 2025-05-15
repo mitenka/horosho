@@ -1,23 +1,17 @@
 import { StyleSheet, Text, View } from "react-native";
 import ScreenContainer from "../../components/ScreenContainer";
 
-export default function Index() {
+export default function Dictionary() {
   return (
     <ScreenContainer>
       <View style={styles.header}>
-        <Text style={styles.title}>Сегодня</Text>
-        <Text style={styles.subtitle}>
-          {new Date().toLocaleDateString("ru-RU", {
-            weekday: "long",
-            day: "numeric",
-            month: "long",
-          })}
-        </Text>
+        <Text style={styles.title}>Словарь терминов</Text>
+        <Text style={styles.subtitle}>Термины и определения ДПТ</Text>
       </View>
 
       <View style={styles.emptyStateContainer}>
         <Text style={styles.emptyStateText}>
-          Здесь будет дневник навыков и отслеживание настроения
+          Здесь будет словарь терминов ДПТ с возможностью поиска
         </Text>
       </View>
     </ScreenContainer>
