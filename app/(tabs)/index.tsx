@@ -1,19 +1,20 @@
+import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import ScreenContainer from "../../components/ScreenContainer";
+import DaySelector from "../../components/today/DaySelector";
 
 export default function Index() {
+  const handleDaySelected = (date: Date) => {
+    console.log("Selected date:", date);
+  };
   return (
     <ScreenContainer>
       <View style={styles.header}>
         <Text style={styles.title}>Сегодня</Text>
-        <Text style={styles.subtitle}>
-          {new Date().toLocaleDateString("ru-RU", {
-            weekday: "long",
-            day: "numeric",
-            month: "long",
-          })}
-        </Text>
+        <Text style={styles.subtitle}>Дневник и практика</Text>
       </View>
+
+      <DaySelector onDaySelected={handleDaySelected} />
 
       <View style={styles.emptyStateContainer}>
         <Text style={styles.emptyStateText}>
