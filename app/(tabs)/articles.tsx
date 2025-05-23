@@ -2,7 +2,6 @@ import { Ionicons } from "@expo/vector-icons";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import ScreenContainer from "../../components/ScreenContainer";
 
-// Определяем тип для модулей с правильной типизацией иконок
 type ModuleType = {
   id: number;
   title: string;
@@ -12,7 +11,7 @@ type ModuleType = {
   progress: number;
 };
 
-export default function Theory() {
+export default function Articles() {
   const modules: ModuleType[] = [
     {
       id: 1,
@@ -59,7 +58,7 @@ export default function Theory() {
   return (
     <ScreenContainer>
       <View style={styles.header}>
-        <Text style={styles.title}>Теория ДПТ</Text>
+        <Text style={styles.title}>Статьи</Text>
         <Text style={styles.subtitle}>
           Изучайте навыки и применяйте их в жизни
         </Text>
