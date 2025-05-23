@@ -124,6 +124,7 @@ const styles = StyleSheet.create({
     color: "#cccccc",
   },
   modulesList: {
+    marginTop: 20,
     marginBottom: 30,
   },
   moduleCard: {
