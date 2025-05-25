@@ -22,10 +22,10 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: "Сегодня",
+          title: "Практика",
           tabBarIcon: ({ focused, color }) => (
             <Ionicons
-              name={focused ? "today" : "today-outline"}
+              name={focused ? "infinite" : "infinite-outline"}
               size={24}
               color={color}
             />
@@ -38,20 +38,7 @@ export default function TabLayout() {
           title: "Теория",
           tabBarIcon: ({ focused, color }) => (
             <Ionicons
-              name={focused ? "book" : "book-outline"}
-              size={24}
-              color={color}
-            />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="cards"
-        options={{
-          title: "Карточки",
-          tabBarIcon: ({ focused, color }) => (
-            <Ionicons
-              name={focused ? "game-controller" : "game-controller-outline"}
+              name={focused ? "school" : "school-outline"}
               size={24}
               color={color}
             />

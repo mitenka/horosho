@@ -1,7 +1,7 @@
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import ScreenContainer from "../../components/ScreenContainer";
-import DaySelector from "../../components/today/DaySelector";
+import DaySelector from "../../components/practice/DaySelector";
 
 export default function Index() {
   const handleDaySelected = (date: Date) => {
