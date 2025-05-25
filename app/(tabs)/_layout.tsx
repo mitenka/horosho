@@ -25,7 +25,7 @@ export default function TabLayout() {
           title: "Практика",
           tabBarIcon: ({ focused, color }) => (
             <Ionicons
-              name={focused ? "infinite" : "infinite-outline"}
+              name={focused ? "flask" : "flask-outline"}
               size={24}
               color={color}
             />
