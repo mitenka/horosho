@@ -1,7 +1,7 @@
-import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { Text, View } from "react-native";
 import ScreenContainer from "../../components/ScreenContainer";
 import DaySelector from "../../components/practice/DaySelector";
+import commonStyles from "../../styles/commonStyles";
 
 export default function Index() {
   const handleDaySelected = (date: Date) => {
@@ -9,49 +9,14 @@ export default function Index() {
   };
   return (
     <ScreenContainer>
-      <View style={styles.header}>
-        <Text style={styles.title}>Сегодня</Text>
-        <Text style={styles.subtitle}>Дневник и практика</Text>
+      <View style={commonStyles.header}>
+        <Text style={commonStyles.title}>Практика</Text>
+        <Text style={commonStyles.subtitle}>
+          Дневник и использованные за день навыки
+        </Text>
       </View>
 
       <DaySelector onDaySelected={handleDaySelected} />
-
-      <View style={styles.emptyStateContainer}>
-        <Text style={styles.emptyStateText}>
-          Здесь будет дневник навыков и отслеживание настроения
-        </Text>
-      </View>
     </ScreenContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  header: {
-    marginBottom: 8,
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: "bold",
-    color: "#f0f0f0",
-    marginBottom: 4,
-  },
-  subtitle: {
-    fontSize: 16,
-    color: "#cccccc",
-  },
-  emptyStateContainer: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "#3a3a5e",
-    borderRadius: 12,
-    padding: 30,
-    marginTop: 20,
-  },
-  emptyStateText: {
-    color: "#f0f0f0",
-    fontSize: 16,
-    textAlign: "center",
-    lineHeight: 24,
-  },
-});
