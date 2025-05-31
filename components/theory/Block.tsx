@@ -1,7 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
-export type SectionProps = {
+export type BlockProps = {
   id: number;
   title: string;
   description: string;
@@ -11,7 +11,7 @@ export type SectionProps = {
   onPress: () => void;
 };
 
-const Section: React.FC<SectionProps> = ({
+const Block: React.FC<BlockProps> = ({
   title,
   description,
   icon,
@@ -90,4 +90,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Section;
+export default Block;

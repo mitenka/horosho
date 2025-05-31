@@ -1,6 +1,6 @@
 import { Text, View } from "react-native";
 import ScreenContainer from "../../components/ScreenContainer";
-import Section, { SectionProps } from "../../components/theory/Section";
+import Block, { BlockProps } from "../../components/theory/Block";
 import commonStyles from "../../styles/commonStyles";
 
 export default function Theory() {
@@ -8,7 +8,7 @@ export default function Theory() {
     console.log(`Модуль ${title} нажат`);
   };
   
-  const modules: SectionProps[] = [
+  const modules: BlockProps[] = [
     {
       id: 1,
       title: "Основы ДПТ",
@@ -40,7 +40,7 @@ export default function Theory() {
 
       <View>
         {modules.map((module) => (
-          <Section
+          <Block
             key={module.id}
             id={module.id}
             title={module.title}
