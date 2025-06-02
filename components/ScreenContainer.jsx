@@ -1,28 +1,19 @@
-import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
-import {
-  ParamListBase,
+import { 
   useFocusEffect,
   useNavigation,
   useRoute,
 } from "@react-navigation/native";
 import React, { useEffect, useRef } from "react";
-import { ScrollView, StyleSheet, View, ViewStyle } from "react-native";
-
-type ScreenContainerProps = {
-  children: React.ReactNode;
-  scrollable?: boolean;
-  style?: ViewStyle;
-  contentContainerStyle?: ViewStyle;
-};
+import { ScrollView, StyleSheet, View } from "react-native";
 
 export default function ScreenContainer({
   children,
   scrollable = true,
   style,
   contentContainerStyle,
-}: ScreenContainerProps) {
-  const scrollViewRef = useRef<ScrollView>(null);
-  const navigation = useNavigation<BottomTabNavigationProp<ParamListBase>>();
+}) {
+  const scrollViewRef = useRef(null);
+  const navigation = useNavigation();
   const route = useRoute();
 
   useFocusEffect(
@@ -38,7 +29,7 @@ export default function ScreenContainer({
   const isScreenFocused = useRef(false);
 
   useEffect(() => {
-    const handleTabPress = (e: any) => {
+    const handleTabPress = (e) => {
       const currentRoute = route.name;
       const targetRoute = e.target?.split("-")[0] || "";
 

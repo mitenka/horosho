@@ -1,14 +1,14 @@
 import { Text, View } from "react-native";
 import ScreenContainer from "../../components/ScreenContainer";
-import Block, { BlockProps } from "../../components/theory/Block";
+import Block from "../../components/theory/Block";
 import commonStyles from "../../styles/commonStyles";
 
 export default function Theory() {
-  const handleSectionPress = (title: string) => {
+  const handleSectionPress = (title) => {
     console.log(`Модуль ${title} нажат`);
   };
   
-  const modules: BlockProps[] = [
+  const modules = [
     {
       id: 1,
       title: "Основы ДПТ",

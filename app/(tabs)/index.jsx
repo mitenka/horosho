@@ -4,7 +4,7 @@ import DaySelector from "../../components/practice/DaySelector";
 import commonStyles from "../../styles/commonStyles";
 
 export default function Index() {
-  const handleDaySelected = (date: Date) => {
+  const handleDaySelected = (date) => {
     console.log("Selected date:", date);
   };
   return (

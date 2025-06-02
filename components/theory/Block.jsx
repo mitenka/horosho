@@ -1,17 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
-export type BlockProps = {
-  id: number;
-  title: string;
-  description: string;
-  icon: keyof typeof Ionicons.glyphMap;
-  color: string;
-  progress: number;
-  onPress: () => void;
-};
-
-const Block: React.FC<BlockProps> = ({
+const Block = ({
   title,
   description,
   icon,

@@ -7,24 +7,19 @@ import {
   View,
 } from "react-native";
 
-type DaySelectorProps = {
-  onDaySelected?: (date: Date) => void;
-  selectedDate?: Date;
-};
-
 export default function DaySelector({
   onDaySelected,
   selectedDate: propSelectedDate,
-}: DaySelectorProps) {
-  const scrollViewRef = useRef<ScrollView>(null);
-  const [selectedDate, setSelectedDate] = useState<Date>(
+}) {
+  const scrollViewRef = useRef(null);
+  const [selectedDate, setSelectedDate] = useState(
     propSelectedDate || new Date()
   );
-  const [days, setDays] = useState<Date[]>([]);
+  const [days, setDays] = useState([]);
 
   const generateDays = () => {
     const today = new Date();
-    const daysArray: Date[] = [];
+    const daysArray = [];
 
     for (let i = 7; i > 0; i--) {
       const date = new Date();
@@ -72,7 +67,7 @@ export default function DaySelector({
     }
   }, [propSelectedDate]);
 
-  const handleDayPress = (date: Date) => {
+  const handleDayPress = (date) => {
     if (isFutureDate(date)) return;
 
     setSelectedDate(date);
@@ -81,14 +76,14 @@ export default function DaySelector({
     }
   };
 
-  const isFutureDate = (date: Date) => {
+  const isFutureDate = (date) => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     date.setHours(0, 0, 0, 0);
     return date > today;
   };
 
-  const isToday = (date: Date) => {
+  const isToday = (date) => {
     const today = new Date();
     return (
       date.getDate() === today.getDate() &&
@@ -97,7 +92,7 @@ export default function DaySelector({
     );
   };
 
-  const isSelected = (date: Date) => {
+  const isSelected = (date) => {
     return (
       date.getDate() === selectedDate.getDate() &&
       date.getMonth() === selectedDate.getMonth() &&
@@ -105,7 +100,7 @@ export default function DaySelector({
     );
   };
 
-  const getDayName = (date: Date) => {
+  const getDayName = (date) => {
     const dayNames = ["вс", "пн", "вт", "ср", "чт", "пт", "сб"];
     return dayNames[date.getDay()];
   };
