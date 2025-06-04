@@ -1,8 +1,22 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { useMemo, useState } from "react";
+import {
+  FlatList,
+  Modal,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import ScreenContainer from "../../components/ScreenContainer";
 import commonStyles from "../../styles/commonStyles";
 
 export default function Dictionary() {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedTerm, setSelectedTerm] = useState(null);
+  const [modalVisible, setModalVisible] = useState(false);
   const terms = [
     {
       id: 1,
@@ -25,7 +39,118 @@ export default function Dictionary() {
         "Состояние, в котором интегрированы **эмоциональный** и **рациональный** разум, позволяя принимать решения, учитывающие как эмоции, так и логику.",
       relatedTermIds: [1],
     },
+    {
+      id: 4,
+      headword: "Безоценочность",
+      definition:
+        "Наблюдение за фактами и опытом без навешивания ярлыков «хорошо» или «плохо», «правильно» или «неправильно».",
+      relatedTermIds: [2],
+    },
+    {
+      id: 5,
+      headword: "Диалектика",
+      definition:
+        "Принцип объединения противоположностей, принятие и изменение.",
+      relatedTermIds: [],
+    },
+    {
+      id: 6,
+      headword: "Эмоциональный разум",
+      definition: "Управляется чувствами.",
+      relatedTermIds: [3],
+    },
+    {
+      id: 7,
+      headword: "Рациональный разум",
+      definition:
+        "Управляется логикой, рассуждениями и оценками. Он помогает принимать решения, учитывая различные факторы и последствия. Это способность анализировать информацию, делать выводы, формулировать аргументы и принимать обоснованные решения. Он также помогает предсказывать последствия своих действий, планировать и управлять своими ресурсами. Рациональный разум важен для успешной адаптации к окружающей среде, для достижения своих целей и для понимания себя и других людей.",
+      relatedTermIds: [3],
+    },
+    {
+      id: 8,
+      headword: "Биосоциальная модель",
+      definition:
+        "Модель, объясняющая эмоции как результат взаимодействия **биологических** и **социальных** факторов.",
+      relatedTermIds: [],
+    },
+    {
+      id: 9,
+      headword: "Индивидуальная терапия",
+      definition: "Терапия, проводимая с одним человеком.",
+      relatedTermIds: [],
+    },
+    {
+      id: 10,
+      headword: "Групповой тренинг навыков",
+      definition: "Тренинг, проводимый с группой людей.",
+      relatedTermIds: [],
+    },
+    {
+      id: 11,
+      headword: "Телефонные консультации",
+      definition: "Консультации, проводимые по телефону.",
+      relatedTermIds: [],
+    },
+    {
+      id: 12,
+      headword: "Командные встречи терапевтов",
+      definition: "Встречи, проводимые с командой терапевтов.",
+      relatedTermIds: [],
+    },
+    {
+      id: 13,
+      headword: "Противоположное действие",
+      definition:
+        "Техника изменения эмоций через совершение действий, противоположных эмоциональному побуждению.",
+      relatedTermIds: [],
+    },
   ];
+
+  // Filter terms based on search query
+  const filteredTerms = useMemo(() => {
+    if (!searchQuery.trim()) return terms;
+
+    const normalizedQuery = searchQuery.toLowerCase().trim();
+    return terms.filter(
+      (term) =>
+        term.headword.toLowerCase().includes(normalizedQuery) ||
+        term.definition.toLowerCase().includes(normalizedQuery)
+    );
+  }, [searchQuery, terms]);
+
+  // Handle term selection and show modal
+  const handleTermPress = (term) => {
+    setSelectedTerm(term);
+    setModalVisible(true);
+  };
+
+  // Find related terms for a given term
+  const findRelatedTerms = (termId) => {
+    return terms.filter((term) =>
+      selectedTerm?.relatedTermIds.includes(term.id)
+    );
+  };
+
+  // Render each term card
+  const renderTermCard = ({ item }) => {
+    // Truncate definition if it's too long
+    const truncatedDefinition =
+      item.definition.length > 80
+        ? `${item.definition.substring(0, 80)}...`
+        : item.definition;
+
+    return (
+      <TouchableOpacity
+        style={styles.card}
+        onPress={() => handleTermPress(item)}
+      >
+        <View style={styles.cardHeader}>
+          <Text style={styles.title}>{item.headword}</Text>
+        </View>
+        <Text style={styles.definition}>{truncatedDefinition}</Text>
+      </TouchableOpacity>
+    );
+  };
 
   return (
     <ScreenContainer>
@@ -36,32 +161,247 @@ export default function Dictionary() {
         </Text>
       </View>
 
-      <View>
-        {terms.map((term) => (
+      <View style={styles.searchContainer}>
+        <Ionicons
+          name="search"
+          size={20}
+          color="#a0a0d0"
+          style={styles.searchIcon}
+        />
+        <TextInput
+          style={styles.searchInput}
+          placeholder="Поиск терминов..."
+          placeholderTextColor="#8484a9"
+          value={searchQuery}
+          onChangeText={setSearchQuery}
+        />
+        {searchQuery.length > 0 && (
           <TouchableOpacity
-            key={term.id}
-            style={styles.card}
-            onPress={() => console.log(`Термин ${term.headword} нажат`)}
+            onPress={() => setSearchQuery("")}
+            style={styles.clearButton}
           >
-            <Text style={styles.title}>{term.headword}</Text>
+            <Ionicons name="close-circle" size={20} color="#a0a0d0" />
           </TouchableOpacity>
-        ))}
+        )}
       </View>
+
+      <FlatList
+        data={filteredTerms}
+        renderItem={renderTermCard}
+        keyExtractor={(item) => item.id.toString()}
+        contentContainerStyle={styles.listContainer}
+        showsVerticalScrollIndicator={false}
+        ListEmptyComponent={
+          <View style={styles.emptyContainer}>
+            <Text style={styles.emptyText}>Термины не найдены</Text>
+          </View>
+        }
+      />
+
+      {/* Term Detail Modal */}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            {/* Modal Header */}
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>{selectedTerm?.headword}</Text>
+              <TouchableOpacity
+                style={styles.closeButton}
+                onPress={() => setModalVisible(false)}
+              >
+                <Ionicons name="close" size={24} color="#f0f0f0" />
+              </TouchableOpacity>
+            </View>
+
+            <ScrollView style={styles.modalBody}>
+              {/* Definition */}
+              <View style={styles.definitionContainer}>
+                <Text style={styles.definitionLabel}>Определение</Text>
+                <Text style={styles.definitionText}>
+                  {selectedTerm?.definition}
+                </Text>
+              </View>
+
+              {/* Related Terms */}
+              {selectedTerm?.relatedTermIds.length > 0 && (
+                <View style={styles.relatedTermsContainer}>
+                  <Text style={styles.relatedTermsLabel}>
+                    Связанные термины
+                  </Text>
+                  {selectedTerm &&
+                    findRelatedTerms(selectedTerm.id).map((relatedTerm) => (
+                      <TouchableOpacity
+                        key={relatedTerm.id}
+                        style={styles.relatedTermButton}
+                        onPress={() => {
+                          setSelectedTerm(relatedTerm);
+                        }}
+                      >
+                        <Ionicons
+                          name="link-outline"
+                          size={16}
+                          color="#a0a0d0"
+                          style={styles.relatedTermIcon}
+                        />
+                        <Text style={styles.relatedTermText}>
+                          {relatedTerm.headword}
+                        </Text>
+                      </TouchableOpacity>
+                    ))}
+                </View>
+              )}
+            </ScrollView>
+          </View>
+        </View>
+      </Modal>
     </ScreenContainer>
   );
 }
 
 const styles = StyleSheet.create({
+  // Modal styles
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 20,
+  },
+  modalContent: {
+    backgroundColor: "#2d2d4a",
+    borderRadius: 16,
+    width: "100%",
+    maxHeight: "80%",
+    elevation: 5,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+  },
+  modalHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    borderBottomWidth: 1,
+    borderBottomColor: "#3a3a5e",
+    padding: 16,
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: "600",
+    color: "#f0f0f0",
+    flex: 1,
+  },
+  closeButton: {
+    padding: 4,
+  },
+  modalBody: {
+    padding: 16,
+  },
+  definitionContainer: {
+    marginBottom: 24,
+  },
+  definitionLabel: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#a0a0d0",
+    marginBottom: 8,
+  },
+  definitionText: {
+    fontSize: 16,
+    lineHeight: 24,
+    color: "#f0f0f0",
+  },
+  relatedTermsContainer: {
+    marginBottom: 16,
+  },
+  relatedTermsLabel: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#a0a0d0",
+    marginBottom: 12,
+  },
+  relatedTermButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#3a3a5e",
+    padding: 12,
+    borderRadius: 10,
+    marginBottom: 8,
+  },
+  relatedTermIcon: {
+    marginRight: 8,
+  },
+  relatedTermText: {
+    fontSize: 15,
+    color: "#f0f0f0",
+    fontWeight: "500",
+  },
+  // Search container
+  searchContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#2d2d4a",
+    borderRadius: 10,
+    marginBottom: 20,
+    paddingHorizontal: 10,
+    height: 46,
+  },
+  searchIcon: {
+    marginRight: 8,
+  },
+  searchInput: {
+    flex: 1,
+    color: "#f0f0f0",
+    fontSize: 16,
+    height: "100%",
+  },
+  clearButton: {
+    padding: 4,
+  },
+  listContainer: {
+    paddingBottom: 20,
+  },
   card: {
     backgroundColor: "#3a3a5e",
     borderRadius: 12,
-    padding: 15,
+    padding: 16,
     marginBottom: 15,
+    elevation: 2,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+  },
+  cardHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 8,
   },
   title: {
-    fontSize: 16,
+    fontSize: 17,
     fontWeight: "600",
     color: "#f0f0f0",
-    marginBottom: 5,
+    flex: 1,
+  },
+  definition: {
+    fontSize: 14,
+    color: "#c8c8e0",
+    lineHeight: 20,
+  },
+  emptyContainer: {
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 30,
+  },
+  emptyText: {
+    color: "#8484a9",
+    fontSize: 16,
   },
 });
