@@ -1,8 +1,10 @@
 import { Ionicons } from "@expo/vector-icons";
-import { useMemo, useState } from "react";
+import { useScrollToTop } from "@react-navigation/native";
+import { useMemo, useRef, useState } from "react";
 import {
   FlatList,
   Modal,
+  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
@@ -10,10 +12,18 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import ScreenContainer from "../../components/ScreenContainer";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import useTabPressScrollToTop from "../../hooks/useTabPressScrollToTop";
 import commonStyles from "../../styles/commonStyles";
 
 export default function Dictionary() {
+  const insets = useSafeAreaInsets();
+
+  const flatListRef = useRef(null);
+
+  useScrollToTop(flatListRef);
+
+  useTabPressScrollToTop(flatListRef);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedTerm, setSelectedTerm] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
@@ -153,43 +163,42 @@ export default function Dictionary() {
   };
 
   return (
-    <ScreenContainer>
-      <View style={commonStyles.header}>
+    <SafeAreaView style={[styles.container, { paddingTop: insets.top }]}>
+      <View style={styles.titleContainer}>
         <Text style={commonStyles.title}>Словарь</Text>
-        <Text style={commonStyles.subtitle}>
-          Способ быстро вспомнить забытый термин
-        </Text>
       </View>
-
-      <View style={styles.searchContainer}>
-        <Ionicons
-          name="search"
-          size={20}
-          color="#a0a0d0"
-          style={styles.searchIcon}
-        />
-        <TextInput
-          style={styles.searchInput}
-          placeholder="Поиск терминов..."
-          placeholderTextColor="#8484a9"
-          value={searchQuery}
-          onChangeText={setSearchQuery}
-        />
-        {searchQuery.length > 0 && (
-          <TouchableOpacity
-            onPress={() => setSearchQuery("")}
-            style={styles.clearButton}
-          >
-            <Ionicons name="close-circle" size={20} color="#a0a0d0" />
-          </TouchableOpacity>
-        )}
+      <View style={styles.fixedContentContainer}>
+        <View style={styles.searchContainer}>
+          <Ionicons
+            name="search-outline"
+            size={20}
+            color="#a0a0d0"
+            style={styles.searchIcon}
+          />
+          <TextInput
+            style={styles.searchInput}
+            placeholder="Поиск термина"
+            placeholderTextColor="#8484a9"
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+          />
+          {searchQuery.length > 0 && (
+            <TouchableOpacity
+              onPress={() => setSearchQuery("")}
+              style={styles.clearButton}
+            >
+              <Ionicons name="close-circle" size={20} color="#8484a9" />
+            </TouchableOpacity>
+          )}
+        </View>
       </View>
 
       <FlatList
+        ref={flatListRef}
         data={filteredTerms}
         renderItem={renderTermCard}
         keyExtractor={(item) => item.id.toString()}
-        contentContainerStyle={styles.listContainer}
+        contentContainerStyle={styles.scrollViewContent}
         showsVerticalScrollIndicator={false}
         ListEmptyComponent={
           <View style={styles.emptyContainer}>
@@ -198,16 +207,14 @@ export default function Dictionary() {
         }
       />
 
-      {/* Term Detail Modal */}
       <Modal
-        animationType="slide"
+        animationType="fade"
         transparent={true}
         visible={modalVisible}
         onRequestClose={() => setModalVisible(false)}
       >
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
-            {/* Modal Header */}
             <View style={styles.modalHeader}>
               <Text style={styles.modalTitle}>{selectedTerm?.headword}</Text>
               <TouchableOpacity
@@ -219,7 +226,6 @@ export default function Dictionary() {
             </View>
 
             <ScrollView style={styles.modalBody}>
-              {/* Definition */}
               <View style={styles.definitionContainer}>
                 <Text style={styles.definitionLabel}>Определение</Text>
                 <Text style={styles.definitionText}>
@@ -227,7 +233,6 @@ export default function Dictionary() {
                 </Text>
               </View>
 
-              {/* Related Terms */}
               {selectedTerm?.relatedTermIds.length > 0 && (
                 <View style={styles.relatedTermsContainer}>
                   <Text style={styles.relatedTermsLabel}>
@@ -259,12 +264,22 @@ export default function Dictionary() {
           </View>
         </View>
       </Modal>
-    </ScreenContainer>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  // Modal styles
+  container: {
+    flex: 1,
+    backgroundColor: "#3a3a5e",
+  },
+  titleContainer: {
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+  },
+  fixedContentContainer: {
+    paddingHorizontal: 16,
+  },
   modalOverlay: {
     flex: 1,
     backgroundColor: "rgba(0, 0, 0, 0.5)",
@@ -364,14 +379,14 @@ const styles = StyleSheet.create({
   clearButton: {
     padding: 4,
   },
-  listContainer: {
-    paddingBottom: 20,
+  scrollViewContent: {
+    paddingHorizontal: 16,
   },
   card: {
     backgroundColor: "#3a3a5e",
     borderRadius: 12,
     padding: 16,
-    marginBottom: 15,
+    marginBottom: 12,
     elevation: 2,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },

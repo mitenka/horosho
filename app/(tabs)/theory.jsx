@@ -1,13 +1,22 @@
-import { Text, View } from "react-native";
-import ScreenContainer from "../../components/ScreenContainer";
+import { useScrollToTop } from "@react-navigation/native";
+import { useRef } from "react";
+import { SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Block from "../../components/theory/Block";
+import useTabPressScrollToTop from "../../hooks/useTabPressScrollToTop";
 import commonStyles from "../../styles/commonStyles";
 
 export default function Theory() {
+  const insets = useSafeAreaInsets();
+  const scrollViewRef = useRef(null);
+
+  useScrollToTop(scrollViewRef);
+
+  useTabPressScrollToTop(scrollViewRef);
   const handleSectionPress = (title) => {
     console.log(`Модуль ${title} нажат`);
   };
-  
+
   const modules = [
     {
       id: 1,
@@ -30,15 +39,20 @@ export default function Theory() {
   ];
 
   return (
-    <ScreenContainer>
-      <View style={commonStyles.header}>
+    <SafeAreaView style={[styles.container, { paddingTop: insets.top }]}>
+      <View style={styles.titleContainer}>
         <Text style={commonStyles.title}>Теория</Text>
         <Text style={commonStyles.subtitle}>
           Навыки, принципы и философия ДПТ
         </Text>
       </View>
 
-      <View>
+      <ScrollView
+        ref={scrollViewRef}
+        style={styles.scrollView}
+        contentContainerStyle={styles.scrollViewContent}
+        showsVerticalScrollIndicator={false}
+      >
         {modules.map((module) => (
           <Block
             key={module.id}
@@ -51,7 +65,25 @@ export default function Theory() {
             onPress={module.onPress}
           />
         ))}
-      </View>
-    </ScreenContainer>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#3a3a5e",
+  },
+  titleContainer: {
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+  },
+  scrollView: {
+    flex: 1,
+  },
+  scrollViewContent: {
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+  },
+});
