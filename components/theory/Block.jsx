@@ -3,8 +3,8 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 const Block = ({ title, description, icon, color, progress, onPress }) => {
   return (
-    <TouchableOpacity style={styles.card} onPress={onPress}>
-      <View style={styles.iconContainer}>
+    <TouchableOpacity style={styles.card} onPress={onPress} activeOpacity={0.9}>
+      <View style={[styles.iconContainer, { backgroundColor: `${color}20` }]}>
         <Ionicons name={icon} size={28} color={color} />
       </View>
       <View style={styles.content}>
@@ -24,7 +24,11 @@ const Block = ({ title, description, icon, color, progress, onPress }) => {
           />
         </View>
       </View>
-      <Ionicons name="chevron-forward" size={24} color="#cccccc" />
+      <Ionicons
+        name="chevron-forward"
+        size={22}
+        color="rgba(204, 204, 204, 0.6)"
+      />
     </TouchableOpacity>
   );
 };
@@ -33,9 +37,9 @@ const styles = StyleSheet.create({
   card: {
     flexDirection: "row",
     backgroundColor: "#2d2d4a",
-    borderRadius: 16,
-    paddingHorizontal: 16,
-    paddingVertical: 16,
+    borderRadius: 18,
+    paddingHorizontal: 18,
+    paddingVertical: 18,
     alignItems: "center",
     marginBottom: 16,
     elevation: 2,
@@ -45,28 +49,28 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
   },
   iconContainer: {
-    width: 56,
-    height: 56,
-    borderRadius: 28,
+    width: 58,
+    height: 58,
+    borderRadius: 29,
     justifyContent: "center",
     alignItems: "center",
-    marginRight: 16,
-    backgroundColor: "#444464",
+    marginRight: 18,
   },
   content: {
     flex: 1,
+    paddingRight: 6,
   },
   title: {
-    fontSize: 17,
-    fontWeight: "600",
-    color: "#f0f0f0",
-    marginBottom: 6,
+    fontSize: 18,
+    fontWeight: "700",
+    color: "#ffffff",
+    marginBottom: 7,
   },
   description: {
     fontSize: 14,
     color: "#c8c8e0",
     lineHeight: 20,
-    marginBottom: 10,
+    marginBottom: 12,
   },
   progressContainer: {
     height: 5,
@@ -76,6 +80,7 @@ const styles = StyleSheet.create({
   },
   progressBar: {
     height: "100%",
+    borderRadius: 3,
   },
 });
 
