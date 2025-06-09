@@ -20,9 +20,6 @@ export default function Index() {
     <SafeAreaView style={[styles.container, { paddingTop: insets.top }]}>
       <View style={styles.titleContainer}>
         <Text style={commonStyles.title}>Практика</Text>
-        <Text style={commonStyles.subtitle}>
-          Дневник и использованные за день навыки
-        </Text>
       </View>
 
       <View style={styles.fixedContentContainer}>

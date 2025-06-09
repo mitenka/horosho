@@ -10,10 +10,6 @@ export const commonStyles = StyleSheet.create({
     color: "#f0f0f0",
     marginBottom: 4,
   },
-  subtitle: {
-    fontSize: 16,
-    color: "#cccccc",
-  },
 });
 
 export default commonStyles;

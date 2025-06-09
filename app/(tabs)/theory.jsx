@@ -11,13 +11,13 @@ export default function Theory() {
   const scrollViewRef = useRef(null);
 
   useScrollToTop(scrollViewRef);
-
   useTabPressScrollToTop(scrollViewRef);
+
   const handleSectionPress = (title) => {
     console.log(`Модуль ${title} нажат`);
   };
 
-  const modules = [
+  const blocks = [
     {
       id: 1,
       title: "Основы ДПТ",
@@ -42,9 +42,6 @@ export default function Theory() {
     <SafeAreaView style={[styles.container, { paddingTop: insets.top }]}>
       <View style={styles.titleContainer}>
         <Text style={commonStyles.title}>Теория</Text>
-        <Text style={commonStyles.subtitle}>
-          Навыки, принципы и философия ДПТ
-        </Text>
       </View>
 
       <ScrollView
@@ -53,16 +50,16 @@ export default function Theory() {
         contentContainerStyle={styles.scrollViewContent}
         showsVerticalScrollIndicator={false}
       >
-        {modules.map((module) => (
+        {blocks.map((block) => (
           <Block
-            key={module.id}
-            id={module.id}
-            title={module.title}
-            description={module.description}
-            icon={module.icon}
-            color={module.color}
-            progress={module.progress}
-            onPress={module.onPress}
+            key={block.id}
+            id={block.id}
+            title={block.title}
+            description={block.description}
+            icon={block.icon}
+            color={block.color}
+            progress={block.progress}
+            onPress={block.onPress}
           />
         ))}
       </ScrollView>
@@ -84,6 +81,6 @@ const styles = StyleSheet.create({
   },
   scrollViewContent: {
     paddingHorizontal: 16,
-    paddingVertical: 12,
+    paddingBottom: 24,
   },
 });

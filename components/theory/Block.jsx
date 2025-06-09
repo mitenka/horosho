@@ -1,14 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
-const Block = ({
-  title,
-  description,
-  icon,
-  color,
-  progress,
-  onPress,
-}) => {
+const Block = ({ title, description, icon, color, progress, onPress }) => {
   return (
     <TouchableOpacity style={styles.card} onPress={onPress}>
       <View style={styles.iconContainer}>
@@ -39,40 +32,46 @@ const Block = ({
 const styles = StyleSheet.create({
   card: {
     flexDirection: "row",
-    backgroundColor: "#3a3a5e",
-    borderRadius: 12,
-    padding: 15,
-    marginBottom: 15,
+    backgroundColor: "#2d2d4a",
+    borderRadius: 16,
+    paddingHorizontal: 16,
+    paddingVertical: 16,
     alignItems: "center",
+    marginBottom: 16,
+    elevation: 2,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
   },
   iconContainer: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    backgroundColor: "#444464",
+    width: 56,
+    height: 56,
+    borderRadius: 28,
     justifyContent: "center",
     alignItems: "center",
-    marginRight: 15,
+    marginRight: 16,
+    backgroundColor: "#444464",
   },
   content: {
     flex: 1,
-    marginRight: 10,
   },
   title: {
-    fontSize: 16,
+    fontSize: 17,
     fontWeight: "600",
     color: "#f0f0f0",
-    marginBottom: 5,
+    marginBottom: 6,
   },
   description: {
     fontSize: 14,
-    color: "#cccccc",
-    marginBottom: 8,
+    color: "#c8c8e0",
+    lineHeight: 20,
+    marginBottom: 10,
   },
   progressContainer: {
-    height: 4,
+    height: 5,
     backgroundColor: "#444464",
-    borderRadius: 2,
+    borderRadius: 3,
     overflow: "hidden",
   },
   progressBar: {
