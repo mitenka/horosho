@@ -1,9 +1,9 @@
 import { Ionicons } from "@expo/vector-icons";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
-const Block = ({ title, description, icon, color, progress, onPress }) => {
+const Block = ({ title, description, icon, color, progress, onPress, isLast = false }) => {
   return (
-    <TouchableOpacity style={styles.card} onPress={onPress} activeOpacity={0.9}>
+    <TouchableOpacity style={[styles.card, isLast && styles.lastCard]} onPress={onPress} activeOpacity={0.9}>
       <View style={[styles.iconContainer, { backgroundColor: `${color}20` }]}>
         <Ionicons name={icon} size={28} color={color} />
       </View>
@@ -47,6 +47,9 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
+  },
+  lastCard: {
+    marginBottom: 0,
   },
   iconContainer: {
     width: 58,
