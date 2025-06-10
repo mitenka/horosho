@@ -1,0 +1,79 @@
+{
+  "groups": [
+    {
+      "title": "Навыки",
+      "blocks": [
+        "mindfulness",
+        "distress_tolerance",
+        "emotion_regulation",
+        "interpersonal_effectiveness"
+      ]
+    },
+    {
+      "title": "Дополнительные источники",
+      "blocks": ["resources"]
+    },
+    {
+      "title": "Практическое применение",
+      "blocks": ["exercises", "case_studies"]
+    }
+  ],
+  "blocks": [
+    {
+      "id": "mindfulness",
+      "title": "Осознанность",
+      "description": "Практики развития внимательности и присутствия в моменте",
+      "icon": "eye-outline",
+      "color": "#7CB342",
+      "contentFile": "mindfulness.json"
+    },
+    {
+      "id": "distress_tolerance",
+      "title": "Переносимость стресса",
+      "description": "Навыки выживания в кризисных ситуациях без ухудшения",
+      "icon": "shield-outline",
+      "color": "#FF7043",
+      "contentFile": "distress_tolerance.json"
+    },
+    {
+      "id": "emotion_regulation",
+      "title": "Регуляция эмоций",
+      "description": "Понимание и управление эмоциональными реакциями",
+      "icon": "heart-outline",
+      "color": "#E91E63",
+      "contentFile": "emotion_regulation.json"
+    },
+    {
+      "id": "interpersonal_effectiveness",
+      "title": "Межличностная эффективность",
+      "description": "Навыки построения здоровых отношений и коммуникации",
+      "icon": "people-outline",
+      "color": "#673AB7",
+      "contentFile": "interpersonal_effectiveness.json"
+    },
+    {
+      "id": "resources",
+      "title": "Библиотека ресурсов",
+      "description": "Книги, статьи и дополнительные материалы по ДПТ",
+      "icon": "library-outline",
+      "color": "#795548",
+      "contentFile": "resources.json"
+    },
+    {
+      "id": "exercises",
+      "title": "Упражнения",
+      "description": "Практические упражнения для отработки навыков ДПТ",
+      "icon": "fitness-outline",
+      "color": "#FF9800",
+      "contentFile": "exercises.json"
+    },
+    {
+      "id": "case_studies",
+      "title": "Примеры из практики",
+      "description": "Реальные случаи применения техник ДПТ",
+      "icon": "document-text-outline",
+      "color": "#607D8B",
+      "contentFile": "case_studies.json"
+    }
+  ]
+}
