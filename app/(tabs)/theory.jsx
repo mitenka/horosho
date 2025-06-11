@@ -1,5 +1,5 @@
 import { useScrollToTop } from "@react-navigation/native";
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
 import {
   ActivityIndicator,
   SafeAreaView,
@@ -10,39 +10,17 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Block from "../../components/theory/Block";
-import theoryData from "../../data/theory.json";
+import useDataLoader from "../../hooks/useDataLoader";
 import useTabPressScrollToTop from "../../hooks/useTabPressScrollToTop";
 import commonStyles from "../../styles/commonStyles";
 
 export default function Theory() {
   const insets = useSafeAreaInsets();
   const scrollViewRef = useRef(null);
-  const [loading, setLoading] = useState(true);
-  const [groups, setGroups] = useState([]);
-  const [blocks, setBlocks] = useState({});
+  const { loading, theoryGroups, theoryBlocks } = useDataLoader();
 
   useScrollToTop(scrollViewRef);
   useTabPressScrollToTop(scrollViewRef);
-
-  useEffect(() => {
-    loadTheoryData();
-  }, []);
-
-  const loadTheoryData = () => {
-    try {
-      const blocksMap = {};
-      theoryData.blocks.forEach((block) => {
-        blocksMap[block.id] = block;
-      });
-
-      setBlocks(blocksMap);
-      setGroups(theoryData.groups);
-      setLoading(false);
-    } catch (error) {
-      console.error("Ошибка при загрузке данных теории:", error);
-      setLoading(false);
-    }
-  };
 
   const handleSectionPress = (blockId) => {
     console.log(`Модуль ${blockId} нажат`);
@@ -65,17 +43,18 @@ export default function Theory() {
             <ActivityIndicator size="large" color="#f0f0f0" />
           </View>
         ) : (
-          groups.map((group, groupIndex) => (
+          theoryGroups.map((group, groupIndex) => (
             <View
               key={groupIndex}
               style={[
                 styles.groupContainer,
-                groupIndex === groups.length - 1 && styles.lastGroupContainer,
+                groupIndex === theoryGroups.length - 1 &&
+                  styles.lastGroupContainer,
               ]}
             >
               <Text style={styles.groupTitle}>{group.title}</Text>
               {group.blocks.map((blockId, blockIndex) => {
-                const block = blocks[blockId];
+                const block = theoryBlocks[blockId];
                 if (!block) return null;
 
                 return (
