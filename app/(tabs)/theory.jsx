@@ -1,23 +1,15 @@
 import { useScrollToTop } from "@react-navigation/native";
 import { useRef } from "react";
-import {
-  ActivityIndicator,
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Block from "../../components/theory/Block";
-import useDataLoader from "../../hooks/useDataLoader";
 import useTabPressScrollToTop from "../../hooks/useTabPressScrollToTop";
 import commonStyles from "../../styles/commonStyles";
 
 export default function Theory() {
   const insets = useSafeAreaInsets();
   const scrollViewRef = useRef(null);
-  const { loading, theoryGroups, theoryBlocks } = useDataLoader();
+  const theoryGroups = [];
 
   useScrollToTop(scrollViewRef);
   useTabPressScrollToTop(scrollViewRef);
@@ -38,42 +30,36 @@ export default function Theory() {
         contentContainerStyle={styles.scrollViewContent}
         showsVerticalScrollIndicator={false}
       >
-        {loading ? (
-          <View style={styles.loadingContainer}>
-            <ActivityIndicator size="large" color="#f0f0f0" />
-          </View>
-        ) : (
-          theoryGroups.map((group, groupIndex) => (
-            <View
-              key={groupIndex}
-              style={[
-                styles.groupContainer,
-                groupIndex === theoryGroups.length - 1 &&
-                  styles.lastGroupContainer,
-              ]}
-            >
-              <Text style={styles.groupTitle}>{group.title}</Text>
-              {group.blocks.map((blockId, blockIndex) => {
-                const block = theoryBlocks[blockId];
-                if (!block) return null;
+        {theoryGroups.map((group, groupIndex) => (
+          <View
+            key={groupIndex}
+            style={[
+              styles.groupContainer,
+              groupIndex === theoryGroups.length - 1 &&
+                styles.lastGroupContainer,
+            ]}
+          >
+            <Text style={styles.groupTitle}>{group.title}</Text>
+            {group.blocks.map((blockId, blockIndex) => {
+              const block = theoryBlocks[blockId];
+              if (!block) return null;
 
-                return (
-                  <Block
-                    key={block.id}
-                    id={block.id}
-                    title={block.title}
-                    description={block.description}
-                    icon={block.icon}
-                    color={block.color}
-                    progress={0}
-                    onPress={() => handleSectionPress(block.id)}
-                    isLast={blockIndex === group.blocks.length - 1}
-                  />
-                );
-              })}
-            </View>
-          ))
-        )}
+              return (
+                <Block
+                  key={block.id}
+                  id={block.id}
+                  title={block.title}
+                  description={block.description}
+                  icon={block.icon}
+                  color={block.color}
+                  progress={0}
+                  onPress={() => handleSectionPress(block.id)}
+                  isLast={blockIndex === group.blocks.length - 1}
+                />
+              );
+            })}
+          </View>
+        ))}
       </ScrollView>
     </SafeAreaView>
   );
