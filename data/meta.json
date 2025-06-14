@@ -1,6 +1,3 @@
 {
-  "versions": {
-    "dictionary": "1.0",
-    "theory": "1.0"
-  }
+  "dictionaryVersion": "1"
 }

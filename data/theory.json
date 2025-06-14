@@ -25,6 +25,7 @@
       "description": "Практики развития внимательности и присутствия в моменте",
       "icon": "eye-outline",
       "color": "#7CB342",
+      "version": "1",
       "contentFile": "mindfulness.json"
     },
     {
@@ -33,6 +34,7 @@
       "description": "Навыки выживания в кризисных ситуациях без ухудшения",
       "icon": "shield-outline",
       "color": "#FF7043",
+      "version": "1",
       "contentFile": "distress_tolerance.json"
     },
     {
@@ -41,6 +43,7 @@
       "description": "Понимание и управление эмоциональными реакциями",
       "icon": "heart-outline",
       "color": "#E91E63",
+      "version": "1",
       "contentFile": "emotion_regulation.json"
     },
     {
@@ -49,6 +52,7 @@
       "description": "Навыки построения здоровых отношений и коммуникации",
       "icon": "people-outline",
       "color": "#673AB7",
+      "version": "1",
       "contentFile": "interpersonal_effectiveness.json"
     },
     {
@@ -57,6 +61,7 @@
       "description": "Книги, статьи и дополнительные материалы по ДПТ",
       "icon": "library-outline",
       "color": "#795548",
+      "version": "1",
       "contentFile": "resources.json"
     },
     {
@@ -65,6 +70,7 @@
       "description": "Практические упражнения для отработки навыков ДПТ",
       "icon": "fitness-outline",
       "color": "#FF9800",
+      "version": "1",
       "contentFile": "exercises.json"
     },
     {
@@ -73,6 +79,7 @@
       "description": "Реальные случаи применения техник ДПТ",
       "icon": "document-text-outline",
       "color": "#607D8B",
+      "version": "1",
       "contentFile": "case_studies.json"
     }
   ]
