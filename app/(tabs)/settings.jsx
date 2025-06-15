@@ -1,29 +1,47 @@
 import { useScrollToTop } from "@react-navigation/native";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import {
   SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import useTabPressScrollToTop from "../../hooks/useTabPressScrollToTop";
+import { checkForUpdates } from "../../services/dataService";
 import commonStyles from "../../styles/commonStyles";
 
 export default function Settings() {
   const insets = useSafeAreaInsets();
   const scrollViewRef = useRef(null);
+  const [updateStatus, setUpdateStatus] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   useScrollToTop(scrollViewRef);
   useTabPressScrollToTop(scrollViewRef);
 
+  const handleCheckForUpdates = async () => {
+    setIsLoading(true);
+    setUpdateStatus(null);
+
+    try {
+      const result = await checkForUpdates();
+      setUpdateStatus(result);
+    } catch (error) {
+      setUpdateStatus({ error: error.message });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <SafeAreaView style={[styles.container, { paddingTop: insets.top }]}>
       <View style={styles.titleContainer}>
-        <Text style={commonStyles.title}>Настройки</Text>
+        <Text style={commonStyles.title}>Настройка</Text>
       </View>
-      
+
       <ScrollView
         ref={scrollViewRef}
         style={styles.scrollView}
@@ -31,7 +49,42 @@ export default function Settings() {
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.contentContainer}>
-          {/* Здесь будет содержимое экрана настроек */}
+          <TouchableOpacity
+            style={styles.button}
+            onPress={handleCheckForUpdates}
+            disabled={isLoading}
+          >
+            <Text style={styles.buttonText}>
+              {isLoading ? "Проверка..." : "Проверить обновления"}
+            </Text>
+          </TouchableOpacity>
+
+          {updateStatus && (
+            <View style={styles.statusContainer}>
+              <Text style={styles.statusTitle}>Статус:</Text>
+              {updateStatus.error ? (
+                <Text style={styles.errorText}>
+                  Ошибка: {updateStatus.error}
+                </Text>
+              ) : updateStatus.updated ? (
+                <View>
+                  <Text style={styles.successText}>
+                    Данные успешно обновлены!
+                  </Text>
+                  {updateStatus.dictionaryUpdated && (
+                    <Text style={styles.infoText}>• Словарь обновлен</Text>
+                  )}
+                  {updateStatus.theoryUpdated && (
+                    <Text style={styles.infoText}>• Теория обновлена</Text>
+                  )}
+                </View>
+              ) : (
+                <Text style={styles.infoText}>
+                  {updateStatus.message || "Обновления не требуются"}
+                </Text>
+              )}
+            </View>
+          )}
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -56,5 +109,42 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     paddingBottom: 16,
+  },
+  button: {
+    backgroundColor: "#4a4a6a",
+    padding: 16,
+    borderRadius: 8,
+    alignItems: "center",
+  },
+  buttonText: {
+    color: "#ffffff",
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  statusContainer: {
+    backgroundColor: "#323248",
+    padding: 16,
+    borderRadius: 8,
+    marginTop: 20,
+  },
+  statusTitle: {
+    color: "#f0f0f0",
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 8,
+  },
+  successText: {
+    color: "#4cd964",
+    fontSize: 16,
+    marginBottom: 8,
+  },
+  errorText: {
+    color: "#ff3b30",
+    fontSize: 16,
+  },
+  infoText: {
+    color: "#f0f0f0",
+    fontSize: 16,
+    marginBottom: 4,
   },
 });
