@@ -1,0 +1,60 @@
+import { useScrollToTop } from "@react-navigation/native";
+import { useRef } from "react";
+import {
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import useTabPressScrollToTop from "../../hooks/useTabPressScrollToTop";
+import commonStyles from "../../styles/commonStyles";
+
+export default function Settings() {
+  const insets = useSafeAreaInsets();
+  const scrollViewRef = useRef(null);
+
+  useScrollToTop(scrollViewRef);
+  useTabPressScrollToTop(scrollViewRef);
+
+  return (
+    <SafeAreaView style={[styles.container, { paddingTop: insets.top }]}>
+      <View style={styles.titleContainer}>
+        <Text style={commonStyles.title}>Настройки</Text>
+      </View>
+      
+      <ScrollView
+        ref={scrollViewRef}
+        style={styles.scrollView}
+        contentContainerStyle={styles.scrollViewContent}
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={styles.contentContainer}>
+          {/* Здесь будет содержимое экрана настроек */}
+        </View>
+      </ScrollView>
+    </SafeAreaView>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#3a3a5e",
+  },
+  titleContainer: {
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+  },
+  scrollView: {
+    flex: 1,
+  },
+  scrollViewContent: {
+    paddingHorizontal: 16,
+    paddingBottom: 24,
+  },
+  contentContainer: {
+    paddingBottom: 16,
+  },
+});
