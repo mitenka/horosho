@@ -12,11 +12,11 @@ const STORAGE_KEYS = {
   LAST_UPDATE_CHECK: "@horosho/last_update_check",
 };
 
-// GitHub CDN configuration
+// GitHub raw content configuration
 const GITHUB_USER = "mitenka";
 const GITHUB_REPO = "horosho";
 const GITHUB_BRANCH = "main";
-const CDN_BASE_URL = `https://cdn.jsdelivr.net/gh/${GITHUB_USER}/${GITHUB_REPO}@${GITHUB_BRANCH}/data`;
+const API_BASE_URL = `https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/${GITHUB_BRANCH}/data`;
 
 const checkStorageData = async () => {
   try {
@@ -171,7 +171,7 @@ export const checkForUpdates = async () => {
     console.log("Checking for updates from GitHub...");
 
     // Fetch meta.json from CDN with cache-busting parameter
-    const response = await fetch(`${CDN_BASE_URL}/meta.json?v=${Date.now()}`);
+    const response = await fetch(`${API_BASE_URL}/meta.json?v=${Date.now()}`);
     if (!response.ok) {
       throw new Error(`Network response was not ok: ${response.status}`);
     }
@@ -202,7 +202,7 @@ export const checkForUpdates = async () => {
     if (needDictionaryUpdate) {
       console.log("Updating dictionary from GitHub...");
       const dictionaryResponse = await fetch(
-        `${CDN_BASE_URL}/dictionary.json?v=${Date.now()}`
+        `${API_BASE_URL}/dictionary.json?v=${Date.now()}`
       );
 
       if (!dictionaryResponse.ok) {
@@ -226,7 +226,7 @@ export const checkForUpdates = async () => {
     if (needTheoryUpdate) {
       console.log("Updating theory from GitHub...");
       const theoryResponse = await fetch(
-        `${CDN_BASE_URL}/theory.json?v=${Date.now()}`
+        `${API_BASE_URL}/theory.json?v=${Date.now()}`
       );
 
       if (!theoryResponse.ok) {
