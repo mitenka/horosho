@@ -1,6 +1,6 @@
 import { useScrollToTop } from "@react-navigation/native";
 import { useRef } from "react";
-import { SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Block from "../../components/theory/Block";
 import useTabPressScrollToTop from "../../hooks/useTabPressScrollToTop";
@@ -19,7 +19,7 @@ export default function Theory() {
   };
 
   return (
-    <SafeAreaView style={[styles.container, { paddingTop: insets.top }]}>
+    <View style={[styles.container, { paddingTop: insets.top }]}>
       <View style={styles.titleContainer}>
         <Text style={commonStyles.title}>Теория</Text>
       </View>
@@ -61,7 +61,7 @@ export default function Theory() {
           </View>
         ))}
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }
 

@@ -1,6 +1,6 @@
 import { useScrollToTop } from "@react-navigation/native";
 import { useRef } from "react";
-import { SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import DaySelector from "../../components/practice/DaySelector";
 import useTabPressScrollToTop from "../../hooks/useTabPressScrollToTop";
@@ -17,7 +17,7 @@ export default function Index() {
     console.log("Selected date:", date);
   };
   return (
-    <SafeAreaView style={[styles.container, { paddingTop: insets.top }]}>
+    <View style={[styles.container, { paddingTop: insets.top }]}>
       <View style={styles.titleContainer}>
         <Text style={commonStyles.title}>Практика</Text>
       </View>
@@ -32,7 +32,7 @@ export default function Index() {
         contentContainerStyle={styles.scrollViewContent}
         showsVerticalScrollIndicator={false}
       ></ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }
 

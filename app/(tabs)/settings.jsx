@@ -1,7 +1,6 @@
 import { useScrollToTop } from "@react-navigation/native";
 import { useRef, useState } from "react";
 import {
-  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
@@ -37,7 +36,7 @@ export default function Settings() {
   };
 
   return (
-    <SafeAreaView style={[styles.container, { paddingTop: insets.top }]}>
+    <View style={[styles.container, { paddingTop: insets.top }]}>
       <View style={styles.titleContainer}>
         <Text style={commonStyles.title}>Настройка</Text>
       </View>
@@ -86,8 +85,12 @@ export default function Settings() {
             </View>
           )}
         </View>
+
+        <View style={styles.fixedContentContainer}>
+          <Text style={styles.infoText}>insets: {JSON.stringify(insets)}</Text>
+        </View>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }
 

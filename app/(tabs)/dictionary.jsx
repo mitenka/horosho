@@ -4,7 +4,6 @@ import { useMemo, useRef, useState } from "react";
 import {
   FlatList,
   Modal,
-  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
@@ -163,7 +162,7 @@ export default function Dictionary() {
   };
 
   return (
-    <SafeAreaView style={[styles.container, { paddingTop: insets.top }]}>
+    <View style={[styles.container, { paddingTop: insets.top }]}>
       <View style={styles.titleContainer}>
         <Text style={commonStyles.title}>Словарь</Text>
       </View>
@@ -264,7 +263,7 @@ export default function Dictionary() {
           </View>
         </View>
       </Modal>
-    </SafeAreaView>
+    </View>
   );
 }
 
