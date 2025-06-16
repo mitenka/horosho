@@ -3,12 +3,12 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 const Block = ({ title, description, icon, color, progress, onPress, isLast = false }) => {
   return (
-    <TouchableOpacity style={[styles.card, isLast && styles.lastCard]} onPress={onPress} activeOpacity={0.9}>
-      <View style={[styles.iconContainer, { backgroundColor: `${color}20` }]}>
-        <Ionicons name={icon} size={28} color={color} />
+    <TouchableOpacity style={[styles.card, isLast && styles.lastCard]} onPress={onPress} activeOpacity={0.75}>
+      <View style={[styles.iconContainer, { backgroundColor: `${color}30` }]}>
+        <Ionicons name={icon} size={26} color={color} />
       </View>
       <View style={styles.content}>
-        <Text style={styles.title}>{title}</Text>
+        <Text style={[styles.title, { color: color }]}>{title}</Text>
         <Text style={styles.description} numberOfLines={2}>
           {description}
         </Text>
@@ -26,8 +26,8 @@ const Block = ({ title, description, icon, color, progress, onPress, isLast = fa
       </View>
       <Ionicons
         name="chevron-forward"
-        size={22}
-        color="rgba(204, 204, 204, 0.6)"
+        size={20}
+        color="rgba(255, 255, 255, 0.3)"
       />
     </TouchableOpacity>
   );
@@ -36,54 +36,51 @@ const Block = ({ title, description, icon, color, progress, onPress, isLast = fa
 const styles = StyleSheet.create({
   card: {
     flexDirection: "row",
-    backgroundColor: "#2d2d4a",
-    borderRadius: 18,
-    paddingHorizontal: 18,
-    paddingVertical: 18,
+    backgroundColor: "rgba(45, 45, 74, 0.6)",
+    borderRadius: 16,
+    paddingHorizontal: 16,
+    paddingVertical: 16,
     alignItems: "center",
-    marginBottom: 16,
-    elevation: 2,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
+    marginBottom: 14,
+    borderWidth: 1,
+    borderColor: "rgba(255, 255, 255, 0.08)",
   },
   lastCard: {
     marginBottom: 0,
   },
   iconContainer: {
-    width: 58,
-    height: 58,
-    borderRadius: 29,
+    width: 52,
+    height: 52,
+    borderRadius: 26,
     justifyContent: "center",
     alignItems: "center",
-    marginRight: 18,
+    marginRight: 16,
   },
   content: {
     flex: 1,
     paddingRight: 6,
   },
   title: {
-    fontSize: 18,
-    fontWeight: "700",
-    color: "#ffffff",
-    marginBottom: 7,
+    fontSize: 17,
+    fontWeight: "600",
+    marginBottom: 6,
+    letterSpacing: 0.2,
   },
   description: {
     fontSize: 14,
-    color: "#c8c8e0",
-    lineHeight: 20,
-    marginBottom: 12,
+    color: "rgba(200, 200, 224, 0.9)",
+    lineHeight: 19,
+    marginBottom: 10,
   },
   progressContainer: {
-    height: 5,
-    backgroundColor: "#444464",
-    borderRadius: 3,
+    height: 4,
+    backgroundColor: "rgba(68, 68, 100, 0.5)",
+    borderRadius: 2,
     overflow: "hidden",
   },
   progressBar: {
     height: "100%",
-    borderRadius: 3,
+    borderRadius: 2,
   },
 });
 
