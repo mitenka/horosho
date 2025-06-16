@@ -8,6 +8,7 @@ import {
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useData } from "../../contexts/DataContext";
 import useTabPressScrollToTop from "../../hooks/useTabPressScrollToTop";
 import { checkForUpdates } from "../../services/dataService";
 import commonStyles from "../../styles/commonStyles";
@@ -17,6 +18,7 @@ export default function Settings() {
   const scrollViewRef = useRef(null);
   const [updateStatus, setUpdateStatus] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const { refreshData } = useData();
 
   useScrollToTop(scrollViewRef);
   useTabPressScrollToTop(scrollViewRef);
@@ -26,7 +28,14 @@ export default function Settings() {
     setUpdateStatus(null);
 
     try {
+      // First check and load updates from AsyncStorage
       const result = await checkForUpdates();
+
+      // If data was updated, refresh it in the context
+      if (result.updated) {
+        await refreshData();
+      }
+
       setUpdateStatus(result);
     } catch (error) {
       setUpdateStatus({ error: error.message });

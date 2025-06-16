@@ -2,6 +2,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useScrollToTop } from "@react-navigation/native";
 import { useMemo, useRef, useState } from "react";
 import {
+  ActivityIndicator,
   FlatList,
   Modal,
   ScrollView,
@@ -12,110 +13,25 @@ import {
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useData } from "../../contexts/DataContext";
 import useTabPressScrollToTop from "../../hooks/useTabPressScrollToTop";
 import commonStyles from "../../styles/commonStyles";
 
 export default function Dictionary() {
   const insets = useSafeAreaInsets();
-
   const flatListRef = useRef(null);
 
-  useScrollToTop(flatListRef);
+  const { dictionary: dictionaryData, isLoading, error } = useData();
 
+  useScrollToTop(flatListRef);
   useTabPressScrollToTop(flatListRef);
+
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedTerm, setSelectedTerm] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
-  const terms = [
-    {
-      id: 1,
-      headword: "Анализ поведенческой цепочки",
-      definition:
-        "Метод анализа последовательности событий, мыслей, эмоций и действий, которые привели к проблемному поведению, с целью выявления точек для вмешательства.",
-      relatedTermIds: [2],
-    },
-    {
-      id: 2,
-      headword: "Осознанность",
-      definition:
-        "Наблюдение за фактами и опытом без навешивания ярлыков «хорошо» или «плохо», «правильно» или «неправильно».",
-      relatedTermIds: [1],
-    },
-    {
-      id: 3,
-      headword: "Мудрый разум",
-      definition:
-        "Состояние, в котором интегрированы **эмоциональный** и **рациональный** разум, позволяя принимать решения, учитывающие как эмоции, так и логику.",
-      relatedTermIds: [1],
-    },
-    {
-      id: 4,
-      headword: "Безоценочность",
-      definition:
-        "Наблюдение за фактами и опытом без навешивания ярлыков «хорошо» или «плохо», «правильно» или «неправильно».",
-      relatedTermIds: [2],
-    },
-    {
-      id: 5,
-      headword: "Диалектика",
-      definition:
-        "Принцип объединения противоположностей, принятие и изменение.",
-      relatedTermIds: [],
-    },
-    {
-      id: 6,
-      headword: "Эмоциональный разум",
-      definition: "Управляется чувствами.",
-      relatedTermIds: [3],
-    },
-    {
-      id: 7,
-      headword: "Рациональный разум",
-      definition:
-        "Управляется логикой, рассуждениями и оценками. Он помогает принимать решения, учитывая различные факторы и последствия. Это способность анализировать информацию, делать выводы, формулировать аргументы и принимать обоснованные решения. Он также помогает предсказывать последствия своих действий, планировать и управлять своими ресурсами. Рациональный разум важен для успешной адаптации к окружающей среде, для достижения своих целей и для понимания себя и других людей.",
-      relatedTermIds: [3],
-    },
-    {
-      id: 8,
-      headword: "Биосоциальная модель",
-      definition:
-        "Модель, объясняющая эмоции как результат взаимодействия **биологических** и **социальных** факторов.",
-      relatedTermIds: [],
-    },
-    {
-      id: 9,
-      headword: "Индивидуальная терапия",
-      definition: "Терапия, проводимая с одним человеком.",
-      relatedTermIds: [],
-    },
-    {
-      id: 10,
-      headword: "Групповой тренинг навыков",
-      definition: "Тренинг, проводимый с группой людей.",
-      relatedTermIds: [],
-    },
-    {
-      id: 11,
-      headword: "Телефонные консультации",
-      definition: "Консультации, проводимые по телефону.",
-      relatedTermIds: [],
-    },
-    {
-      id: 12,
-      headword: "Командные встречи терапевтов",
-      definition: "Встречи, проводимые с командой терапевтов.",
-      relatedTermIds: [],
-    },
-    {
-      id: 13,
-      headword: "Противоположное действие",
-      definition:
-        "Техника изменения эмоций через совершение действий, противоположных эмоциональному побуждению.",
-      relatedTermIds: [],
-    },
-  ];
 
-  // Filter terms based on search query
+  const terms = dictionaryData || [];
+
   const filteredTerms = useMemo(() => {
     if (!searchQuery.trim()) return terms;
 
@@ -160,6 +76,37 @@ export default function Dictionary() {
       </TouchableOpacity>
     );
   };
+
+  // Show loading indicator if data is being loaded
+  if (isLoading) {
+    return (
+      <View style={[styles.container, { paddingTop: insets.top }]}>
+        <View style={styles.titleContainer}>
+          <Text style={commonStyles.title}>Словарь</Text>
+        </View>
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#a0a0d0" />
+          <Text style={styles.loadingText}>Загрузка словаря...</Text>
+        </View>
+      </View>
+    );
+  }
+
+  // Show error message if something went wrong
+  if (error) {
+    return (
+      <View style={[styles.container, { paddingTop: insets.top }]}>
+        <View style={styles.titleContainer}>
+          <Text style={commonStyles.title}>Словарь</Text>
+        </View>
+        <View style={styles.errorContainer}>
+          <Text style={styles.errorText}>
+            Произошла ошибка при загрузке словаря
+          </Text>
+        </View>
+      </View>
+    );
+  }
 
   return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
@@ -268,6 +215,27 @@ export default function Dictionary() {
 }
 
 const styles = StyleSheet.create({
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  loadingText: {
+    marginTop: 10,
+    fontSize: 16,
+    color: "#c8c8e0",
+  },
+  errorContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 20,
+  },
+  errorText: {
+    fontSize: 16,
+    color: "#ff6b6b",
+    textAlign: "center",
+  },
   container: {
     flex: 1,
     backgroundColor: "#3a3a5e",
