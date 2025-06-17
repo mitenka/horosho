@@ -8,6 +8,7 @@ import {
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { router } from "expo-router";
 import Block from "../../components/theory/Block";
 import { useData } from "../../contexts/DataContext";
 import useTabPressScrollToTop from "../../hooks/useTabPressScrollToTop";
@@ -25,6 +26,7 @@ export default function Theory() {
 
   const handleSectionPress = (blockId) => {
     console.log(`Module ${blockId} pressed`);
+    router.push(`/block/${blockId}`);
   };
 
   // Show loading indicator if data is being loaded

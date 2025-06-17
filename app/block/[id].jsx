@@ -26,33 +26,12 @@ export default function BlockArticles() {
     // router.push(`/article/${articleId}`);
   };
 
-  // Show message if block not found (shouldn't normally happen)
-  if (!block) {
-    return (
-      <View style={styles.container}>
-        <Stack.Screen
-          options={{
-            title: "Блок не найден",
-            headerStyle: {
-              backgroundColor: "#3a3a5e",
-            },
-            headerTintColor: "#f0f0f0",
-            headerShadowVisible: false,
-          }}
-        />
-        <View style={styles.errorContainer}>
-          <Text style={styles.errorText}>Блок не найден</Text>
-        </View>
-      </View>
-    );
-  }
-
   return (
     <View style={styles.container}>
       <Stack.Screen
         options={{
-          title: block.title,
-          headerBackTitle: "Назад",
+          title: "",
+          headerBackTitle: "Теория",
           headerStyle: {
             backgroundColor: "#3a3a5e",
           },
@@ -60,6 +39,10 @@ export default function BlockArticles() {
           headerShadowVisible: false,
         }}
       />
+
+      <View style={styles.titleContainer}>
+        <Text style={styles.blockTitle}>{block.title}</Text>
+      </View>
 
       <ScrollView
         ref={scrollViewRef}
@@ -104,13 +87,21 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#3a3a5e",
   },
+  titleContainer: {
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+  },
+  blockTitle: {
+    fontSize: 24,
+    fontWeight: "700",
+    color: "#f0f0f0",
+  },
   scrollView: {
     flex: 1,
   },
   scrollViewContent: {
     paddingHorizontal: 16,
     paddingBottom: 24,
-    marginTop: 16,
   },
   articleCard: {
     backgroundColor: "rgba(255, 255, 255, 0.05)",
