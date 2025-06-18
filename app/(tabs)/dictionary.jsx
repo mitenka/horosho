@@ -14,7 +14,6 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useData } from "../../contexts/DataContext";
-import useTabPressScrollToTop from "../../hooks/useTabPressScrollToTop";
 import commonStyles from "../../styles/commonStyles";
 
 export default function Dictionary() {
@@ -24,7 +23,6 @@ export default function Dictionary() {
   const { dictionary: dictionaryData, isLoading, error } = useData();
 
   useScrollToTop(flatListRef);
-  useTabPressScrollToTop(flatListRef);
 
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedTerm, setSelectedTerm] = useState(null);

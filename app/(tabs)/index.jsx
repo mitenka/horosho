@@ -3,7 +3,6 @@ import { useRef } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import DaySelector from "../../components/practice/DaySelector";
-import useTabPressScrollToTop from "../../hooks/useTabPressScrollToTop";
 import commonStyles from "../../styles/commonStyles";
 
 export default function Index() {
@@ -12,7 +11,6 @@ export default function Index() {
 
   useScrollToTop(scrollViewRef);
 
-  useTabPressScrollToTop(scrollViewRef);
   const handleDaySelected = (date) => {
     console.log("Selected date:", date);
   };

@@ -11,7 +11,6 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { router } from "expo-router";
 import Block from "../../components/theory/Block";
 import { useData } from "../../contexts/DataContext";
-import useTabPressScrollToTop from "../../hooks/useTabPressScrollToTop";
 import commonStyles from "../../styles/commonStyles";
 
 export default function Theory() {
@@ -22,7 +21,6 @@ export default function Theory() {
   const theoryGroups = theory?.groups || [];
 
   useScrollToTop(scrollViewRef);
-  useTabPressScrollToTop(scrollViewRef);
 
   const handleSectionPress = (blockId) => {
     console.log(`Module ${blockId} pressed`);

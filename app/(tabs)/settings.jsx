@@ -9,7 +9,6 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useData } from "../../contexts/DataContext";
-import useTabPressScrollToTop from "../../hooks/useTabPressScrollToTop";
 import { checkForUpdates } from "../../services/dataService";
 import commonStyles from "../../styles/commonStyles";
 
@@ -21,7 +20,6 @@ export default function Settings() {
   const { refreshData } = useData();
 
   useScrollToTop(scrollViewRef);
-  useTabPressScrollToTop(scrollViewRef);
 
   const handleCheckForUpdates = async () => {
     setIsLoading(true);
