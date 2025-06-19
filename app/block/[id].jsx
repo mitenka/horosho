@@ -1,5 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
-import { Stack, useLocalSearchParams } from "expo-router";
+import { Stack, useLocalSearchParams, router } from "expo-router";
 import { useRef } from "react";
 import {
   ScrollView,
@@ -22,8 +22,7 @@ export default function BlockArticles() {
   // Handle article press
   const handleArticlePress = (articleId) => {
     console.log(`Article ${articleId} pressed`);
-    // Navigate to article detail screen (to be implemented)
-    // router.push(`/article/${articleId}`);
+    router.push(`/article/${articleId}`);
   };
 
   return (
