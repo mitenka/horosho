@@ -1,7 +1,13 @@
 import { Ionicons } from "@expo/vector-icons";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { useData } from "../../contexts/DataContext";
 
-const Block = ({ title, description, icon, color, progress, onPress, isLast = false }) => {
+const Block = ({ id, title, description, icon, color, onPress, isLast = false }) => {
+  const { getBlockProgress } = useData();
+  
+  // Получаем прогресс для этого блока из контекста
+  const progress = getBlockProgress(id);
+  
   return (
     <TouchableOpacity style={[styles.card, isLast && styles.lastCard]} onPress={onPress} activeOpacity={0.75}>
       <View style={[styles.iconContainer, { backgroundColor: `${color}30` }]}>

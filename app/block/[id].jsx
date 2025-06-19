@@ -1,6 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Stack, useLocalSearchParams, router } from "expo-router";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   ScrollView,
   StyleSheet,
@@ -13,7 +13,7 @@ import { useData } from "../../contexts/DataContext";
 export default function BlockArticles() {
   const scrollViewRef = useRef(null);
   const { id } = useLocalSearchParams();
-  const { theory } = useData();
+  const { theory, checkIfRead } = useData();
 
   // Find the block by ID
   const block = theory?.blocks?.find((b) => b.id === id);
@@ -54,27 +54,41 @@ export default function BlockArticles() {
             <Text style={styles.emptyText}>Нет доступных статей</Text>
           </View>
         ) : (
-          articles.map((article, index) => (
-            <TouchableOpacity
-              key={article.id}
-              style={[
-                styles.articleCard,
-                index === articles.length - 1 && styles.lastArticleCard,
-              ]}
-              onPress={() => handleArticlePress(article.id)}
-              activeOpacity={0.7}
-            >
-              <View style={styles.articleContent}>
-                <Text style={styles.articleTitle}>{article.title}</Text>
-                <View style={styles.articleMeta}>
-                  <Ionicons name="time-outline" size={14} color={block.color} />
-                  <Text style={[styles.readTime, { color: block.color }]}>
-                    {article.readTime} мин
+          articles.map((article, index) => {
+            const isArticleRead = checkIfRead(block.id, article.id);
+            return (
+              <TouchableOpacity
+                key={article.id}
+                style={[
+                  styles.articleCard,
+                  index === articles.length - 1 && styles.lastArticleCard,
+                  isArticleRead && styles.articleCardRead,
+                ]}
+                onPress={() => handleArticlePress(article.id)}
+                activeOpacity={0.7}
+              >
+                <View style={styles.articleContent}>
+                  <Text style={[styles.articleTitle, isArticleRead && styles.articleTitleRead]}>
+                    {article.title}
                   </Text>
+                  <View style={styles.articleMeta}>
+                    {isArticleRead && (
+                      <View style={styles.readStatusIndicator}>
+                        <Ionicons name="checkmark-circle" size={14} color={block.color} />
+                        <Text style={[styles.readStatusText, { color: block.color }]}>
+                          Прочитано
+                        </Text>
+                      </View>
+                    )}
+                    <Ionicons name="time-outline" size={14} color={block.color} />
+                    <Text style={[styles.readTime, { color: block.color }]}>
+                      {article.readTime} мин
+                    </Text>
+                  </View>
                 </View>
-              </View>
-            </TouchableOpacity>
-          ))
+              </TouchableOpacity>
+            );
+          })
         )}
       </ScrollView>
     </View>
@@ -111,6 +125,10 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "rgba(255, 255, 255, 0.08)",
   },
+  articleCardRead: {
+    backgroundColor: "rgba(124, 179, 66, 0.08)",
+    borderColor: "rgba(124, 179, 66, 0.2)",
+  },
   lastArticleCard: {
     marginBottom: 0,
   },
@@ -124,9 +142,22 @@ const styles = StyleSheet.create({
     marginBottom: 6,
     letterSpacing: 0.2,
   },
+  articleTitleRead: {
+    fontWeight: "600",
+  },
   articleMeta: {
     flexDirection: "row",
     alignItems: "center",
+  },
+  readStatusIndicator: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginRight: 10,
+  },
+  readStatusText: {
+    fontSize: 13,
+    marginLeft: 4,
+    opacity: 0.9,
   },
   readTime: {
     fontSize: 13,

@@ -1,11 +1,12 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Stack, useLocalSearchParams } from "expo-router";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
   ScrollView,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from "react-native";
 import ArticleElement from "../../components/article/ArticleElement";
@@ -14,7 +15,8 @@ import { useData } from "../../contexts/DataContext";
 export default function ArticleScreen() {
   const scrollViewRef = useRef(null);
   const { id } = useLocalSearchParams();
-  const { theory, isLoading } = useData();
+  const { theory, isLoading, checkIfRead, markAsRead, markAsUnread } = useData();
+  const [isRead, setIsRead] = useState(false);
 
   // Find the article by ID
   let article = null;
@@ -33,6 +35,26 @@ export default function ArticleScreen() {
       }
     }
   }
+  
+  // Check if the article is marked as read when it loads
+  useEffect(() => {
+    if (block && article) {
+      setIsRead(checkIfRead(block.id, article.id));
+    }
+  }, [block, article, checkIfRead]);
+  
+  // Toggle read status
+  const toggleReadStatus = async () => {
+    if (!block || !article) return;
+    
+    if (isRead) {
+      await markAsUnread(block.id, article.id);
+    } else {
+      await markAsRead(block.id, article.id);
+    }
+    
+    setIsRead(!isRead);
+  };
 
   // Show loading indicator if data is being loaded
   if (isLoading) {
@@ -116,6 +138,24 @@ export default function ArticleScreen() {
           article.elements.map((element, index) => (
             <ArticleElement key={index} element={element} />
           ))}
+          
+        <View style={styles.readStatusContainer}>
+          <TouchableOpacity
+            style={[styles.readButton, isRead && styles.readButtonActive]}
+            onPress={toggleReadStatus}
+            activeOpacity={0.7}
+          >
+            <Ionicons
+              name={isRead ? "checkmark-circle" : "checkmark-circle-outline"}
+              size={22}
+              color={isRead ? "#ffffff" : "#c8c8e0"}
+              style={styles.readIcon}
+            />
+            <Text style={[styles.readButtonText, isRead && styles.readButtonTextActive]}>
+              {isRead ? "Прочитано" : "Отметить как прочитанное"}
+            </Text>
+          </TouchableOpacity>
+        </View>
       </ScrollView>
     </View>
   );
@@ -172,5 +212,37 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: "#ff6b6b",
     textAlign: "center",
+  },
+  readStatusContainer: {
+    marginTop: 40,
+    marginBottom: 20,
+    alignItems: "center",
+  },
+  readButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "rgba(45, 45, 74, 0.6)",
+    borderRadius: 12,
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderWidth: 1,
+    borderColor: "rgba(255, 255, 255, 0.1)",
+  },
+  readButtonActive: {
+    backgroundColor: "#7CB342",
+    borderColor: "#7CB342",
+  },
+  readIcon: {
+    marginRight: 8,
+  },
+  readButtonText: {
+    fontSize: 16,
+    color: "#c8c8e0",
+    fontWeight: "500",
+  },
+  readButtonTextActive: {
+    color: "#ffffff",
+    fontWeight: "600",
   },
 });

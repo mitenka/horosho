@@ -10,6 +10,7 @@ const STORAGE_KEYS = {
   DICTIONARY_VERSION: "@horosho/dictionary_version",
   THEORY_VERSION: "@horosho/theory_version",
   LAST_UPDATE_CHECK: "@horosho/last_update_check",
+  READ_ARTICLES: "@horosho/read_articles",
 };
 
 // GitHub raw content configuration
@@ -166,6 +167,91 @@ const updateLastCheckTime = async () => {
  * Checks if updates are available on GitHub and updates AsyncStorage if needed
  * @returns {Promise<Object>} - Result of the update check
  */
+/**
+ * Gets the read articles from AsyncStorage
+ * @returns {Promise<Object>} - Object with block IDs as keys and arrays of article IDs as values
+ */
+export const getReadArticles = async () => {
+  try {
+    const readArticlesData = await AsyncStorage.getItem(
+      STORAGE_KEYS.READ_ARTICLES
+    );
+    return readArticlesData ? JSON.parse(readArticlesData) : {};
+  } catch (error) {
+    console.error("Error getting read articles:", error);
+    return {};
+  }
+};
+
+/**
+ * Marks an article as read
+ * @param {string} blockId - ID of the block containing the article
+ * @param {string} articleId - ID of the article to mark as read
+ * @returns {Promise<boolean>} - Whether the operation was successful
+ */
+export const markArticleAsRead = async (blockId, articleId) => {
+  try {
+    const readArticles = await getReadArticles();
+
+    // Initialize the block array if it doesn't exist
+    if (!readArticles[blockId]) {
+      readArticles[blockId] = [];
+    }
+
+    // Add the article ID if it's not already in the array
+    if (!readArticles[blockId].includes(articleId)) {
+      readArticles[blockId].push(articleId);
+      await AsyncStorage.setItem(
+        STORAGE_KEYS.READ_ARTICLES,
+        JSON.stringify(readArticles)
+      );
+    }
+
+    return true;
+  } catch (error) {
+    console.error("Error marking article as read:", error);
+    return false;
+  }
+};
+
+/**
+ * Marks an article as unread
+ * @param {string} blockId - ID of the block containing the article
+ * @param {string} articleId - ID of the article to mark as unread
+ * @returns {Promise<boolean>} - Whether the operation was successful
+ */
+export const markArticleAsUnread = async (blockId, articleId) => {
+  try {
+    const readArticles = await getReadArticles();
+
+    // If the block doesn't exist or the article is not in the array, nothing to do
+    if (!readArticles[blockId] || !readArticles[blockId].includes(articleId)) {
+      return true;
+    }
+
+    // Remove the article ID from the array
+    readArticles[blockId] = readArticles[blockId].filter(
+      (id) => id !== articleId
+    );
+
+    // If the block array is empty, remove the block key
+    if (readArticles[blockId].length === 0) {
+      delete readArticles[blockId];
+    }
+
+    await AsyncStorage.setItem(
+      STORAGE_KEYS.READ_ARTICLES,
+      JSON.stringify(readArticles)
+    );
+    return true;
+  } catch (error) {
+    console.error("Error marking article as unread:", error);
+    return false;
+  }
+};
+
+
+
 export const checkForUpdates = async () => {
   try {
     console.log("Checking for updates from GitHub...");
