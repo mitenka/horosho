@@ -1,5 +1,13 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+import { AppState, InteractionManager } from "react-native";
 import {
+  checkForUpdates,
   getDictionary,
   getReadArticles,
   getTheory,
@@ -19,6 +27,8 @@ export const DataProvider = ({ children }) => {
   const [error, setError] = useState(null);
   const [readArticles, setReadArticles] = useState({});
   const [blockProgress, setBlockProgress] = useState({});
+  const appState = useRef(AppState.currentState);
+  const lastUpdateCheck = useRef(Date.now());
 
   // Load data
   const loadData = async () => {
@@ -175,16 +185,73 @@ export const DataProvider = ({ children }) => {
     }
   };
 
+  // Check for updates and reload data if needed
+  const checkForUpdatesAndReload = async () => {
+    // Check if at least 1 hour has passed since last update check
+    const now = Date.now();
+    if (now - lastUpdateCheck.current < 60 * 60 * 1000) {
+      console.log("Skipping update check, last check was less than 1 hour ago");
+      return;
+    }
+
+    try {
+      // Update the last check timestamp
+      lastUpdateCheck.current = now;
+
+      // Check for updates after animations complete
+      InteractionManager.runAfterInteractions(async () => {
+        try {
+          const updateResult = await checkForUpdates();
+          if (updateResult.updated) {
+            // Reload data only if there were updates
+            await loadData();
+          }
+        } catch (error) {
+          console.log("Failed to check for updates:", error);
+        }
+      });
+    } catch (error) {
+      console.log("Error in checkForUpdatesAndReload:", error);
+    }
+  };
+
   // Load data on first render
   useEffect(() => {
     const setupData = async () => {
-      // First initialize data from local files if needed
-      await initializeData();
-      // Then load data from AsyncStorage
-      await loadData();
+      try {
+        // First initialize data from local files if needed
+        await initializeData();
+
+        // Then load data from AsyncStorage to show content immediately
+        await loadData();
+
+        // Check for updates in background
+        checkForUpdatesAndReload();
+      } catch (error) {
+        console.error("Error in setupData:", error);
+        setError("Ошибка при инициализации данных");
+      }
     };
 
     setupData();
+  }, []);
+
+  // Monitor app state changes
+  useEffect(() => {
+    const subscription = AppState.addEventListener("change", (nextAppState) => {
+      // App has come to the foreground
+      if (appState.current === "background" && nextAppState === "active") {
+        console.log("App has come to the foreground!");
+        checkForUpdatesAndReload();
+      }
+
+      // Update app state reference
+      appState.current = nextAppState;
+    });
+
+    return () => {
+      subscription.remove();
+    };
   }, []);
 
   // Context value

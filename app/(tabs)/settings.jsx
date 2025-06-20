@@ -1,6 +1,7 @@
 import { useScrollToTop } from "@react-navigation/native";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
+  Alert,
   ScrollView,
   StyleSheet,
   Text,
@@ -9,21 +10,47 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useData } from "../../contexts/DataContext";
-import { checkForUpdates } from "../../services/dataService";
+import {
+  checkForUpdates,
+  getDataVersions,
+  getLastUpdateCheckTime,
+} from "../../services/dataService";
 import commonStyles from "../../styles/commonStyles";
 
 export default function Settings() {
   const insets = useSafeAreaInsets();
   const scrollViewRef = useRef(null);
-  const [updateStatus, setUpdateStatus] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [dataInfo, setDataInfo] = useState({
+    dictionaryVersion: "-",
+    theoryVersion: "-",
+    lastUpdateCheck: null,
+  });
   const { loadData } = useData();
 
   useScrollToTop(scrollViewRef);
 
+  const loadDataInfo = async () => {
+    try {
+      const versions = await getDataVersions();
+      const lastCheckTime = await getLastUpdateCheckTime();
+
+      setDataInfo({
+        dictionaryVersion: versions.dictionaryVersion || "-",
+        theoryVersion: versions.theoryVersion || "-",
+        lastUpdateCheck: lastCheckTime ? new Date(lastCheckTime) : null,
+      });
+    } catch (error) {
+      console.error("Error loading data info:", error);
+    }
+  };
+
+  useEffect(() => {
+    loadDataInfo();
+  }, []);
+
   const handleCheckForUpdates = async () => {
     setIsLoading(true);
-    setUpdateStatus(null);
 
     try {
       const result = await checkForUpdates();
@@ -32,9 +59,24 @@ export default function Settings() {
         await loadData();
       }
 
-      setUpdateStatus(result);
+      await loadDataInfo();
+
+      if (result.error) {
+        Alert.alert(
+          "Ошибка",
+          `Не удалось проверить обновления: ${result.error}`
+        );
+      } else if (result.updated) {
+        let message = "Данные успешно обновлены";
+        if (result.dictionaryUpdated) message += "\n• Словарь обновлен";
+        if (result.theoryUpdated) message += "\n• Теория обновлена";
+
+        Alert.alert("Обновление", message);
+      } else {
+        Alert.alert("Обновление", result.message || "Обновления не требуются");
+      }
     } catch (error) {
-      setUpdateStatus({ error: error.message });
+      Alert.alert("Ошибка", `Произошла ошибка: ${error.message}`);
     } finally {
       setIsLoading(false);
     }
@@ -62,37 +104,24 @@ export default function Settings() {
               {isLoading ? "Проверка..." : "Проверить обновления"}
             </Text>
           </TouchableOpacity>
-
-          {updateStatus && (
-            <View style={styles.statusContainer}>
-              <Text style={styles.statusTitle}>Статус:</Text>
-              {updateStatus.error ? (
-                <Text style={styles.errorText}>
-                  Ошибка: {updateStatus.error}
-                </Text>
-              ) : updateStatus.updated ? (
-                <View>
-                  <Text style={styles.successText}>
-                    Данные успешно обновлены!
-                  </Text>
-                  {updateStatus.dictionaryUpdated && (
-                    <Text style={styles.infoText}>• Словарь обновлен</Text>
-                  )}
-                  {updateStatus.theoryUpdated && (
-                    <Text style={styles.infoText}>• Теория обновлена</Text>
-                  )}
-                </View>
-              ) : (
-                <Text style={styles.infoText}>
-                  {updateStatus.message || "Обновления не требуются"}
-                </Text>
-              )}
-            </View>
-          )}
         </View>
 
-        <View style={styles.fixedContentContainer}>
-          <Text style={styles.infoText}>insets: {JSON.stringify(insets)}</Text>
+        <View style={styles.contentContainer}>
+          <Text style={styles.sectionTitle}>Информация о данных</Text>
+          <View style={styles.infoContainer}>
+            <Text style={styles.infoText}>
+              Версия словаря: {dataInfo.dictionaryVersion}
+            </Text>
+            <Text style={styles.infoText}>
+              Версия теории: {dataInfo.theoryVersion}
+            </Text>
+            <Text style={styles.infoText}>
+              Последняя проверка обновлений:{" "}
+              {dataInfo.lastUpdateCheck
+                ? dataInfo.lastUpdateCheck.toLocaleString("ru-RU")
+                : "никогда"}
+            </Text>
+          </View>
         </View>
       </ScrollView>
     </View>
@@ -129,30 +158,22 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "bold",
   },
-  statusContainer: {
-    backgroundColor: "#323248",
-    padding: 16,
-    borderRadius: 8,
-    marginTop: 20,
-  },
-  statusTitle: {
-    color: "#f0f0f0",
-    fontSize: 18,
-    fontWeight: "bold",
-    marginBottom: 8,
-  },
-  successText: {
-    color: "#4cd964",
-    fontSize: 16,
-    marginBottom: 8,
-  },
-  errorText: {
-    color: "#ff3b30",
-    fontSize: 16,
-  },
+
   infoText: {
     color: "#f0f0f0",
     fontSize: 16,
     marginBottom: 4,
+  },
+  sectionTitle: {
+    color: "#f0f0f0",
+    fontSize: 18,
+    fontWeight: "bold",
+    marginTop: 24,
+    marginBottom: 12,
+  },
+  infoContainer: {
+    backgroundColor: "#323248",
+    padding: 16,
+    borderRadius: 8,
   },
 });

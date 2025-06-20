@@ -164,6 +164,20 @@ const updateLastCheckTime = async () => {
 };
 
 /**
+ * Gets the timestamp of the last update check
+ * @returns {Promise<number|null>} Timestamp in milliseconds or null if never checked
+ */
+export const getLastUpdateCheckTime = async () => {
+  try {
+    const lastCheckTime = await AsyncStorage.getItem(STORAGE_KEYS.LAST_UPDATE_CHECK);
+    return lastCheckTime ? parseInt(lastCheckTime) : null;
+  } catch (error) {
+    console.error("Error getting last check time:", error);
+    return null;
+  }
+};
+
+/**
  * Checks if updates are available on GitHub and updates AsyncStorage if needed
  * @returns {Promise<Object>} - Result of the update check
  */
@@ -276,9 +290,13 @@ export const checkForUpdates = async () => {
       parseInt(serverMeta.theoryVersion) >
       parseInt(localVersions.theoryVersion);
 
-    // If no updates needed, return early
+    // If no updates needed
     if (!needDictionaryUpdate && !needTheoryUpdate) {
       console.log("No updates available");
+      
+      // Update last check timestamp even when no updates are available
+      await updateLastCheckTime();
+      
       return { checked: true, updated: false, message: "No updates available" };
     }
 
