@@ -1,9 +1,9 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import {
-  checkForUpdates,
   getDictionary,
   getReadArticles,
   getTheory,
+  initializeData,
   markArticleAsRead,
   markArticleAsUnread,
 } from "../services/dataService";
@@ -46,17 +46,21 @@ export const DataProvider = ({ children }) => {
   };
 
   // Calculate progress for a single block
-  const calculateSingleBlockProgress = (blockId, theoryData, readArticlesData) => {
+  const calculateSingleBlockProgress = (
+    blockId,
+    theoryData,
+    readArticlesData
+  ) => {
     const block = theoryData.blocks.find((b) => b.id === blockId);
     if (!block || !block.articles || block.articles.length === 0) {
       return 0;
     }
-    
+
     const totalArticles = block.articles.length;
     const readCount = readArticlesData[blockId]?.length || 0;
     return readCount / totalArticles;
   };
-  
+
   // Update progress for all blocks
   const updateBlockProgress = async (theoryData, readArticlesData) => {
     try {
@@ -64,7 +68,11 @@ export const DataProvider = ({ children }) => {
 
       if (theoryData && theoryData.blocks) {
         for (const block of theoryData.blocks) {
-          progress[block.id] = calculateSingleBlockProgress(block.id, theoryData, readArticlesData);
+          progress[block.id] = calculateSingleBlockProgress(
+            block.id,
+            theoryData,
+            readArticlesData
+          );
         }
       }
 
@@ -90,7 +98,11 @@ export const DataProvider = ({ children }) => {
 
           // Update progress
           const updatedProgress = { ...blockProgress };
-          updatedProgress[blockId] = calculateSingleBlockProgress(blockId, theory, updatedReadArticles);
+          updatedProgress[blockId] = calculateSingleBlockProgress(
+            blockId,
+            theory,
+            updatedReadArticles
+          );
           setBlockProgress(updatedProgress);
         }
         return true;
@@ -120,7 +132,11 @@ export const DataProvider = ({ children }) => {
 
           // Update progress
           const updatedProgress = { ...blockProgress };
-          updatedProgress[blockId] = calculateSingleBlockProgress(blockId, theory, updatedReadArticles);
+          updatedProgress[blockId] = calculateSingleBlockProgress(
+            blockId,
+            theory,
+            updatedReadArticles
+          );
           setBlockProgress(updatedProgress);
         }
         return true;
@@ -142,18 +158,14 @@ export const DataProvider = ({ children }) => {
     return blockProgress[blockId] || 0;
   };
 
-  // Refresh data
+  // Refresh data from AsyncStorage to memory
   const refreshData = async () => {
     try {
       setIsLoading(true);
-      const result = await checkForUpdates();
 
-      if (result.updated) {
-        await loadData();
-        return { success: true, message: "Данные успешно обновлены" };
-      }
-
-      return { success: true, message: "Данные уже актуальны" };
+      // Load data from AsyncStorage to update the state
+      await loadData();
+      return { success: true, message: "Данные успешно обновлены" };
     } catch (err) {
       console.error("Error refreshing data:", err);
       setError("Ошибка при обновлении данных");
@@ -165,7 +177,14 @@ export const DataProvider = ({ children }) => {
 
   // Load data on first render
   useEffect(() => {
-    loadData();
+    const setupData = async () => {
+      // First initialize data from local files if needed
+      await initializeData();
+      // Then load data from AsyncStorage
+      await loadData();
+    };
+
+    setupData();
   }, []);
 
   // Context value

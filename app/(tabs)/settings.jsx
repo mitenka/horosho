@@ -17,7 +17,7 @@ export default function Settings() {
   const scrollViewRef = useRef(null);
   const [updateStatus, setUpdateStatus] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const { refreshData } = useData();
+  const { loadData } = useData();
 
   useScrollToTop(scrollViewRef);
 
@@ -26,12 +26,10 @@ export default function Settings() {
     setUpdateStatus(null);
 
     try {
-      // First check and load updates from AsyncStorage
       const result = await checkForUpdates();
 
-      // If data was updated, refresh it in the context
       if (result.updated) {
-        await refreshData();
+        await loadData();
       }
 
       setUpdateStatus(result);
