@@ -1,9 +1,11 @@
 import { Ionicons } from "@expo/vector-icons";
 import * as Haptics from "expo-haptics";
 import { Stack, useLocalSearchParams } from "expo-router";
+import LottieView from "lottie-react-native";
 import { useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
+  Dimensions,
   ScrollView,
   StyleSheet,
   Text,
@@ -20,10 +22,13 @@ import { useData } from "../../contexts/DataContext";
 
 export default function ArticleScreen() {
   const scrollViewRef = useRef(null);
+  const lottieRef = useRef(null);
+  const celebrationTimerRef = useRef(null);
   const { id } = useLocalSearchParams();
   const { theory, isLoading, checkIfRead, markAsRead, markAsUnread } =
     useData();
   const [isRead, setIsRead] = useState(false);
+  const [showCelebration, setShowCelebration] = useState(false);
 
   // Find the article by ID
   let article = null;
@@ -63,6 +68,24 @@ export default function ArticleScreen() {
     };
   });
 
+  const playCelebrationAnimation = () => {
+    // Clear the previous timer if it exists
+    if (celebrationTimerRef.current) {
+      clearTimeout(celebrationTimerRef.current);
+    }
+
+    setShowCelebration(true);
+    if (lottieRef.current) {
+      lottieRef.current.reset();
+      lottieRef.current.play();
+    }
+
+    // Hide celebration after animation completes
+    celebrationTimerRef.current = setTimeout(() => {
+      setShowCelebration(false);
+    }, 5000);
+  };
+
   const toggleReadStatus = async () => {
     if (!block || !article) return;
 
@@ -77,6 +100,9 @@ export default function ArticleScreen() {
 
       translateY.value = withTiming(-3, { duration: 200 });
       opacity.value = withTiming(0.9, { duration: 150 });
+
+      // Play celebration animation when marking as read
+      playCelebrationAnimation();
 
       setTimeout(() => {
         translateY.value = withTiming(0, { duration: 200 });
@@ -200,9 +226,25 @@ export default function ArticleScreen() {
           </Animated.View>
         </View>
       </ScrollView>
+
+      {/* Lottie celebration animation */}
+      {showCelebration && (
+        <View style={styles.celebrationContainer}>
+          <LottieView
+            ref={lottieRef}
+            source={require("../../assets/animations/confetti.json")}
+            style={styles.lottieAnimation}
+            autoPlay
+            loop={false}
+            speed={0.8}
+          />
+        </View>
+      )}
     </View>
   );
 }
+
+const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 
 const styles = StyleSheet.create({
   container: {
@@ -296,5 +338,20 @@ const styles = StyleSheet.create({
   readButtonTextActive: {
     color: "#ffffff",
     fontWeight: "600",
+  },
+  celebrationContainer: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: 100,
+    pointerEvents: "none",
+  },
+  lottieAnimation: {
+    width: screenWidth * 1.5,
+    height: screenHeight * 1.5,
   },
 });
