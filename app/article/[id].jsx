@@ -1,4 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
+import * as Haptics from "expo-haptics";
 import { Stack, useLocalSearchParams } from "expo-router";
 import { useEffect, useRef, useState } from "react";
 import {
@@ -9,13 +10,19 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from "react-native-reanimated";
 import ArticleElement from "../../components/article/ArticleElement";
 import { useData } from "../../contexts/DataContext";
 
 export default function ArticleScreen() {
   const scrollViewRef = useRef(null);
   const { id } = useLocalSearchParams();
-  const { theory, isLoading, checkIfRead, markAsRead, markAsUnread } = useData();
+  const { theory, isLoading, checkIfRead, markAsRead, markAsUnread } =
+    useData();
   const [isRead, setIsRead] = useState(false);
 
   // Find the article by ID
@@ -35,24 +42,53 @@ export default function ArticleScreen() {
       }
     }
   }
-  
+
   // Check if the article is marked as read when it loads
   useEffect(() => {
     if (block && article) {
       setIsRead(checkIfRead(block.id, article.id));
     }
   }, [block, article, checkIfRead]);
-  
-  // Toggle read status
+
+  // Animation values
+  const scale = useSharedValue(1);
+  const translateY = useSharedValue(0);
+  const opacity = useSharedValue(1);
+
+  // Animated styles for the button
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{ scale: scale.value }, { translateY: translateY.value }],
+      opacity: opacity.value,
+    };
+  });
+
   const toggleReadStatus = async () => {
     if (!block || !article) return;
-    
+
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+
+    scale.value = withTiming(0.97, { duration: 150 });
+
     if (isRead) {
       await markAsUnread(block.id, article.id);
     } else {
       await markAsRead(block.id, article.id);
+
+      translateY.value = withTiming(-3, { duration: 200 });
+      opacity.value = withTiming(0.9, { duration: 150 });
+
+      setTimeout(() => {
+        translateY.value = withTiming(0, { duration: 200 });
+        opacity.value = withTiming(1, { duration: 250 });
+
+        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+      }, 200);
     }
-    
+    setTimeout(() => {
+      scale.value = withTiming(1, { duration: 150 });
+    }, 150);
+
     setIsRead(!isRead);
   };
 
@@ -138,23 +174,30 @@ export default function ArticleScreen() {
           article.elements.map((element, index) => (
             <ArticleElement key={index} element={element} />
           ))}
-          
+
         <View style={styles.readStatusContainer}>
-          <TouchableOpacity
-            style={[styles.readButton, isRead && styles.readButtonActive]}
-            onPress={toggleReadStatus}
-            activeOpacity={0.7}
-          >
-            <Ionicons
-              name={isRead ? "checkmark-circle" : "checkmark-circle-outline"}
-              size={22}
-              color={isRead ? "#ffffff" : "#c8c8e0"}
-              style={styles.readIcon}
-            />
-            <Text style={[styles.readButtonText, isRead && styles.readButtonTextActive]}>
-              {isRead ? "Прочитано" : "Отметить как прочитанное"}
-            </Text>
-          </TouchableOpacity>
+          <Animated.View style={animatedStyle}>
+            <TouchableOpacity
+              style={[styles.readButton, isRead && styles.readButtonActive]}
+              onPress={toggleReadStatus}
+              activeOpacity={0.9}
+            >
+              <Ionicons
+                name={isRead ? "checkmark-circle" : "checkmark-circle-outline"}
+                size={26}
+                color={isRead ? "#ffffff" : "#c8c8e0"}
+                style={styles.readIcon}
+              />
+              <Text
+                style={[
+                  styles.readButtonText,
+                  isRead && styles.readButtonTextActive,
+                ]}
+              >
+                {isRead ? "Прочитано" : "Отметить как прочитанное"}
+              </Text>
+            </TouchableOpacity>
+          </Animated.View>
         </View>
       </ScrollView>
     </View>
@@ -222,24 +265,33 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "rgba(45, 45, 74, 0.6)",
-    borderRadius: 12,
-    paddingVertical: 12,
-    paddingHorizontal: 20,
+    backgroundColor: "rgba(45, 45, 74, 0.8)",
+    borderRadius: 16,
+    paddingVertical: 16,
+    paddingHorizontal: 24,
     borderWidth: 1,
-    borderColor: "rgba(255, 255, 255, 0.1)",
+    borderColor: "rgba(255, 255, 255, 0.15)",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 3,
+    minWidth: 240,
   },
   readButtonActive: {
     backgroundColor: "#7CB342",
     borderColor: "#7CB342",
+    shadowColor: "#7CB342",
+    shadowOpacity: 0.4,
   },
   readIcon: {
-    marginRight: 8,
+    marginRight: 10,
   },
   readButtonText: {
-    fontSize: 16,
+    fontSize: 18,
     color: "#c8c8e0",
     fontWeight: "500",
+    letterSpacing: 0.3,
   },
   readButtonTextActive: {
     color: "#ffffff",
