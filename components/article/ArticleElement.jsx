@@ -10,7 +10,7 @@ export default function ArticleElement({ element, color = "#7CB342" }) {
     case "paragraph":
       return <Paragraph text={element.text} />;
     case "list":
-      return <List items={element.items} color={color} />;
+      return <List items={element.items} title={element.title} color={color} />;
     default:
       console.log(`Unknown element type: ${element.type}`);
       return null;
