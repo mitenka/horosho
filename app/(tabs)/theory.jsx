@@ -1,4 +1,5 @@
 import { useScrollToTop } from "@react-navigation/native";
+import { router } from "expo-router";
 import { useRef } from "react";
 import {
   ActivityIndicator,
@@ -8,7 +9,6 @@ import {
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { router } from "expo-router";
 import Block from "../../components/theory/Block";
 import { useData } from "../../contexts/DataContext";
 import commonStyles from "../../styles/commonStyles";

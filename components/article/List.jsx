@@ -1,12 +1,12 @@
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 
-export default function List({ items }) {
+export default function List({ items, color = "#7CB342" }) {
   return (
     <View style={styles.listContainer}>
       {items.map((item, index) => (
         <View key={index} style={styles.listItemContainer}>
-          <Text style={styles.bullet}>•</Text>
+          <Text style={[styles.bullet, { color }]}>•</Text>
           <Text style={styles.listItem}>{item}</Text>
         </View>
       ))}
@@ -24,8 +24,6 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
   },
   bullet: {
-    fontSize: 16,
-    color: "#e0e0e0",
     marginRight: 8,
     lineHeight: 24,
   },

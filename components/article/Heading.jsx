@@ -10,8 +10,8 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: "700",
     color: "#f0f0f0",
-    marginBottom: 16,
-    marginTop: 24,
+    marginTop: 8,
+    marginBottom: 8,
     letterSpacing: 0.3,
   },
 });

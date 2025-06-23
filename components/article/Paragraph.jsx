@@ -10,7 +10,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#e0e0e0",
     lineHeight: 24,
-    marginBottom: 16,
+    marginBottom: 24,
     letterSpacing: 0.2,
   },
 });

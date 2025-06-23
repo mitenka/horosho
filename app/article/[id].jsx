@@ -198,7 +198,7 @@ export default function ArticleScreen() {
 
         {article.elements &&
           article.elements.map((element, index) => (
-            <ArticleElement key={index} element={element} />
+            <ArticleElement key={index} element={element} color={block?.color || "#7CB342"} />
           ))}
 
         <View style={styles.readStatusContainer}>
@@ -263,13 +263,13 @@ const styles = StyleSheet.create({
     fontSize: 26,
     fontWeight: "700",
     color: "#f0f0f0",
-    marginBottom: 12,
+    marginBottom: 16,
     letterSpacing: 0.3,
   },
   articleMeta: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 24,
+    marginBottom: 16,
   },
   readTime: {
     fontSize: 15,
@@ -299,8 +299,8 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   readStatusContainer: {
-    marginTop: 40,
-    marginBottom: 20,
+    marginTop: 32,
+    marginBottom: 24,
     alignItems: "center",
   },
   readButton: {
