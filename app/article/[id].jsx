@@ -198,7 +198,11 @@ export default function ArticleScreen() {
 
         {article.elements &&
           article.elements.map((element, index) => (
-            <ArticleElement key={index} element={element} color={block?.color || "#7CB342"} />
+            <ArticleElement
+              key={index}
+              element={element}
+              color={block?.color || "#7CB342"}
+            />
           ))}
 
         <View style={styles.readStatusContainer}>

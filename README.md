@@ -1,50 +1,163 @@
-# Welcome to your Expo app 👋
+## Элементы статьи
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+### Заголовок
 
-## Get started
+Заголовок раздела статьи. Используется для разделения контента на логические блоки.
 
-1. Install dependencies
-
-   ```bash
-   npm install
-   ```
-
-2. Start the app
-
-   ```bash
-   npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
+```json
+{
+  "type": "heading",
+  "text": "Основы здоровых отношений"
+}
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+### Параграф
 
-## Learn more
+Основной текстовый блок для размещения информации.
 
-To learn more about developing your project with Expo, look at the following resources:
+```json
+{
+  "type": "paragraph",
+  "text": "Здоровые отношения строятся на взаимном уважении, честности и поддержке."
+}
+```
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+### Список
 
-## Join the community
+Маркированный список элементов. Используется для перечисления связанных пунктов.
 
-Join our community of developers creating universal apps.
+```json
+{
+  "type": "list",
+  "items": [
+    "Установи границу на время общения",
+    "Установи границу на количество сообщений",
+    "Установи границу на количество звонков"
+  ]
+}
+```
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+### Цитата
+
+Блок с цитатой и указанием автора.
+
+```json
+{
+  "type": "quote",
+  "text": "Текст цитаты",
+  "author": "Автор"
+}
+```
+
+### Заметка
+
+Выделенный блок с важной информацией.
+
+```json
+{
+  "type": "note",
+  "text": "Важная информация"
+}
+```
+
+### Чеклист
+
+Список задач или шагов с заголовком.
+
+```json
+{
+  "type": "checklist",
+  "title": "Шаги к установке границ",
+  "items": [
+    "Определи свои потребности",
+    "Сформулируй границу четко",
+    "Сообщи о границе"
+  ]
+}
+```
+
+### Карточки
+
+Анимированный виджет с карточками, которые можно переворачивать. Каждая карточка имеет лицевую и обратную стороны.
+
+```json
+{
+  "type": "cards",
+  "cards": [
+    {
+      "front": "S - СТОП",
+      "back": "Замри на месте, когда чувствуешь сильные эмоции"
+    },
+    {
+      "front": "T - ВДОХНИ",
+      "back": "Сделай несколько глубоких вдохов"
+    },
+    {
+      "front": "O - ОСМОТРИСЬ",
+      "back": "Посмотри вокруг себя, назови 3 предмета"
+    },
+    {
+      "front": "P - ПОДУМАЙ",
+      "back": "Выбери следующий шаг - что будет полезно сейчас?"
+    }
+  ]
+}
+```
+
+### Квиз
+
+Интерактивный тест с вопросами и вариантами ответов. Может содержать вопросы с одним или несколькими правильными ответами.
+
+```json
+{
+  "type": "quiz",
+  "questions": [
+    {
+      "question": "Что означает S в технике STOP?",
+      "options": ["Стоп", "Слушай", "Смотри"],
+      "correct": [0],
+      "multiple": false
+    },
+    {
+      "question": "Какие техники помогают при стрессе?",
+      "options": ["Дыхание", "STOP", "Холодная вода", "Крик"],
+      "correct": [0, 1, 2],
+      "multiple": true
+    }
+  ]
+}
+```
+
+### Сценарий
+
+Интерактивный виджет с ситуацией и вариантами реакции с обратной связью.
+
+```json
+{
+  "type": "scenario",
+  "title": "Как ответить коллеге?",
+  "situation": "Коллега просит остаться после работы в пятый раз за неделю",
+  "options": [
+    {
+      "text": "Конечно, без проблем",
+      "feedback": "Ты нарушаешь свою границу. Попробуй по-другому.",
+      "isHealthy": false
+    },
+    {
+      "text": "Извини, но я не могу. У меня планы",
+      "feedback": "Отлично! Ты четко обозначил границу.",
+      "isHealthy": true
+    }
+  ]
+}
+```
+
+### Дыхание по квадрату
+
+Дыхание по квадрату.
+
+```json
+{
+  "type": "boxBreathing"
+}
+```
