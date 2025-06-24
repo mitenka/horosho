@@ -3,32 +3,15 @@ import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 
 export default function List({ items, title, color = "#7CB342" }) {
-  const backgroundColor = "rgba(45, 45, 65, 0.75)";
   return (
-    <View
-      style={[
-        styles.listContainer,
-        {
-          borderColor: `${color}90`,
-          shadowColor: color,
-          shadowOpacity: 0.25,
-          shadowRadius: 6,
-          shadowOffset: { width: 0, height: 3 },
-          elevation: 4,
-        },
-      ]}
-    >
+    <View style={styles.listContainer}>
       {title && (
-        <View style={[styles.titleContainer, { backgroundColor }]}>
-          <Text style={[styles.title, { color: "#ffffff" }]}>{title}</Text>
-        </View>
+        <Text style={[styles.title, { color }]}>{title}</Text>
       )}
-      <View style={[styles.listItemsContainer, { backgroundColor }]}>
+      <View style={styles.listItemsContainer}>
         {items.map((item, index) => (
           <View key={index} style={styles.listItemContainer}>
-            <View style={[styles.checkContainer, { backgroundColor: color }]}>
-              <Ionicons name="checkmark" size={18} color="#fff" />
-            </View>
+            <View style={[styles.marker, { backgroundColor: color }]} />
             <Text style={styles.listItem}>{item}</Text>
           </View>
         ))}
@@ -39,44 +22,34 @@ export default function List({ items, title, color = "#7CB342" }) {
 
 const styles = StyleSheet.create({
   listContainer: {
-    marginBottom: 20,
-    borderWidth: 1.5,
-    borderRadius: 12,
-    overflow: "hidden",
-  },
-  titleContainer: {
-    paddingHorizontal: 16,
-    paddingTop: 24,
-    paddingBottom: 0,
-    marginBottom: 0,
+    marginBottom: 24,
   },
   title: {
-    fontSize: 22,
+    fontSize: 20,
     fontWeight: "600",
     letterSpacing: 0.3,
+    marginBottom: 12,
+    color: "#f0f0f0",
   },
   listItemsContainer: {
-    padding: 16,
+    marginLeft: 4,
   },
   listItemContainer: {
     flexDirection: "row",
-    marginVertical: 8,
+    marginVertical: 6,
     alignItems: "flex-start",
-    paddingVertical: 6,
   },
-  checkContainer: {
-    width: 26,
-    height: 26,
-    borderRadius: 13,
-    justifyContent: "center",
-    alignItems: "center",
-    marginRight: 14,
-    marginTop: 2,
+  marker: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    marginRight: 12,
+    marginTop: 9,
   },
   listItem: {
-    fontSize: 18,
-    color: "#ffffff",
-    lineHeight: 26,
+    fontSize: 16,
+    color: "#e0e0e0",
+    lineHeight: 24,
     flex: 1,
     letterSpacing: 0.2,
   },
