@@ -17,7 +17,7 @@ export default function ArticleElement({ element, color = "#7CB342" }) {
     case "quote":
       return <Quote text={element.text} author={element.author} color={color} />;
     case "note":
-      return <Note text={element.text} />;
+      return <Note text={element.text} color={color} />;
     case "checklist":
       return <Checklist items={element.items} title={element.title} color={color} />;
     default:
