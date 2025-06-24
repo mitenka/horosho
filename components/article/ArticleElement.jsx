@@ -4,6 +4,7 @@ import Paragraph from "./Paragraph";
 import List from "./List";
 import Quote from "./Quote";
 import Note from "./Note";
+import Checklist from "./Checklist";
 
 export default function ArticleElement({ element, color = "#7CB342" }) {
   switch (element.type) {
@@ -17,6 +18,8 @@ export default function ArticleElement({ element, color = "#7CB342" }) {
       return <Quote text={element.text} author={element.author} color={color} />;
     case "note":
       return <Note text={element.text} />;
+    case "checklist":
+      return <Checklist items={element.items} title={element.title} color={color} />;
     default:
       console.log(`Unknown element type: ${element.type}`);
       return null;
