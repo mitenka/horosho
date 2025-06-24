@@ -1,10 +1,11 @@
 import React from "react";
-import Heading from "./Heading";
-import Paragraph from "./Paragraph";
-import List from "./List";
-import Quote from "./Quote";
-import Note from "./Note";
+import BoxBreathing from "./BoxBreathing";
 import Checklist from "./Checklist";
+import Heading from "./Heading";
+import List from "./List";
+import Note from "./Note";
+import Paragraph from "./Paragraph";
+import Quote from "./Quote";
 
 export default function ArticleElement({ element, color = "#7CB342" }) {
   switch (element.type) {
@@ -20,6 +21,8 @@ export default function ArticleElement({ element, color = "#7CB342" }) {
       return <Note text={element.text} color={color} />;
     case "checklist":
       return <Checklist items={element.items} title={element.title} color={color} />;
+    case "boxBreathing":
+      return <BoxBreathing color={color} />;
     default:
       console.log(`Unknown element type: ${element.type}`);
       return null;
