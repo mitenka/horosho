@@ -1,11 +1,18 @@
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 
-export default function Note({ text }) {
+export default function Note({ text, color = "#0078D7" }) {
   return (
     <View style={styles.noteContainer}>
-      <View style={styles.noteContent}>
-        <Text style={styles.noteText}>{text}</Text>
+      <View
+        style={[
+          styles.noteWrapper,
+          { borderColor: `rgba(255, 255, 255, 0.6)` },
+        ]}
+      >
+        <View style={styles.noteContent}>
+          <Text style={[styles.noteText, { color }]}>{text}</Text>
+        </View>
       </View>
     </View>
   );
@@ -13,28 +20,23 @@ export default function Note({ text }) {
 
 const styles = StyleSheet.create({
   noteContainer: {
-    marginVertical: 16,
-    borderRadius: 16,
-    overflow: "hidden",
-    backgroundColor: "#0078D7",
+    marginBottom: 24,
+  },
+  noteWrapper: {
+    borderWidth: 2,
+    borderStyle: "dashed",
+    borderRadius: 6,
+    padding: 2,
   },
   noteContent: {
-    padding: 20,
-    borderWidth: 2,
-    borderColor: "#FFFFFF",
-    borderStyle: "dashed",
-    margin: 4,
-    borderRadius: 12,
+    padding: 16,
+    backgroundColor: "rgba(45, 45, 65, 0.4)",
+    borderRadius: 4,
   },
   noteText: {
-    fontSize: 17,
+    fontSize: 16,
     lineHeight: 24,
-    fontWeight: "700",
+    fontWeight: "600",
     letterSpacing: 0.3,
-    color: "#FFFFFF",
-    textAlign: "left",
-    textShadowColor: "rgba(0, 0, 0, 0.2)",
-    textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 1,
   },
 });
