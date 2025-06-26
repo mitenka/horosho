@@ -3,8 +3,8 @@ import { StyleSheet, View, Text, Animated, Easing } from "react-native";
 
 export default function BoxBreathing({ color = "#7CB342" }) {
   // Animation values
-  const minSize = 120;
-  const maxSize = 240;
+  const minSize = 150;
+  const maxSize = 280;
   const squareSize = useRef(new Animated.Value(minSize)).current;
   const opacity = useRef(new Animated.Value(0)).current;
   const textOpacity = useRef([
@@ -154,7 +154,7 @@ export default function BoxBreathing({ color = "#7CB342" }) {
         <Animated.Text style={[styles.phaseText, { opacity: textOpacity[2], color }]}>
           Выдох
         </Animated.Text>
-        <Animated.Text style={[styles.phaseText, { opacity: textOpacity[3], color, width: maxSize - 20 }]}>
+        <Animated.Text style={[styles.phaseText, { opacity: textOpacity[3], color, width: minSize - 20 }]}>
           Задержка
         </Animated.Text>
       </View>
@@ -168,7 +168,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   animationContainer: {
-    height: 280,
+    height: 320,
     width: "100%",
     justifyContent: "center",
     alignItems: "center",
