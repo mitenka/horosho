@@ -1,5 +1,6 @@
 import React from "react";
 import BoxBreathing from "./BoxBreathing";
+import Cards from "./Cards";
 import Checklist from "./Checklist";
 import Heading from "./Heading";
 import List from "./List";
@@ -23,6 +24,8 @@ export default function ArticleElement({ element, color = "#7CB342" }) {
       return <Checklist items={element.items} title={element.title} color={color} />;
     case "boxBreathing":
       return <BoxBreathing color={color} />;
+    case "cards":
+      return <Cards cards={element.cards} color={color} />;
     default:
       console.log(`Unknown element type: ${element.type}`);
       return null;
