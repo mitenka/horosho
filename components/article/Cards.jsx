@@ -227,9 +227,6 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     textAlign: "center",
   },
-  cardBack: {
-    // Colors are set dynamically
-  },
   cardBackText: {
     fontSize: 18,
     textAlign: "center",
@@ -239,7 +236,6 @@ const styles = StyleSheet.create({
   progressContainer: {
     flexDirection: "row",
     marginTop: 24,
-    // marginBottom: 12,
   },
   progressDot: {
     width: 8,
