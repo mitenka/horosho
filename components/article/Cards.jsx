@@ -141,7 +141,14 @@ export default function Cards({ cards = [], color = "#7CB342" }) {
         <View style={styles.cardContainer}>
           {/* Front of the card */}
           <Animated.View
-            style={[styles.card, { borderColor: color }, frontAnimatedStyle]}
+            style={[
+              styles.card,
+              {
+                borderColor: color,
+                backgroundColor: `${color}03`,
+              },
+              frontAnimatedStyle,
+            ]}
             accessibilityRole="button"
             accessibilityLabel={`Карточка ${currentIndex + 1} из ${
               cards.length
@@ -158,6 +165,7 @@ export default function Cards({ cards = [], color = "#7CB342" }) {
           <Animated.View
             style={[
               styles.card,
+              styles.backCard,
               { borderColor: color, backgroundColor: "white" },
               backAnimatedStyle,
             ]}
@@ -208,30 +216,39 @@ const styles = StyleSheet.create({
   card: {
     width: "100%",
     height: "100%",
-    borderRadius: 12,
-    borderWidth: 1,
+    borderRadius: 16,
+    borderWidth: 1.5,
     padding: 20,
     justifyContent: "center",
     alignItems: "center",
     position: "absolute",
     backgroundColor: "white",
-    // Subtle shadow for depth
+    // Enhanced shadow for more elegance
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.12,
+    shadowRadius: 6,
+    elevation: 3,
+  },
+  backCard: {
+    borderWidth: 1,
+    borderRadius: 14,
   },
   cardText: {
     fontSize: 24,
     fontWeight: "700",
     textAlign: "center",
+    letterSpacing: 0.3,
+    textShadowColor: "rgba(0, 0, 0, 0.05)",
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 2,
   },
   cardBackText: {
     fontSize: 18,
     textAlign: "center",
     lineHeight: 26,
     fontWeight: "500",
+    letterSpacing: 0.2,
   },
   progressContainer: {
     flexDirection: "row",
