@@ -14,6 +14,7 @@ import {
   initializeData,
   markArticleAsRead,
   markArticleAsUnread,
+  getLastUpdateCheckTime,
 } from "../services/dataService";
 
 // Create context
@@ -28,7 +29,7 @@ export const DataProvider = ({ children }) => {
   const [readArticles, setReadArticles] = useState({});
   const [blockProgress, setBlockProgress] = useState({});
   const appState = useRef(AppState.currentState);
-  const lastUpdateCheck = useRef(Date.now());
+  const lastUpdateCheck = useRef(null);
 
   // Load data
   const loadData = async () => {
@@ -187,16 +188,20 @@ export const DataProvider = ({ children }) => {
 
   // Check for updates and reload data if needed
   const checkForUpdatesAndReload = async () => {
-    // Check if at least 1 hour has passed since last update check
-    const now = Date.now();
-    if (now - lastUpdateCheck.current < 60 * 60 * 1000) {
-      console.log("Skipping update check, last check was less than 1 hour ago");
-      return;
-    }
-
     try {
-      // Update the last check timestamp
-      lastUpdateCheck.current = now;
+      // Get the last update check time from AsyncStorage using the existing service function
+      if (lastUpdateCheck.current === null) {
+        lastUpdateCheck.current = await getLastUpdateCheckTime() || 0;
+      }
+      
+      const now = Date.now();
+      // Check if at least 1 hour has passed since last update check
+      if (now - lastUpdateCheck.current < 60 * 60 * 1000) {
+        console.log("Skipping update check, last check was less than 1 hour ago");
+        return;
+      }
+      
+      // The checkForUpdates function will update the last check timestamp internally
 
       // Check for updates after animations complete
       InteractionManager.runAfterInteractions(async () => {
