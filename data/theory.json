@@ -41,12 +41,6 @@
           "title": "Любящая доброта",
           "readTime": 3,
           "elements": []
-        },
-        {
-          "id": "mindfulness-to-thoughts",
-          "title": "Осознанность к текущим мыслям",
-          "readTime": 3,
-          "elements": []
         }
       ]
     },
@@ -114,6 +108,12 @@
         {
           "id": "half-smile",
           "title": "Полуулыбка и ладони готовности",
+          "readTime": 3,
+          "elements": []
+        },
+        {
+          "id": "mindfulness-to-thoughts",
+          "title": "Осознанность к текущим мыслям",
           "readTime": 3,
           "elements": []
         }
