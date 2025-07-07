@@ -15,6 +15,16 @@ import {
   markArticleAsRead,
   markArticleAsUnread,
   getLastUpdateCheckTime,
+  // DBT Diary Card imports
+  getBehaviors,
+  addBehavior,
+  updateBehavior,
+  deleteBehavior,
+  getDiaryEntries,
+  getDiaryEntryByDate,
+  saveDiaryEntry,
+  deleteDiaryEntry,
+  getDiaryEntriesInRange,
 } from "../services/dataService";
 
 // Create context
@@ -30,6 +40,12 @@ export const DataProvider = ({ children }) => {
   const [blockProgress, setBlockProgress] = useState({});
   const appState = useRef(AppState.currentState);
   const lastUpdateCheck = useRef(null);
+  
+  // DBT Diary Card states
+  const [behaviors, setBehaviors] = useState([]);
+  const [diaryEntries, setDiaryEntries] = useState([]);
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [currentDiaryEntry, setCurrentDiaryEntry] = useState(null);
 
   // Load data
   const loadData = async () => {
@@ -220,6 +236,139 @@ export const DataProvider = ({ children }) => {
     }
   };
 
+  // === DBT Diary Card methods ===
+
+  // Load DBT behaviors from AsyncStorage
+  const loadBehaviors = async () => {
+    try {
+      const behaviorsData = await getBehaviors();
+      setBehaviors(behaviorsData);
+      return behaviorsData;
+    } catch (error) {
+      console.error("Error loading behaviors:", error);
+      return [];
+    }
+  };
+
+  // Add a new behavior
+  const handleAddBehavior = async (behavior) => {
+    try {
+      const newBehavior = await addBehavior(behavior);
+      setBehaviors((prevBehaviors) => [...prevBehaviors, newBehavior]);
+      return newBehavior;
+    } catch (error) {
+      console.error("Error adding behavior:", error);
+      throw error;
+    }
+  };
+
+  // Update a behavior
+  const handleUpdateBehavior = async (id, updates) => {
+    try {
+      const updatedBehavior = await updateBehavior(id, updates);
+      if (updatedBehavior) {
+        setBehaviors((prevBehaviors) =>
+          prevBehaviors.map((b) => (b.id === id ? updatedBehavior : b))
+        );
+      }
+      return updatedBehavior;
+    } catch (error) {
+      console.error("Error updating behavior:", error);
+      throw error;
+    }
+  };
+
+  // Delete a behavior
+  const handleDeleteBehavior = async (id) => {
+    try {
+      const success = await deleteBehavior(id);
+      if (success) {
+        setBehaviors((prevBehaviors) => 
+          prevBehaviors.filter((b) => b.id !== id)
+        );
+      }
+      return success;
+    } catch (error) {
+      console.error("Error deleting behavior:", error);
+      return false;
+    }
+  };
+
+  // Load diary entries
+  const loadDiaryEntries = async () => {
+    try {
+      const entries = await getDiaryEntries();
+      setDiaryEntries(entries);
+      return entries;
+    } catch (error) {
+      console.error("Error loading diary entries:", error);
+      return [];
+    }
+  };
+
+  // Load a specific diary entry by date
+  const loadDiaryEntryByDate = async (date) => {
+    try {
+      // Format date to YYYY-MM-DD
+      const dateString = date instanceof Date 
+        ? date.toISOString().substring(0, 10) 
+        : date.substring(0, 10);
+      
+      const entry = await getDiaryEntryByDate(dateString);
+      setCurrentDiaryEntry(entry);
+      return entry;
+    } catch (error) {
+      console.error("Error loading diary entry:", error);
+      return null;
+    }
+  };
+
+  // Save a diary entry
+  const handleSaveDiaryEntry = async (entry) => {
+    try {
+      const savedEntry = await saveDiaryEntry(entry);
+      
+      // Update the current entry if it's for the currently selected date
+      if (savedEntry.date.substring(0, 10) === selectedDate.toISOString().substring(0, 10)) {
+        setCurrentDiaryEntry(savedEntry);
+      }
+      
+      // Update the entries list
+      await loadDiaryEntries();
+      
+      return savedEntry;
+    } catch (error) {
+      console.error("Error saving diary entry:", error);
+      throw error;
+    }
+  };
+
+  // Delete a diary entry
+  const handleDeleteDiaryEntry = async (id) => {
+    try {
+      const success = await deleteDiaryEntry(id);
+      if (success) {
+        // If the deleted entry was the current one, clear current entry
+        if (currentDiaryEntry && currentDiaryEntry.id === id) {
+          setCurrentDiaryEntry(null);
+        }
+        
+        // Update the entries list
+        await loadDiaryEntries();
+      }
+      return success;
+    } catch (error) {
+      console.error("Error deleting diary entry:", error);
+      return false;
+    }
+  };
+
+  // Handle date selection
+  const handleSelectDate = async (date) => {
+    setSelectedDate(date);
+    await loadDiaryEntryByDate(date);
+  };
+
   // Load data on first render
   useEffect(() => {
     const setupData = async () => {
@@ -229,6 +378,15 @@ export const DataProvider = ({ children }) => {
 
         // Then load data from AsyncStorage to show content immediately
         await loadData();
+
+        // Load DBT data
+        await Promise.all([
+          loadBehaviors(),
+          loadDiaryEntries()
+        ]);
+
+        // Load diary entry for today
+        await loadDiaryEntryByDate(new Date());
 
         // Check for updates in background
         checkForUpdatesAndReload();
@@ -261,6 +419,7 @@ export const DataProvider = ({ children }) => {
 
   // Context value
   const value = {
+    // Original context values
     dictionary,
     theory,
     isLoading,
@@ -273,6 +432,23 @@ export const DataProvider = ({ children }) => {
     markAsUnread,
     checkIfRead,
     getBlockProgress,
+    
+    // DBT diary card values and methods
+    behaviors,
+    diaryEntries,
+    selectedDate,
+    currentDiaryEntry,
+    // Behaviors methods
+    loadBehaviors,
+    addBehavior: handleAddBehavior,
+    updateBehavior: handleUpdateBehavior,
+    deleteBehavior: handleDeleteBehavior,
+    // Diary entry methods
+    loadDiaryEntries,
+    loadDiaryEntryByDate,
+    saveDiaryEntry: handleSaveDiaryEntry,
+    deleteDiaryEntry: handleDeleteDiaryEntry,
+    selectDate: handleSelectDate,
   };
 
   return <DataContext.Provider value={value}>{children}</DataContext.Provider>;
