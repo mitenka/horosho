@@ -1,6 +1,10 @@
 {
   "groups": [
     {
+      "title": "Введение",
+      "blocks": ["basic"]
+    },
+    {
       "title": "Навыки ДПТ",
       "blocks": [
         "mindfulness",
@@ -12,12 +16,63 @@
   ],
   "blocks": [
     {
+      "id": "basic",
+      "title": "Основы",
+      "description": "Предварительные знания, которые помогут лучше освоить навыки ДПТ",
+      "icon": "book-outline",
+      "color": "#FF7043",
+      "articles": [
+        {
+          "id": "setting-goals",
+          "title": "Постановка целей",
+          "readTime": 6,
+          "elements": []
+        },
+        {
+          "id": "problem-solving",
+          "title": "Варианты решения любой проблемы",
+          "readTime": 6,
+          "elements": []
+        },
+        {
+          "id": "assumptions",
+          "title": "Допущения тренинга навыков ДПТ",
+          "readTime": 6,
+          "elements": []
+        },
+        {
+          "id": "biopsychosocial-theory",
+          "title": "Биосоциальная теория эмоциональной регуляции",
+          "readTime": 6,
+          "elements": []
+        },
+        {
+          "id": "behavioral-chain",
+          "title": "Анализ поведенческой цепочки",
+          "readTime": 6,
+          "elements": []
+        },
+        {
+          "id": "missing-link",
+          "title": "Анализ пропущенного звена",
+          "readTime": 6,
+          "elements": []
+        }
+      ]
+    },
+    {
       "id": "mindfulness",
       "title": "Осознанность",
       "description": "Практики развития внимательности и присутствия в моменте",
       "icon": "eye-outline",
       "color": "#7CB342",
       "articles": [
+        {
+          "id": "mindfulness-definition",
+          "title": "Определение осознанности",
+          "readTime": 6,
+          "elements": []
+        },
         {
           "id": "what-skills",
           "title": "Навыки ЧТО: Наблюдение, Описание, Участие",
@@ -39,6 +94,12 @@
         {
           "id": "loving-kindness",
           "title": "Любящая доброта",
+          "readTime": 3,
+          "elements": []
+        },
+        {
+          "id": "middle-path",
+          "title": "Следование срединному пути: поиск единства противоположностей",
           "readTime": 3,
           "elements": []
         }
