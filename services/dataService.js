@@ -268,6 +268,20 @@ export const markArticleAsUnread = async (blockId, articleId) => {
   }
 };
 
+/**
+ * Resets all reading progress by clearing the read articles data
+ * @returns {Promise<boolean>} - Whether the operation was successful
+ */
+export const resetReadingProgress = async () => {
+  try {
+    await AsyncStorage.setItem(STORAGE_KEYS.READ_ARTICLES, JSON.stringify({}));
+    console.log("Reading progress has been reset");
+    return true;
+  } catch (error) {
+    console.error("Error resetting reading progress:", error);
+    return false;
+  }
+};
 
 
 // ========== DBT Diary Card Functions ==========
