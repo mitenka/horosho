@@ -1,18 +1,32 @@
 import { useScrollToTop } from "@react-navigation/native";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import AddBehaviorModal from "../../components/dbt/AddBehaviorModal";
+import BehaviorsSection from "../../components/dbt/BehaviorsSection";
 import DaySelector from "../../components/practice/DaySelector";
+import { useData } from "../../contexts/DataContext";
 import commonStyles from "../../styles/commonStyles";
 
 export default function Index() {
   const insets = useSafeAreaInsets();
   const scrollViewRef = useRef(null);
+  const [isAddBehaviorModalVisible, setIsAddBehaviorModalVisible] =
+    useState(false);
+  const { selectedDate, selectDate } = useData();
 
   useScrollToTop(scrollViewRef);
 
   const handleDaySelected = (date) => {
-    console.log("Selected date:", date);
+    selectDate(date);
+  };
+
+  const handleOpenAddBehaviorModal = () => {
+    setIsAddBehaviorModalVisible(true);
+  };
+
+  const handleCloseAddBehaviorModal = () => {
+    setIsAddBehaviorModalVisible(false);
   };
   return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
@@ -29,7 +43,14 @@ export default function Index() {
         style={styles.scrollView}
         contentContainerStyle={styles.scrollViewContent}
         showsVerticalScrollIndicator={false}
-      ></ScrollView>
+      >
+        <BehaviorsSection onAddBehavior={handleOpenAddBehaviorModal} />
+      </ScrollView>
+
+      <AddBehaviorModal
+        visible={isAddBehaviorModalVisible}
+        onClose={handleCloseAddBehaviorModal}
+      />
     </View>
   );
 }
@@ -45,13 +66,26 @@ const styles = StyleSheet.create({
   },
   fixedContentContainer: {
     paddingHorizontal: 16,
-    paddingBottom: 12,
+    paddingBottom: 4, // Уменьшили с 12 до 4
   },
   scrollView: {
     flex: 1,
   },
   scrollViewContent: {
     paddingHorizontal: 16,
-    paddingVertical: 12,
+    paddingTop: 0, // Убрали верхний отступ
+    paddingBottom: 12,
+  },
+  sectionContainer: {
+    marginBottom: 20,
+    backgroundColor: "rgba(255, 255, 255, 0.1)",
+    borderRadius: 12,
+    padding: 16,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: "600",
+    color: "#fff",
+    marginBottom: 16,
   },
 });

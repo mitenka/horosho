@@ -163,7 +163,7 @@ export default function DaySelector({
 
 const styles = StyleSheet.create({
   container: {
-    marginBottom: 16,
+    marginBottom: 0,
   },
   scrollContent: {
     paddingVertical: 4,
