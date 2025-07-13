@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useData } from "../../contexts/DataContext";
 import {
   behaviorSuggestions,
@@ -23,6 +24,7 @@ import {
  */
 const AddBehaviorModal = ({ visible, onClose }) => {
   const { addBehavior } = useData();
+  const insets = useSafeAreaInsets();
   const [name, setName] = useState("");
   const [type, setType] = useState("boolean"); // 'boolean' or 'scale'
 
@@ -156,7 +158,12 @@ const AddBehaviorModal = ({ visible, onClose }) => {
             </View>
           </ScrollView>
 
-          <View style={styles.footer}>
+          <View
+            style={[
+              styles.footer,
+              { paddingBottom: Math.max(insets.bottom, 8) },
+            ]}
+          >
             <TouchableOpacity
               style={[
                 styles.addButton,
