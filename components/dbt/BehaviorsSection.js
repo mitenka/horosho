@@ -1,15 +1,41 @@
 import { Ionicons } from "@expo/vector-icons";
-import React from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import React, { useState } from "react";
+import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useData } from "../../contexts/DataContext";
 
 /**
  * BehaviorsSection component displays a list of tracked behaviors
  */
 const BehaviorsSection = ({ onAddBehavior }) => {
-  const { behaviors } = useData();
+  const { behaviors, deleteBehavior } = useData();
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const displayBehaviors = [...behaviors];
+  
+  const handleDeleteBehavior = (id, name) => {
+    Alert.alert(
+      "Удаление поведения",
+      `Вы уверены, что хотите удалить "${name}"?`,
+      [
+        { text: "Отмена", style: "cancel" },
+        { 
+          text: "Удалить", 
+          style: "destructive",
+          onPress: async () => {
+            setIsDeleting(true);
+            try {
+              await deleteBehavior(id);
+            } catch (error) {
+              console.error("Error deleting behavior:", error);
+              Alert.alert("Ошибка", "Не удалось удалить поведение");
+            } finally {
+              setIsDeleting(false);
+            }
+          } 
+        },
+      ]
+    );
+  };
 
   // Empty state content
   const renderEmptyComponent = () => (
@@ -45,6 +71,13 @@ const BehaviorsSection = ({ onAddBehavior }) => {
                     {item.type === "boolean" ? "Да/Нет" : "Шкала 0-5"}
                   </Text>
                 </View>
+                <TouchableOpacity 
+                  style={styles.deleteButton} 
+                  onPress={() => handleDeleteBehavior(item.id, item.name)}
+                  disabled={isDeleting}
+                >
+                  <Ionicons name="trash-outline" size={20} color="#ff3b30" />
+                </TouchableOpacity>
               </View>
             ))
           : renderEmptyComponent()}
@@ -71,6 +104,10 @@ const styles = StyleSheet.create({
   },
   behaviorInfo: {
     flex: 1,
+  },
+  deleteButton: {
+    padding: 8,
+    marginLeft: 8,
   },
   behaviorName: {
     fontSize: 16,
