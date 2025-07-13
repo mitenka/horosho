@@ -85,15 +85,25 @@ const AddBehaviorModal = ({ visible, onClose }) => {
 
           {/* Fixed top area */}
           <View style={styles.fixedTopArea}>
-            {/* Behavior name input */}
-            <TextInput
-              style={styles.input}
-              placeholder="Введите название поведения"
-              value={name}
-              onChangeText={setName}
-              autoCorrect={false}
-              placeholderTextColor="rgba(255, 255, 255, 0.5)"
-            />
+            {/* Behavior name input with clear button */}
+            <View style={styles.inputContainer}>
+              <TextInput
+                style={styles.input}
+                placeholder="Введите название поведения"
+                value={name}
+                onChangeText={setName}
+                autoCorrect={false}
+                placeholderTextColor="rgba(255, 255, 255, 0.5)"
+              />
+              {name.length > 0 && (
+                <TouchableOpacity
+                  onPress={() => setName("")}
+                  style={styles.clearButton}
+                >
+                  <Ionicons name="close-circle" size={22} color="rgba(255, 255, 255, 0.6)" />
+                </TouchableOpacity>
+              )}  
+            </View>
 
             {/* Behavior type toggle */}
             <View style={styles.typeToggle}>
@@ -233,58 +243,73 @@ const styles = StyleSheet.create({
     paddingTop: 4,
     paddingBottom: 16,
   },
-  input: {
-    backgroundColor: "rgba(255, 255, 255, 0.1)",
-    borderRadius: 8,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    fontSize: 16,
+  inputContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "rgba(255, 255, 255, 0.12)",
+    borderRadius: 12,
     borderWidth: 1,
-    borderColor: "rgba(255, 255, 255, 0.2)",
+    borderColor: "rgba(255, 255, 255, 0.25)",
+    marginBottom: 16,
+  },
+  input: {
+    flex: 1,
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+    fontSize: 18,
     color: "#fff",
-    marginBottom: 8,
+    fontWeight: "500",
+  },
+  clearButton: {
+    padding: 8,
+    marginRight: 8,
   },
   typeToggle: {
     flexDirection: "row",
-    backgroundColor: "rgba(255, 255, 255, 0.1)",
-    borderRadius: 8,
+    backgroundColor: "rgba(255, 255, 255, 0.12)",
+    borderRadius: 12,
     overflow: "hidden",
-    marginBottom: 16,
+    marginBottom: 20,
   },
   typeButton: {
     flex: 1,
-    paddingVertical: 12,
+    paddingVertical: 14,
     alignItems: "center",
   },
   typeButtonActive: {
     backgroundColor: "#ff3b30",
   },
   typeButtonText: {
-    fontSize: 16,
-    color: "#ccc",
+    fontSize: 17,
+    color: "rgba(255, 255, 255, 0.7)",
   },
   typeButtonTextActive: {
     color: "#fff",
-    fontWeight: "500",
+    fontWeight: "600",
   },
   footer: {
-    padding: 8,
-    paddingHorizontal: 12,
+    padding: 10,
+    paddingHorizontal: 16,
     borderTopWidth: 1,
     borderTopColor: "rgba(255, 255, 255, 0.1)",
   },
   addButton: {
     backgroundColor: "#ff3b30",
-    borderRadius: 8,
-    paddingVertical: 14,
+    borderRadius: 12,
+    paddingVertical: 16,
     alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
+    elevation: 4,
   },
   addButtonDisabled: {
     backgroundColor: "rgba(255, 255, 255, 0.2)",
   },
   addButtonText: {
     color: "#fff",
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: "600",
   },
 });
