@@ -68,7 +68,7 @@ const AddBehaviorModal = ({ visible, onClose }) => {
       onRequestClose={onClose}
     >
       <View style={styles.modalOverlay}>
-        <View style={styles.modalContainer}>
+        <View style={[styles.modalContainer, { paddingTop: Math.max(insets.top, 10) }]}>
           <View style={styles.header}>
             <Text style={styles.headerTitle}>Добавить поведение</Text>
             <TouchableOpacity onPress={onClose} style={styles.closeButton}>
@@ -194,7 +194,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 20,
     flex: 1,
     overflow: "hidden",
-    paddingTop: 64,
+    // paddingTop is applied dynamically based on safe area insets
   },
   header: {
     flexDirection: "row",

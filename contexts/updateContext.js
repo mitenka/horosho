@@ -40,7 +40,7 @@ export const useUpdateContext = () => {
       // Check if last update check was less than an hour ago
       if (now - lastUpdateCheck.current < 60 * 60 * 1000) {
         console.log(
-          "Пропускаем проверку обновлений, последняя проверка была менее часа назад"
+          "Skipping update check, last check was less than an hour ago 🕰️"
         );
         return { checked: false, updated: false, skipped: true };
       }
