@@ -56,6 +56,8 @@ const AddBehaviorModal = ({ visible, onClose }) => {
     setName(suggestion);
   }, []);
 
+  // Функции для группировки по категориям были удалены для упрощения кода
+
   const handlePressOutside = () => {
     Keyboard.dismiss();
   };
@@ -68,7 +70,12 @@ const AddBehaviorModal = ({ visible, onClose }) => {
       onRequestClose={onClose}
     >
       <View style={styles.modalOverlay}>
-        <View style={[styles.modalContainer, { paddingTop: Math.max(insets.top, 10) }]}>
+        <View
+          style={[
+            styles.modalContainer,
+            { paddingTop: Math.max(insets.top, 10) },
+          ]}
+        >
           <View style={styles.header}>
             <Text style={styles.headerTitle}>Добавить поведение</Text>
             <TouchableOpacity onPress={onClose} style={styles.closeButton}>
@@ -132,7 +139,7 @@ const AddBehaviorModal = ({ visible, onClose }) => {
             showsVerticalScrollIndicator={false}
             keyboardShouldPersistTaps="handled"
           >
-            <View style={suggestionStyles.suggestionsFlexWrap}>
+            <View style={suggestionStyles.suggestionsContainer}>
               {behaviorSuggestions.map((suggestion, index) => {
                 const categoryColor = getCategoryColor(suggestion.category);
                 return (
@@ -140,15 +147,13 @@ const AddBehaviorModal = ({ visible, onClose }) => {
                     key={index}
                     style={[
                       suggestionStyles.suggestionBubble,
-                      { borderColor: `${categoryColor}60` }, // Adding 60 for transparency
+                      { backgroundColor: `${categoryColor}30` }, // Light background with 30% opacity
                     ]}
                     onPress={() => handleSelectSuggestion(suggestion.name)}
                   >
                     <Text
-                      style={[
-                        suggestionStyles.suggestionText,
-                        { color: categoryColor },
-                      ]}
+                      style={suggestionStyles.suggestionText}
+                      numberOfLines={2}
                     >
                       {suggestion.name}
                     </Text>
