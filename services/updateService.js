@@ -1,6 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { STORAGE_KEYS, API_BASE_URL } from "./storageConfig";
 import { getDataVersions } from "./contentService";
+import { API_BASE_URL, STORAGE_KEYS } from "./storageConfig";
 
 /**
  * Updates the timestamp of the last update check
@@ -25,7 +25,9 @@ export const updateLastCheckTime = async () => {
  */
 export const getLastUpdateCheckTime = async () => {
   try {
-    const timestamp = await AsyncStorage.getItem(STORAGE_KEYS.LAST_UPDATE_CHECK);
+    const timestamp = await AsyncStorage.getItem(
+      STORAGE_KEYS.LAST_UPDATE_CHECK
+    );
     return timestamp ? parseInt(timestamp) : null;
   } catch (error) {
     console.error("Error getting last update check time:", error);
@@ -39,7 +41,7 @@ export const getLastUpdateCheckTime = async () => {
  */
 export const checkForUpdates = async () => {
   try {
-    console.log("Checking for updates from GitHub...");
+    console.log("Checking for updates from GitHub... 📡");
 
     // Fetch meta.json from CDN with cache-busting parameter
     const response = await fetch(`${API_BASE_URL}/meta.json?v=${Date.now()}`);
@@ -64,10 +66,10 @@ export const checkForUpdates = async () => {
     // If no updates needed
     if (!needDictionaryUpdate && !needTheoryUpdate) {
       console.log("No updates available");
-      
+
       // Update last check timestamp even when no updates are available
       await updateLastCheckTime();
-      
+
       return { checked: true, updated: false, message: "No updates available" };
     }
 
