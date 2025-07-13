@@ -72,15 +72,16 @@ export const suggestionStyles = StyleSheet.create({
     paddingHorizontal: 4,
   },
   suggestionBubble: {
-    paddingVertical: 6,
-    paddingHorizontal: 8,
-    paddingLeft: 6,
-    margin: 3,
-    marginLeft: 2,
-    borderRadius: 16,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    paddingLeft: 10,
+    margin: 4,
+    marginLeft: 3,
+    borderRadius: 18,
   },
   suggestionText: {
-    fontSize: 15,
+    fontSize: 16,
     color: "#fff",
+    fontWeight: "500",
   },
 });
