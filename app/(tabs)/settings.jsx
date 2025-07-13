@@ -23,7 +23,10 @@ import commonStyles from "../../styles/commonStyles";
 
 const APP_VERSION = appJson.expo.version;
 
-const DEVELOPERS = [{ name: "Дима", telegram: "mitenka" }];
+const DEVELOPERS = [
+  { name: "Редакторка Диана", telegram: "Di9919" },
+  { name: "Разработчик Дима", telegram: "mitenka" },
+];
 
 export default function Settings() {
   const insets = useSafeAreaInsets();
@@ -191,8 +194,9 @@ export default function Settings() {
           {/* Ссылки */}
           <View style={styles.contactSection}>
             <Text style={styles.infoText}>
-              Если вы заметили ошибку или хотите предложить улучшение, напишите
-              нам. Впрочем, можете написать и безо всякого повода.
+              Если вы заметили ошибку, хотите предложить улучшение, или
+              поговорить безо всякого повода, мы будем исключительно рады вашим
+              сообщениям.
             </Text>
 
             <View style={styles.linksGroup}>
@@ -218,7 +222,6 @@ export default function Settings() {
               ))}
             </View>
           </View>
-          <Text style={styles.infoText}>Диана, тебя добавить? 🙂</Text>
         </View>
       </ScrollView>
     </View>
@@ -229,9 +232,7 @@ const styles = StyleSheet.create({
   contactSection: {
     backgroundColor: "#323248",
     padding: 16,
-    borderRadius: 8,
-    marginTop: 24,
-    marginBottom: 8,
+    borderRadius: 10,
   },
   container: {
     flex: 1,
@@ -252,11 +253,11 @@ const styles = StyleSheet.create({
     paddingBottom: 16,
   },
   actionsContainer: {
-    marginTop: 24,
-    marginBottom: 24,
+    marginTop: 16,
+    marginBottom: 16,
   },
   buttonsGroup: {
-    marginBottom: 24,
+    marginBottom: 16,
   },
   linksGroup: {
     paddingTop: 8,
@@ -264,7 +265,7 @@ const styles = StyleSheet.create({
   button: {
     backgroundColor: "#4a4a6a",
     padding: 16,
-    borderRadius: 8,
+    borderRadius: 10,
     flexDirection: "row",
     alignItems: "center",
     marginBottom: 12,
@@ -281,7 +282,7 @@ const styles = StyleSheet.create({
     padding: 12,
     marginBottom: 8,
     backgroundColor: "#404060",
-    borderRadius: 8,
+    borderRadius: 10,
   },
   iconContainer: {
     width: 24,
@@ -291,7 +292,7 @@ const styles = StyleSheet.create({
   buttonText: {
     color: "#ffffff",
     fontSize: 16,
-    fontWeight: "bold",
+    fontWeight: "600",
   },
   linkTextContainer: {
     flexDirection: "row",
@@ -315,7 +316,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     lineHeight: 20,
     textAlign: "left",
-    marginBottom: 16,
+    marginBottom: 12,
   },
   infoRow: {
     flexDirection: "row",
@@ -345,6 +346,6 @@ const styles = StyleSheet.create({
   infoContainer: {
     backgroundColor: "#323248",
     padding: 16,
-    borderRadius: 8,
+    borderRadius: 10,
   },
 });
