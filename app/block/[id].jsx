@@ -1,6 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
-import { Stack, useLocalSearchParams, router } from "expo-router";
-import { useEffect, useRef, useState } from "react";
+import { LinearGradient } from "expo-linear-gradient";
+import { router, Stack, useLocalSearchParams } from "expo-router";
+import { useRef } from "react";
 import {
   ScrollView,
   StyleSheet,
@@ -8,7 +9,6 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
 import { useData } from "../../contexts/DataContext";
 
 export default function BlockArticles() {
@@ -27,13 +27,13 @@ export default function BlockArticles() {
   };
 
   return (
-    <LinearGradient colors={["#3f3f68", "#2a2a45"]} style={styles.container}>
+    <LinearGradient colors={["#3a3a5e", "#2d2d4a"]} style={styles.container}>
       <Stack.Screen
         options={{
           title: "",
           headerBackTitle: "Теория",
           headerStyle: {
-            backgroundColor: "#3f3f68",
+            backgroundColor: "#3a3a5e",
           },
           headerTintColor: "#f0f0f0",
           headerShadowVisible: false,
@@ -69,19 +69,37 @@ export default function BlockArticles() {
                 activeOpacity={0.7}
               >
                 <View style={styles.articleContent}>
-                  <Text style={[styles.articleTitle, isArticleRead && styles.articleTitleRead]}>
+                  <Text
+                    style={[
+                      styles.articleTitle,
+                      isArticleRead && styles.articleTitleRead,
+                    ]}
+                  >
                     {article.title}
                   </Text>
                   <View style={styles.articleMeta}>
                     {isArticleRead && (
                       <View style={styles.readStatusIndicator}>
-                        <Ionicons name="checkmark-circle" size={14} color={block.color} />
-                        <Text style={[styles.readStatusText, { color: block.color }]}>
+                        <Ionicons
+                          name="checkmark-circle"
+                          size={14}
+                          color={block.color}
+                        />
+                        <Text
+                          style={[
+                            styles.readStatusText,
+                            { color: block.color },
+                          ]}
+                        >
                           Прочитано
                         </Text>
                       </View>
                     )}
-                    <Ionicons name="time-outline" size={14} color={block.color} />
+                    <Ionicons
+                      name="time-outline"
+                      size={14}
+                      color={block.color}
+                    />
                     <Text style={[styles.readTime, { color: block.color }]}>
                       {article.readTime} мин
                     </Text>

@@ -1,5 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useScrollToTop } from "@react-navigation/native";
+import { LinearGradient } from "expo-linear-gradient";
 import { useMemo, useRef, useState } from "react";
 import {
   ActivityIndicator,
@@ -13,7 +14,6 @@ import {
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { LinearGradient } from "expo-linear-gradient";
 import { useData } from "../../contexts/DataContext";
 
 export default function Dictionary() {
@@ -79,7 +79,7 @@ export default function Dictionary() {
   if (isLoading) {
     return (
       <LinearGradient
-        colors={["#3f3f68", "#2a2a45"]}
+        colors={["#3a3a5e", "#2d2d4a"]}
         style={[styles.container, { paddingTop: insets.top + 8 }]}
       >
         <View style={styles.titleContainer}>
@@ -97,7 +97,7 @@ export default function Dictionary() {
   if (error) {
     return (
       <LinearGradient
-        colors={["#3f3f68", "#2a2a45"]}
+        colors={["#3a3a5e", "#2d2d4a"]}
         style={[styles.container, { paddingTop: insets.top + 8 }]}
       >
         <View style={styles.titleContainer}>
@@ -114,7 +114,7 @@ export default function Dictionary() {
 
   return (
     <LinearGradient
-      colors={["#3f3f68", "#2a2a45"]}
+      colors={["#3a3a5e", "#2d2d4a"]}
       style={[styles.container, { paddingTop: insets.top + 8 }]}
     >
       <View style={styles.titleContainer}>
@@ -158,7 +158,10 @@ export default function Dictionary() {
           data={filteredTerms}
           renderItem={renderTermCard}
           keyExtractor={(item) => item.id.toString()}
-          contentContainerStyle={[styles.scrollViewContent, { paddingBottom: insets.bottom + 16 }]}
+          contentContainerStyle={[
+            styles.scrollViewContent,
+            { paddingBottom: insets.bottom + 16 },
+          ]}
           showsVerticalScrollIndicator={false}
           bounces={true}
         />
@@ -271,7 +274,7 @@ const styles = StyleSheet.create({
     padding: 24,
   },
   modalContent: {
-    backgroundColor: "#2a2a45",
+    backgroundColor: "#2d2d4a",
     borderRadius: 24,
     width: "100%",
     maxHeight: "80%",
@@ -334,7 +337,7 @@ const styles = StyleSheet.create({
   relatedTermButton: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#3f3f68",
+    backgroundColor: "#3a3a5e",
     padding: 14,
     borderRadius: 14,
     marginBottom: 10,

@@ -1,5 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useScrollToTop } from "@react-navigation/native";
+import { LinearGradient } from "expo-linear-gradient";
 import { useEffect, useRef, useState } from "react";
 import {
   Alert,
@@ -11,8 +12,8 @@ import {
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { LinearGradient } from "expo-linear-gradient";
 import appJson from "../../app.json";
+import StorageDataViewer from "../../components/StorageDataViewer";
 import { useData } from "../../contexts/DataContext";
 import {
   checkForUpdates,
@@ -130,7 +131,7 @@ export default function Settings() {
 
   return (
     <LinearGradient
-      colors={["#3f3f68", "#2a2a45"]}
+      colors={["#3a3a5e", "#2d2d4a"]}
       style={[styles.container, { paddingTop: insets.top + 8 }]}
     >
       <View style={styles.titleContainer}>
@@ -140,7 +141,10 @@ export default function Settings() {
       <ScrollView
         ref={scrollViewRef}
         style={[styles.scrollView, { marginTop: 10 }]}
-        contentContainerStyle={[styles.scrollViewContent, { paddingBottom: insets.bottom + 16 }]}
+        contentContainerStyle={[
+          styles.scrollViewContent,
+          { paddingBottom: insets.bottom + 16 },
+        ]}
         showsVerticalScrollIndicator={false}
         bounces={true}
       >
@@ -195,8 +199,11 @@ export default function Settings() {
             </TouchableOpacity>
           </View>
 
-          {/* Ссылки */}
+          {/* Storage Data Viewer Section */}
+          <StorageDataViewer />
+
           <View style={styles.contactSection}>
+            <Text style={styles.sectionTitle}>Написать авторам</Text>
             <Text style={styles.infoText}>
               Если вы заметили ошибку, хотите предложить улучшение, или
               поговорить безо всякого повода, мы будем исключительно рады вашим

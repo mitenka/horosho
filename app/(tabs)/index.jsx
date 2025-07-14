@@ -30,7 +30,7 @@ export default function Index() {
   };
   return (
     <LinearGradient
-      colors={["#3f3f68", "#2a2a45"]}
+      colors={["#3a3a5e", "#2d2d4a"]}
       style={[styles.container, { paddingTop: insets.top + 8 }]}
     >
       <View style={styles.titleContainer}>

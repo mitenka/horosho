@@ -1,4 +1,5 @@
 import { useScrollToTop } from "@react-navigation/native";
+import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
 import { useRef } from "react";
 import {
@@ -9,7 +10,6 @@ import {
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { LinearGradient } from "expo-linear-gradient";
 import Block from "../../components/theory/Block";
 import { useData } from "../../contexts/DataContext";
 
@@ -31,7 +31,7 @@ export default function Theory() {
   if (isLoading) {
     return (
       <LinearGradient
-        colors={["#3f3f68", "#2a2a45"]}
+        colors={["#3a3a5e", "#2d2d4a"]}
         style={[styles.container, { paddingTop: insets.top + 8 }]}
       >
         <View style={styles.titleContainer}>
@@ -49,7 +49,7 @@ export default function Theory() {
   if (error) {
     return (
       <LinearGradient
-        colors={["#3f3f68", "#2a2a45"]}
+        colors={["#3a3a5e", "#2d2d4a"]}
         style={[styles.container, { paddingTop: insets.top + 8 }]}
       >
         <View style={styles.titleContainer}>
@@ -64,7 +64,7 @@ export default function Theory() {
 
   return (
     <LinearGradient
-      colors={["#3f3f68", "#2a2a45"]}
+      colors={["#3a3a5e", "#2d2d4a"]}
       style={[styles.container, { paddingTop: insets.top + 8 }]}
     >
       <View style={styles.titleContainer}>
@@ -74,7 +74,10 @@ export default function Theory() {
       <ScrollView
         ref={scrollViewRef}
         style={[styles.scrollView, { marginTop: 10 }]}
-        contentContainerStyle={[styles.scrollViewContent, { paddingBottom: insets.bottom + 16 }]}
+        contentContainerStyle={[
+          styles.scrollViewContent,
+          { paddingBottom: insets.bottom + 16 },
+        ]}
         showsVerticalScrollIndicator={false}
         bounces={true}
       >

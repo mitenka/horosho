@@ -1,5 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import * as Haptics from "expo-haptics";
+import { LinearGradient } from "expo-linear-gradient";
 import { Stack, useLocalSearchParams } from "expo-router";
 import LottieView from "lottie-react-native";
 import { useEffect, useRef, useState } from "react";
@@ -17,7 +18,6 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
-import { LinearGradient } from "expo-linear-gradient";
 import ArticleElement from "../../components/article/ArticleElement";
 import { useData } from "../../contexts/DataContext";
 
@@ -122,13 +122,13 @@ export default function ArticleScreen() {
   // Show loading indicator if data is being loaded
   if (isLoading) {
     return (
-      <LinearGradient colors={["#3f3f68", "#2a2a45"]} style={styles.container}>
+      <LinearGradient colors={["#3a3a5e", "#2d2d4a"]} style={styles.container}>
         <Stack.Screen
           options={{
             title: "",
             headerBackTitle: "Назад",
             headerStyle: {
-              backgroundColor: "#3f3f68",
+              backgroundColor: "#3a3a5e",
             },
             headerTintColor: "#f0f0f0",
             headerShadowVisible: false,
@@ -145,13 +145,13 @@ export default function ArticleScreen() {
   // Show message if article not found
   if (!article) {
     return (
-      <LinearGradient colors={["#3f3f68", "#2a2a45"]} style={styles.container}>
+      <LinearGradient colors={["#3a3a5e", "#2d2d4a"]} style={styles.container}>
         <Stack.Screen
           options={{
             title: "",
             headerBackTitle: "Назад",
             headerStyle: {
-              backgroundColor: "#3f3f68",
+              backgroundColor: "#3a3a5e",
             },
             headerTintColor: "#f0f0f0",
             headerShadowVisible: false,
@@ -165,13 +165,13 @@ export default function ArticleScreen() {
   }
 
   return (
-    <LinearGradient colors={["#3f3f68", "#2a2a45"]} style={styles.container}>
+    <LinearGradient colors={["#3a3a5e", "#2d2d4a"]} style={styles.container}>
       <Stack.Screen
         options={{
           title: "",
           headerBackTitle: "Назад",
           headerStyle: {
-            backgroundColor: "#3f3f68",
+            backgroundColor: "#3a3a5e",
           },
           headerTintColor: "#f0f0f0",
           headerShadowVisible: false,
