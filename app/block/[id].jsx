@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
 import { useData } from "../../contexts/DataContext";
 
 export default function BlockArticles() {
@@ -26,13 +27,13 @@ export default function BlockArticles() {
   };
 
   return (
-    <View style={styles.container}>
+    <LinearGradient colors={["#3f3f68", "#2a2a45"]} style={styles.container}>
       <Stack.Screen
         options={{
           title: "",
           headerBackTitle: "Теория",
           headerStyle: {
-            backgroundColor: "#3a3a5e",
+            backgroundColor: "#3f3f68",
           },
           headerTintColor: "#f0f0f0",
           headerShadowVisible: false,
@@ -91,39 +92,45 @@ export default function BlockArticles() {
           })
         )}
       </ScrollView>
-    </View>
+    </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#3a3a5e",
   },
   titleContainer: {
-    paddingHorizontal: 16,
-    paddingVertical: 12,
+    paddingHorizontal: 20,
+    paddingVertical: 16,
+    marginBottom: 10,
   },
   blockTitle: {
-    fontSize: 24,
+    fontSize: 28,
     fontWeight: "700",
     color: "#f0f0f0",
+    letterSpacing: 0.5,
   },
   scrollView: {
     flex: 1,
   },
   scrollViewContent: {
-    paddingHorizontal: 16,
-    paddingBottom: 24,
+    paddingHorizontal: 20,
+    paddingBottom: 30,
   },
   articleCard: {
     backgroundColor: "rgba(255, 255, 255, 0.05)",
-    borderRadius: 12,
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-    marginBottom: 10,
+    borderRadius: 16,
+    paddingHorizontal: 18,
+    paddingVertical: 16,
+    marginBottom: 14,
     borderWidth: 1,
     borderColor: "rgba(255, 255, 255, 0.08)",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 4,
+    elevation: 2,
   },
   articleCardRead: {
     backgroundColor: "rgba(124, 179, 66, 0.08)",
@@ -136,10 +143,10 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   articleTitle: {
-    fontSize: 16,
-    fontWeight: "500",
+    fontSize: 17,
+    fontWeight: "600",
     color: "#ffffff",
-    marginBottom: 6,
+    marginBottom: 8,
     letterSpacing: 0.2,
   },
   articleTitleRead: {

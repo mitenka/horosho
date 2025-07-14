@@ -17,6 +17,7 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
+import { LinearGradient } from "expo-linear-gradient";
 import ArticleElement from "../../components/article/ArticleElement";
 import { useData } from "../../contexts/DataContext";
 
@@ -121,13 +122,13 @@ export default function ArticleScreen() {
   // Show loading indicator if data is being loaded
   if (isLoading) {
     return (
-      <View style={styles.container}>
+      <LinearGradient colors={["#3f3f68", "#2a2a45"]} style={styles.container}>
         <Stack.Screen
           options={{
             title: "",
             headerBackTitle: "Назад",
             headerStyle: {
-              backgroundColor: "#3a3a5e",
+              backgroundColor: "#3f3f68",
             },
             headerTintColor: "#f0f0f0",
             headerShadowVisible: false,
@@ -137,20 +138,20 @@ export default function ArticleScreen() {
           <ActivityIndicator size="large" color="#c8c8e0" />
           <Text style={styles.loadingText}>Загрузка статьи...</Text>
         </View>
-      </View>
+      </LinearGradient>
     );
   }
 
   // Show message if article not found
   if (!article) {
     return (
-      <View style={styles.container}>
+      <LinearGradient colors={["#3f3f68", "#2a2a45"]} style={styles.container}>
         <Stack.Screen
           options={{
             title: "",
             headerBackTitle: "Назад",
             headerStyle: {
-              backgroundColor: "#3a3a5e",
+              backgroundColor: "#3f3f68",
             },
             headerTintColor: "#f0f0f0",
             headerShadowVisible: false,
@@ -159,18 +160,18 @@ export default function ArticleScreen() {
         <View style={styles.errorContainer}>
           <Text style={styles.errorText}>Статья не найдена</Text>
         </View>
-      </View>
+      </LinearGradient>
     );
   }
 
   return (
-    <View style={styles.container}>
+    <LinearGradient colors={["#3f3f68", "#2a2a45"]} style={styles.container}>
       <Stack.Screen
         options={{
           title: "",
           headerBackTitle: "Назад",
           headerStyle: {
-            backgroundColor: "#3a3a5e",
+            backgroundColor: "#3f3f68",
           },
           headerTintColor: "#f0f0f0",
           headerShadowVisible: false,
@@ -244,7 +245,7 @@ export default function ArticleScreen() {
           />
         </View>
       )}
-    </View>
+    </LinearGradient>
   );
 }
 
@@ -253,22 +254,21 @@ const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#3a3a5e",
   },
   scrollView: {
     flex: 1,
   },
   scrollViewContent: {
     paddingHorizontal: 20,
-    paddingVertical: 16,
+    paddingVertical: 20,
     paddingBottom: 40,
   },
   articleTitle: {
-    fontSize: 26,
+    fontSize: 28,
     fontWeight: "700",
     color: "#f0f0f0",
     marginBottom: 16,
-    letterSpacing: 0.3,
+    letterSpacing: 0.5,
   },
   articleMeta: {
     flexDirection: "row",
@@ -287,8 +287,8 @@ const styles = StyleSheet.create({
     paddingVertical: 40,
   },
   loadingText: {
-    marginTop: 10,
-    fontSize: 16,
+    marginTop: 12,
+    fontSize: 18,
     color: "#c8c8e0",
   },
   errorContainer: {
@@ -313,15 +313,15 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     backgroundColor: "rgba(45, 45, 74, 0.8)",
     borderRadius: 16,
-    paddingVertical: 16,
-    paddingHorizontal: 24,
+    paddingVertical: 18,
+    paddingHorizontal: 28,
     borderWidth: 1,
     borderColor: "rgba(255, 255, 255, 0.15)",
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    elevation: 3,
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.25,
+    shadowRadius: 6,
+    elevation: 4,
     minWidth: 240,
   },
   readButtonActive: {

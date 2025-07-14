@@ -9,9 +9,9 @@ import {
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { LinearGradient } from "expo-linear-gradient";
 import Block from "../../components/theory/Block";
 import { useData } from "../../contexts/DataContext";
-import commonStyles from "../../styles/commonStyles";
 
 export default function Theory() {
   const insets = useSafeAreaInsets();
@@ -30,43 +30,53 @@ export default function Theory() {
   // Show loading indicator if data is being loaded
   if (isLoading) {
     return (
-      <View style={[styles.container, { paddingTop: insets.top }]}>
+      <LinearGradient
+        colors={["#3f3f68", "#2a2a45"]}
+        style={[styles.container, { paddingTop: insets.top + 8 }]}
+      >
         <View style={styles.titleContainer}>
-          <Text style={commonStyles.title}>Теория</Text>
+          <Text style={styles.pageTitle}>Теория</Text>
         </View>
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color="#c8c8e0" />
           <Text style={styles.loadingText}>Загрузка данных...</Text>
         </View>
-      </View>
+      </LinearGradient>
     );
   }
 
   // Show error message if something went wrong
   if (error) {
     return (
-      <View style={[styles.container, { paddingTop: insets.top }]}>
+      <LinearGradient
+        colors={["#3f3f68", "#2a2a45"]}
+        style={[styles.container, { paddingTop: insets.top + 8 }]}
+      >
         <View style={styles.titleContainer}>
-          <Text style={commonStyles.title}>Теория</Text>
+          <Text style={styles.pageTitle}>Теория</Text>
         </View>
         <View style={styles.errorContainer}>
           <Text style={styles.errorText}>Произошла ошибка при загрузке</Text>
         </View>
-      </View>
+      </LinearGradient>
     );
   }
 
   return (
-    <View style={[styles.container, { paddingTop: insets.top }]}>
+    <LinearGradient
+      colors={["#3f3f68", "#2a2a45"]}
+      style={[styles.container, { paddingTop: insets.top + 8 }]}
+    >
       <View style={styles.titleContainer}>
-        <Text style={commonStyles.title}>Теория</Text>
+        <Text style={styles.pageTitle}>Теория</Text>
       </View>
 
       <ScrollView
         ref={scrollViewRef}
-        style={styles.scrollView}
-        contentContainerStyle={styles.scrollViewContent}
+        style={[styles.scrollView, { marginTop: 10 }]}
+        contentContainerStyle={[styles.scrollViewContent, { paddingBottom: insets.bottom + 16 }]}
         showsVerticalScrollIndicator={false}
+        bounces={true}
       >
         {theoryGroups.length === 0 ? (
           <View style={styles.emptyContainer}>
@@ -108,37 +118,43 @@ export default function Theory() {
           ))
         )}
       </ScrollView>
-    </View>
+    </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#3a3a5e",
   },
   titleContainer: {
-    paddingHorizontal: 16,
-    paddingVertical: 12,
+    paddingHorizontal: 20,
+    paddingVertical: 16,
+  },
+  pageTitle: {
+    fontSize: 28,
+    fontWeight: "700",
+    color: "#fff",
+    letterSpacing: 0.5,
   },
   scrollView: {
     flex: 1,
   },
   scrollViewContent: {
-    paddingHorizontal: 16,
+    paddingHorizontal: 20,
     paddingBottom: 24,
+    paddingTop: 8,
   },
   groupContainer: {
-    marginBottom: 24,
+    marginBottom: 28,
   },
   lastGroupContainer: {
     marginBottom: 0,
   },
   groupTitle: {
-    fontSize: 20,
+    fontSize: 22,
     fontWeight: "700",
     color: "#f0f0f0",
-    marginBottom: 16,
+    marginBottom: 18,
     marginLeft: 4,
   },
   loadingContainer: {
@@ -148,18 +164,18 @@ const styles = StyleSheet.create({
     paddingVertical: 40,
   },
   loadingText: {
-    marginTop: 10,
-    fontSize: 16,
+    marginTop: 12,
+    fontSize: 18,
     color: "#c8c8e0",
   },
   errorContainer: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    padding: 20,
+    padding: 24,
   },
   errorText: {
-    fontSize: 18,
+    fontSize: 20,
     color: "#ff6b6b",
     textAlign: "center",
   },
@@ -170,7 +186,7 @@ const styles = StyleSheet.create({
     paddingVertical: 60,
   },
   emptyText: {
-    fontSize: 18,
+    fontSize: 20,
     color: "#c8c8e0",
     textAlign: "center",
   },

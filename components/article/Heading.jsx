@@ -7,11 +7,11 @@ export default function Heading({ text }) {
 
 const styles = StyleSheet.create({
   heading: {
-    fontSize: 22,
+    fontSize: 24,
     fontWeight: "700",
     color: "#f0f0f0",
-    marginTop: 8,
-    marginBottom: 8,
-    letterSpacing: 0.3,
+    marginTop: 10,
+    marginBottom: 14,
+    letterSpacing: 0.5,
   },
 });

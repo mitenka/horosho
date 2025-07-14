@@ -11,6 +11,7 @@ import {
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { LinearGradient } from "expo-linear-gradient";
 import appJson from "../../app.json";
 import { useData } from "../../contexts/DataContext";
 import {
@@ -19,7 +20,6 @@ import {
   getLastUpdateCheckTime,
   resetReadingProgress,
 } from "../../services/dataService";
-import commonStyles from "../../styles/commonStyles";
 
 const APP_VERSION = appJson.expo.version;
 
@@ -129,16 +129,20 @@ export default function Settings() {
   };
 
   return (
-    <View style={[styles.container, { paddingTop: insets.top }]}>
+    <LinearGradient
+      colors={["#3f3f68", "#2a2a45"]}
+      style={[styles.container, { paddingTop: insets.top + 8 }]}
+    >
       <View style={styles.titleContainer}>
-        <Text style={commonStyles.title}>Настройка</Text>
+        <Text style={styles.pageTitle}>Настройки</Text>
       </View>
 
       <ScrollView
         ref={scrollViewRef}
-        style={styles.scrollView}
-        contentContainerStyle={styles.scrollViewContent}
+        style={[styles.scrollView, { marginTop: 10 }]}
+        contentContainerStyle={[styles.scrollViewContent, { paddingBottom: insets.bottom + 16 }]}
         showsVerticalScrollIndicator={false}
+        bounces={true}
       >
         <View style={styles.infoContainer}>
           <View style={styles.infoRow}>
@@ -224,74 +228,90 @@ export default function Settings() {
           </View>
         </View>
       </ScrollView>
-    </View>
+    </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
   contactSection: {
-    backgroundColor: "#323248",
-    padding: 16,
-    borderRadius: 10,
+    backgroundColor: "rgba(50, 50, 72, 0.9)",
+    padding: 20,
+    borderRadius: 16,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 3,
   },
   container: {
     flex: 1,
-    backgroundColor: "#3a3a5e",
   },
   titleContainer: {
-    paddingHorizontal: 16,
-    paddingVertical: 12,
+    paddingHorizontal: 20,
+    paddingVertical: 16,
+  },
+  pageTitle: {
+    fontSize: 28,
+    fontWeight: "700",
+    color: "#fff",
+    letterSpacing: 0.5,
   },
   scrollView: {
     flex: 1,
   },
   scrollViewContent: {
-    paddingHorizontal: 16,
+    paddingHorizontal: 20,
     paddingBottom: 24,
-  },
-  contentContainer: {
-    paddingBottom: 16,
-  },
-  actionsContainer: {
-    marginTop: 16,
-    marginBottom: 16,
-  },
-  buttonsGroup: {
-    marginBottom: 16,
-  },
-  linksGroup: {
     paddingTop: 8,
   },
+  contentContainer: {
+    paddingBottom: 20,
+  },
+  actionsContainer: {
+    marginTop: 20,
+    marginBottom: 20,
+  },
+  buttonsGroup: {
+    marginBottom: 20,
+  },
+  linksGroup: {
+    paddingTop: 12,
+  },
   button: {
-    backgroundColor: "#4a4a6a",
-    padding: 16,
-    borderRadius: 10,
+    backgroundColor: "rgba(74, 74, 106, 0.9)",
+    padding: 18,
+    borderRadius: 14,
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 12,
-    elevation: 2,
+    marginBottom: 16,
+    elevation: 3,
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
-    shadowRadius: 1.5,
+    shadowRadius: 4,
   },
 
   link: {
     flexDirection: "row",
     alignItems: "center",
-    padding: 12,
-    marginBottom: 8,
-    backgroundColor: "#404060",
-    borderRadius: 10,
+    padding: 16,
+    marginBottom: 12,
+    backgroundColor: "rgba(64, 64, 96, 0.9)",
+    borderRadius: 14,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+    elevation: 2,
   },
   iconContainer: {
-    width: 24,
+    width: 28,
     alignItems: "center",
-    marginRight: 12,
+    marginRight: 14,
   },
   buttonText: {
     color: "#ffffff",
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: "600",
   },
   linkTextContainer: {
@@ -301,51 +321,56 @@ const styles = StyleSheet.create({
   },
   linkText: {
     color: "#a0a0c0",
-    fontSize: 16,
+    fontSize: 17,
     flex: 1,
   },
   externalLinkIcon: {
-    marginLeft: 6,
+    marginLeft: 8,
   },
   infoTextContainer: {
-    paddingHorizontal: 4,
-    marginBottom: 16,
+    paddingHorizontal: 6,
+    marginBottom: 20,
   },
   infoText: {
     color: "#a0a0c0",
-    fontSize: 14,
-    lineHeight: 20,
+    fontSize: 16,
+    lineHeight: 22,
     textAlign: "left",
-    marginBottom: 12,
+    marginBottom: 16,
   },
   infoRow: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: 8,
+    marginBottom: 12,
   },
   infoLabel: {
     color: "#a0a0c0",
-    fontSize: 16,
-    width: 100,
+    fontSize: 17,
+    width: 110,
   },
   infoValue: {
     color: "#f0f0f0",
-    fontSize: 16,
+    fontSize: 17,
     fontFamily: "monospace",
     flex: 1,
     textAlign: "right",
   },
   sectionTitle: {
     color: "#f0f0f0",
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: "bold",
-    marginTop: 24,
-    marginBottom: 12,
+    marginTop: 28,
+    marginBottom: 16,
   },
   infoContainer: {
-    backgroundColor: "#323248",
-    padding: 16,
-    borderRadius: 10,
+    backgroundColor: "rgba(50, 50, 72, 0.9)",
+    padding: 20,
+    borderRadius: 16,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 3,
   },
 });

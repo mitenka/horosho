@@ -13,8 +13,8 @@ import {
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { LinearGradient } from "expo-linear-gradient";
 import { useData } from "../../contexts/DataContext";
-import commonStyles from "../../styles/commonStyles";
 
 export default function Dictionary() {
   const insets = useSafeAreaInsets();
@@ -78,44 +78,53 @@ export default function Dictionary() {
   // Show loading indicator if data is being loaded
   if (isLoading) {
     return (
-      <View style={[styles.container, { paddingTop: insets.top }]}>
+      <LinearGradient
+        colors={["#3f3f68", "#2a2a45"]}
+        style={[styles.container, { paddingTop: insets.top + 8 }]}
+      >
         <View style={styles.titleContainer}>
-          <Text style={commonStyles.title}>Словарь</Text>
+          <Text style={styles.pageTitle}>Словарь</Text>
         </View>
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color="#a0a0d0" />
           <Text style={styles.loadingText}>Загрузка словаря...</Text>
         </View>
-      </View>
+      </LinearGradient>
     );
   }
 
   // Show error message if something went wrong
   if (error) {
     return (
-      <View style={[styles.container, { paddingTop: insets.top }]}>
+      <LinearGradient
+        colors={["#3f3f68", "#2a2a45"]}
+        style={[styles.container, { paddingTop: insets.top + 8 }]}
+      >
         <View style={styles.titleContainer}>
-          <Text style={commonStyles.title}>Словарь</Text>
+          <Text style={styles.pageTitle}>Словарь</Text>
         </View>
         <View style={styles.errorContainer}>
           <Text style={styles.errorText}>
             Произошла ошибка при загрузке словаря
           </Text>
         </View>
-      </View>
+      </LinearGradient>
     );
   }
 
   return (
-    <View style={[styles.container, { paddingTop: insets.top }]}>
+    <LinearGradient
+      colors={["#3f3f68", "#2a2a45"]}
+      style={[styles.container, { paddingTop: insets.top + 8 }]}
+    >
       <View style={styles.titleContainer}>
-        <Text style={commonStyles.title}>Словарь</Text>
+        <Text style={styles.pageTitle}>Словарь</Text>
       </View>
-      <View style={styles.fixedContentContainer}>
+      <View style={[styles.fixedContentContainer, { marginTop: 10 }]}>
         <View style={styles.searchContainer}>
           <Ionicons
             name="search-outline"
-            size={20}
+            size={22}
             color="#a0a0d0"
             style={styles.searchIcon}
           />
@@ -131,25 +140,29 @@ export default function Dictionary() {
               onPress={() => setSearchQuery("")}
               style={styles.clearButton}
             >
-              <Ionicons name="close-circle" size={20} color="#8484a9" />
+              <Ionicons name="close" size={22} color="#a0a0d0" />
             </TouchableOpacity>
           )}
         </View>
       </View>
 
-      <FlatList
-        ref={flatListRef}
-        data={filteredTerms}
-        renderItem={renderTermCard}
-        keyExtractor={(item) => item.id.toString()}
-        contentContainerStyle={styles.scrollViewContent}
-        showsVerticalScrollIndicator={false}
-        ListEmptyComponent={
-          <View style={styles.emptyContainer}>
-            <Text style={styles.emptyText}>Термины не найдены</Text>
-          </View>
-        }
-      />
+      {filteredTerms.length === 0 ? (
+        <View style={styles.emptyContainer}>
+          <Text style={styles.emptyText}>
+            Ничего не найдено. Попробуйте изменить запрос.
+          </Text>
+        </View>
+      ) : (
+        <FlatList
+          ref={flatListRef}
+          data={filteredTerms}
+          renderItem={renderTermCard}
+          keyExtractor={(item) => item.id.toString()}
+          contentContainerStyle={[styles.scrollViewContent, { paddingBottom: insets.bottom + 16 }]}
+          showsVerticalScrollIndicator={false}
+          bounces={true}
+        />
+      )}
 
       <Modal
         animationType="fade"
@@ -208,7 +221,7 @@ export default function Dictionary() {
           </View>
         </View>
       </Modal>
-    </View>
+    </LinearGradient>
   );
 }
 
@@ -219,169 +232,197 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   loadingText: {
-    marginTop: 10,
-    fontSize: 16,
+    marginTop: 12,
+    fontSize: 18,
     color: "#c8c8e0",
   },
   errorContainer: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    padding: 20,
+    padding: 24,
   },
   errorText: {
-    fontSize: 16,
+    fontSize: 18,
     color: "#ff6b6b",
     textAlign: "center",
   },
   container: {
     flex: 1,
-    backgroundColor: "#3a3a5e",
   },
   titleContainer: {
-    paddingHorizontal: 16,
-    paddingVertical: 12,
+    paddingHorizontal: 20,
+    paddingVertical: 16,
+  },
+  pageTitle: {
+    fontSize: 28,
+    fontWeight: "700",
+    color: "#fff",
+    letterSpacing: 0.5,
   },
   fixedContentContainer: {
-    paddingHorizontal: 16,
+    paddingHorizontal: 20,
   },
   modalOverlay: {
     flex: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    backgroundColor: "rgba(0, 0, 0, 0.6)",
     justifyContent: "center",
     alignItems: "center",
-    padding: 20,
+    padding: 24,
   },
   modalContent: {
-    backgroundColor: "#2d2d4a",
-    borderRadius: 16,
+    backgroundColor: "#2a2a45",
+    borderRadius: 24,
     width: "100%",
     maxHeight: "80%",
-    elevation: 5,
+    elevation: 6,
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.35,
+    shadowRadius: 10,
+    borderWidth: 1,
+    borderColor: "rgba(255, 255, 255, 0.08)",
   },
   modalHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
     borderBottomWidth: 1,
-    borderBottomColor: "#3a3a5e",
-    padding: 16,
+    borderBottomColor: "rgba(58, 58, 94, 0.5)",
+    padding: 22,
+    paddingBottom: 18,
   },
   modalTitle: {
-    fontSize: 20,
-    fontWeight: "600",
+    fontSize: 24,
+    fontWeight: "700",
     color: "#f0f0f0",
     flex: 1,
+    letterSpacing: 0.3,
   },
   closeButton: {
-    padding: 4,
+    padding: 10,
+    marginRight: -6,
   },
   modalBody: {
-    padding: 16,
+    padding: 22,
   },
   definitionContainer: {
-    marginBottom: 24,
+    marginBottom: 28,
   },
   definitionLabel: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: "600",
     color: "#a0a0d0",
-    marginBottom: 8,
+    marginBottom: 10,
+    letterSpacing: 0.2,
   },
   definitionText: {
-    fontSize: 16,
-    lineHeight: 24,
+    fontSize: 17,
+    lineHeight: 26,
     color: "#f0f0f0",
   },
   relatedTermsContainer: {
     marginBottom: 16,
   },
   relatedTermsLabel: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: "600",
     color: "#a0a0d0",
-    marginBottom: 12,
+    marginBottom: 14,
+    letterSpacing: 0.2,
   },
   relatedTermButton: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#3a3a5e",
-    padding: 12,
-    borderRadius: 10,
-    marginBottom: 8,
+    backgroundColor: "#3f3f68",
+    padding: 14,
+    borderRadius: 14,
+    marginBottom: 10,
+    borderWidth: 1,
+    borderColor: "rgba(255, 255, 255, 0.08)",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 3,
+    elevation: 2,
   },
   relatedTermIcon: {
     marginRight: 8,
   },
   relatedTermText: {
-    fontSize: 15,
+    fontSize: 16,
     color: "#f0f0f0",
-    fontWeight: "500",
+    fontWeight: "600",
+    letterSpacing: 0.2,
   },
   // Search container
   searchContainer: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#2d2d4a",
-    borderRadius: 10,
-    marginBottom: 20,
-    paddingHorizontal: 10,
-    height: 46,
-  },
-  searchIcon: {
-    marginRight: 8,
-  },
-  searchInput: {
-    flex: 1,
-    color: "#f0f0f0",
-    fontSize: 16,
-    height: "100%",
-  },
-  clearButton: {
-    padding: 4,
-  },
-  scrollViewContent: {
-    paddingHorizontal: 16,
-  },
-  card: {
-    backgroundColor: "#3a3a5e",
+    backgroundColor: "rgba(45, 45, 74, 0.8)",
     borderRadius: 12,
-    padding: 16,
-    marginBottom: 12,
-    elevation: 2,
+    marginBottom: 20,
+    paddingHorizontal: 16,
+    height: 54,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
+    elevation: 2,
+  },
+  searchIcon: {
+    marginRight: 12,
+  },
+  searchInput: {
+    flex: 1,
+    color: "#f0f0f0",
+    fontSize: 18,
+    height: "100%",
+  },
+  clearButton: {
+    padding: 8,
+  },
+  scrollViewContent: {
+    paddingHorizontal: 20,
+    paddingTop: 8,
+    paddingBottom: 24,
+  },
+  card: {
+    backgroundColor: "rgba(58, 58, 94, 0.9)",
+    borderRadius: 16,
+    padding: 20,
+    marginBottom: 16,
+    elevation: 3,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 8,
   },
   cardHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: 8,
+    marginBottom: 10,
   },
   title: {
-    fontSize: 17,
+    fontSize: 19,
     fontWeight: "600",
     color: "#f0f0f0",
     flex: 1,
   },
   definition: {
-    fontSize: 14,
+    fontSize: 16,
     color: "#c8c8e0",
-    lineHeight: 20,
+    lineHeight: 22,
   },
   emptyContainer: {
     alignItems: "center",
     justifyContent: "center",
-    padding: 30,
+    padding: 40,
   },
   emptyText: {
     color: "#8484a9",
-    fontSize: 16,
+    fontSize: 18,
+    textAlign: "center",
   },
 });

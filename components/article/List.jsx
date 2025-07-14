@@ -22,35 +22,35 @@ export default function List({ items, title, color = "#7CB342" }) {
 
 const styles = StyleSheet.create({
   listContainer: {
-    marginBottom: 24,
+    marginBottom: 28,
   },
   title: {
-    fontSize: 20,
+    fontSize: 22,
     fontWeight: "600",
-    letterSpacing: 0.3,
-    marginBottom: 12,
+    letterSpacing: 0.4,
+    marginBottom: 14,
     color: "#f0f0f0",
   },
   listItemsContainer: {
-    marginLeft: 4,
+    marginLeft: 6,
   },
   listItemContainer: {
     flexDirection: "row",
-    marginVertical: 6,
+    marginVertical: 8,
     alignItems: "flex-start",
   },
   marker: {
-    width: 6,
-    height: 6,
-    borderRadius: 3,
-    marginRight: 12,
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    marginRight: 14,
     marginTop: 9,
   },
   listItem: {
-    fontSize: 16,
+    fontSize: 17,
     color: "#e0e0e0",
-    lineHeight: 24,
+    lineHeight: 26,
     flex: 1,
-    letterSpacing: 0.2,
+    letterSpacing: 0.3,
   },
 });

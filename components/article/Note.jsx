@@ -20,22 +20,27 @@ export default function Note({ text, color = "#0078D7" }) {
 
 const styles = StyleSheet.create({
   noteContainer: {
-    marginBottom: 24,
+    marginBottom: 28,
   },
   noteWrapper: {
     borderWidth: 2,
     borderStyle: "dashed",
-    borderRadius: 6,
+    borderRadius: 12,
     padding: 2,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
   },
   noteContent: {
-    padding: 16,
-    backgroundColor: "rgba(45, 45, 65, 0.4)",
-    borderRadius: 4,
+    padding: 18,
+    backgroundColor: "rgba(45, 45, 65, 0.5)",
+    borderRadius: 10,
   },
   noteText: {
-    fontSize: 16,
-    lineHeight: 24,
+    fontSize: 17,
+    lineHeight: 26,
     fontWeight: "600",
     letterSpacing: 0.3,
   },

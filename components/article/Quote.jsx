@@ -25,27 +25,28 @@ export default function Quote({ text, author, color = "#7CB342" }) {
 
 const styles = StyleSheet.create({
   quoteContainer: {
-    marginBottom: 24,
-    borderLeftWidth: 3,
+    marginBottom: 28,
+    borderLeftWidth: 4,
     flexDirection: "row",
-    paddingLeft: 16,
+    paddingLeft: 18,
+    paddingVertical: 2,
   },
   quoteContent: {
     flex: 1,
   },
   quoteText: {
-    fontSize: 17,
-    lineHeight: 26,
+    fontSize: 18,
+    lineHeight: 28,
     fontStyle: "italic",
     color: "#e0e0e0",
-    letterSpacing: 0.2,
-    marginBottom: 8,
+    letterSpacing: 0.3,
+    marginBottom: 10,
   },
   quoteAuthor: {
-    fontSize: 15,
+    fontSize: 16,
     textAlign: "right",
     fontWeight: "600",
     letterSpacing: 0.3,
-    marginTop: 4,
+    marginTop: 6,
   },
 });

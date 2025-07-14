@@ -7,10 +7,10 @@ export default function Paragraph({ text }) {
 
 const styles = StyleSheet.create({
   paragraph: {
-    fontSize: 16,
+    fontSize: 17,
     color: "#e0e0e0",
-    lineHeight: 24,
-    marginBottom: 24,
-    letterSpacing: 0.2,
+    lineHeight: 26,
+    marginBottom: 26,
+    letterSpacing: 0.3,
   },
 });
