@@ -135,7 +135,7 @@ export default function Settings() {
       style={[styles.container, { paddingTop: insets.top + 8 }]}
     >
       <View style={styles.titleContainer}>
-        <Text style={styles.pageTitle}>Настройки</Text>
+        <Text style={styles.pageTitle}>Настройка</Text>
       </View>
 
       <ScrollView
