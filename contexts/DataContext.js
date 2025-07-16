@@ -1,6 +1,10 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { AppState } from "react-native";
-import { initializeData } from "../services/dataService";
+import {
+  getSettings,
+  initializeData,
+  updateSetting,
+} from "../services/dataService";
 
 import { useBehaviorsContext } from "./behaviorsContext";
 import { useContentContext } from "./contentContext";
@@ -13,6 +17,7 @@ const DataContext = createContext();
 export const DataProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [settings, setSettings] = useState({ useFeminineVerbs: true });
 
   const contentContext = useContentContext();
   const readingProgressContext = useReadingProgressContext();
@@ -54,6 +59,10 @@ export const DataProvider = ({ children }) => {
     const setupData = async () => {
       try {
         await initializeData();
+
+        // Load settings after initialization
+        const currentSettings = await getSettings();
+        setSettings(currentSettings);
 
         await loadData();
 
@@ -99,6 +108,20 @@ export const DataProvider = ({ children }) => {
     };
   }, []);
 
+  // Function to update a setting
+  const updateSettingValue = async (key, value) => {
+    try {
+      const updatedSettings = await updateSetting(key, value);
+      if (updatedSettings) {
+        setSettings(updatedSettings);
+      }
+      return updatedSettings;
+    } catch (error) {
+      console.error(`Error updating setting ${key}:`, error);
+      return null;
+    }
+  };
+
   const value = {
     isLoading,
     error,
@@ -121,6 +144,10 @@ export const DataProvider = ({ children }) => {
         updateBlockProgress
       ),
     loadData,
+
+    // Settings
+    settings,
+    updateSetting: updateSettingValue,
 
     ...behaviorsContext,
 

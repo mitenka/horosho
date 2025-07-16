@@ -19,6 +19,12 @@ import {
   markArticleAsUnread,
   resetReadingProgress,
 } from "./readingProgressService";
+import {
+  getSettings,
+  saveSettings,
+  initializeSettings,
+  updateSetting,
+} from "./settingsService";
 import { STORAGE_KEYS, dictionary, meta, theory } from "./storageConfig";
 import {
   checkForUpdates,
@@ -94,6 +100,9 @@ export const initializeData = async () => {
         AsyncStorage.setItem(STORAGE_KEYS.THEORY_VERSION, meta.theoryVersion)
       );
     }
+    
+    // Initialize settings with default values if needed
+    await initializeSettings();
 
     if (storageOperations.length > 0) {
       await Promise.all(storageOperations);
@@ -129,6 +138,11 @@ export {
   resetReadingProgress,
   saveDiaryEntry,
   updateBehavior,
+  // From settingsService
+  getSettings,
+  saveSettings,
+  initializeSettings,
+  updateSetting,
   // From updateService
   updateLastCheckTime,
 };

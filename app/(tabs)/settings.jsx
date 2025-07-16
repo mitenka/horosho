@@ -7,6 +7,7 @@ import {
   Linking,
   ScrollView,
   StyleSheet,
+  Switch,
   Text,
   TouchableOpacity,
   View,
@@ -39,7 +40,7 @@ export default function Settings() {
     theoryVersion: "-",
     lastUpdateCheck: null,
   });
-  const { loadData } = useData();
+  const { loadData, settings, updateSetting } = useData();
 
   useScrollToTop(scrollViewRef);
 
@@ -207,6 +208,24 @@ export default function Settings() {
         showsVerticalScrollIndicator={false}
         bounces={true}
       >
+        <View style={styles.settingsContainer}>
+          <View style={styles.settingRow}>
+            <Text style={styles.settingLabel}>
+              Использовать глаголы в женском роде
+            </Text>
+            <Switch
+              value={settings?.useFeminineVerbs}
+              onValueChange={(value) =>
+                updateSetting("useFeminineVerbs", value)
+              }
+              trackColor={{ false: "#3a3a5e", true: "#6e6ea0" }}
+              thumbColor={settings?.useFeminineVerbs ? "#f0f0f0" : "#a0a0c0"}
+              ios_backgroundColor="#3a3a5e"
+              style={styles.settingSwitch}
+            />
+          </View>
+        </View>
+
         <View style={styles.infoContainer}>
           <View style={styles.infoRow}>
             <Text style={styles.infoLabel}>Словарь:</Text>
@@ -324,7 +343,7 @@ const styles = StyleSheet.create({
   contactSection: {
     backgroundColor: "rgba(50, 50, 72, 0.9)",
     padding: 20,
-    borderRadius: 16,
+    borderRadius: 12,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
@@ -448,13 +467,39 @@ const styles = StyleSheet.create({
     color: "#f0f0f0",
     fontSize: 20,
     fontWeight: "bold",
-    marginTop: 28,
     marginBottom: 16,
+  },
+  settingsContainer: {
+    backgroundColor: "rgba(50, 50, 72, 0.9)",
+    padding: 20,
+    borderRadius: 12,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 3,
+    marginBottom: 24,
+  },
+  settingRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingVertical: 14,
+  },
+  settingLabel: {
+    color: "#f0f0f0",
+    fontSize: 18,
+    flex: 1,
+    paddingRight: 16,
+    fontWeight: "500",
+  },
+  settingSwitch: {
+    transform: [{ scaleX: 1.1 }, { scaleY: 1.1 }],
   },
   infoContainer: {
     backgroundColor: "rgba(50, 50, 72, 0.9)",
     padding: 20,
-    borderRadius: 16,
+    borderRadius: 12,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
