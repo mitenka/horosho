@@ -21,6 +21,7 @@ import {
   getLastUpdateCheckTime,
   resetReadingProgress,
 } from "../../services/dataService";
+import { clearBehaviors, clearDiaryHistory } from "../../services/dbtDiaryService";
 
 const APP_VERSION = appJson.expo.version;
 
@@ -129,6 +130,64 @@ export default function Settings() {
     }
   };
 
+  const handleClearBehaviors = async () => {
+    Alert.alert(
+      "Очистка списка поведений",
+      "Вы уверены, что хотите удалить все добавленные вами поведения? Это действие нельзя отменить.",
+      [
+        { text: "Отмена", style: "cancel" },
+        {
+          text: "Очистить",
+          style: "destructive",
+          onPress: async () => {
+            try {
+              setIsLoading(true);
+              const success = await clearBehaviors();
+              if (success) {
+                Alert.alert("Готово", "Список поведений успешно очищен");
+              } else {
+                Alert.alert("Ошибка", "Не удалось очистить список поведений");
+              }
+            } catch (error) {
+              Alert.alert("Ошибка", `Произошла ошибка: ${error.message}`);
+            } finally {
+              setIsLoading(false);
+            }
+          },
+        },
+      ]
+    );
+  };
+
+  const handleClearDiaryHistory = async () => {
+    Alert.alert(
+      "Удаление истории дневника",
+      "Вы уверены, что хотите удалить всю историю дневника? Это действие нельзя отменить.",
+      [
+        { text: "Отмена", style: "cancel" },
+        {
+          text: "Удалить",
+          style: "destructive",
+          onPress: async () => {
+            try {
+              setIsLoading(true);
+              const success = await clearDiaryHistory();
+              if (success) {
+                Alert.alert("Готово", "История дневника успешно удалена");
+              } else {
+                Alert.alert("Ошибка", "Не удалось удалить историю дневника");
+              }
+            } catch (error) {
+              Alert.alert("Ошибка", `Произошла ошибка: ${error.message}`);
+            } finally {
+              setIsLoading(false);
+            }
+          },
+        },
+      ]
+    );
+  };
+
   return (
     <LinearGradient
       colors={["#3a3a5e", "#2d2d4a"]}
@@ -196,6 +255,28 @@ export default function Settings() {
                 <Ionicons name="trash-outline" size={20} color="#ffffff" />
               </View>
               <Text style={styles.buttonText}>Сбросить прогресс чтения</Text>
+            </TouchableOpacity>
+            
+            <TouchableOpacity
+              style={styles.button}
+              onPress={handleClearBehaviors}
+              disabled={isLoading}
+            >
+              <View style={styles.iconContainer}>
+                <Ionicons name="trash-outline" size={20} color="#ffffff" />
+              </View>
+              <Text style={styles.buttonText}>Очистить список поведений</Text>
+            </TouchableOpacity>
+            
+            <TouchableOpacity
+              style={styles.button}
+              onPress={handleClearDiaryHistory}
+              disabled={isLoading}
+            >
+              <View style={styles.iconContainer}>
+                <Ionicons name="trash-outline" size={20} color="#ffffff" />
+              </View>
+              <Text style={styles.buttonText}>Удалить историю дневника</Text>
             </TouchableOpacity>
           </View>
 

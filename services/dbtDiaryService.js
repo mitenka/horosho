@@ -265,3 +265,31 @@ export const getDiaryEntriesInRange = async (startDate, endDate) => {
     return [];
   }
 };
+
+/**
+ * Clears all behaviors data
+ * @returns {Promise<boolean>} - Whether the operation was successful
+ */
+export const clearBehaviors = async () => {
+  try {
+    await AsyncStorage.removeItem(STORAGE_KEYS.DBT_BEHAVIORS);
+    return true;
+  } catch (error) {
+    console.error("Error clearing behaviors:", error);
+    return false;
+  }
+};
+
+/**
+ * Clears all diary history entries
+ * @returns {Promise<boolean>} - Whether the operation was successful
+ */
+export const clearDiaryHistory = async () => {
+  try {
+    await AsyncStorage.removeItem(STORAGE_KEYS.DBT_DIARY_ENTRIES);
+    return true;
+  } catch (error) {
+    console.error("Error clearing diary history:", error);
+    return false;
+  }
+};
