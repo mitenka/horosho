@@ -5,7 +5,7 @@ import {
   getBehaviors,
   updateBehavior,
 } from "../services/dataService";
-export const useDbtBehaviorsContext = () => {
+export const useBehaviorsContext = () => {
   const [behaviors, setBehaviors] = useState([]);
 
   const loadBehaviors = async () => {

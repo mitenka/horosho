@@ -1,18 +1,18 @@
-import React, { useState, useEffect } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  ScrollView,
-  ActivityIndicator,
-  Clipboard,
-  ToastAndroid,
-  Platform,
-  Alert,
-} from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Ionicons } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import React, { useEffect, useState } from "react";
+import {
+  ActivityIndicator,
+  Alert,
+  Clipboard,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  ToastAndroid,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { STORAGE_KEYS } from "../services/storageConfig";
 
 const StorageDataViewer = () => {
@@ -25,9 +25,9 @@ const StorageDataViewer = () => {
   const keysToDisplay = [
     STORAGE_KEYS.DICTIONARY,
     STORAGE_KEYS.THEORY,
-    STORAGE_KEYS.DBT_BEHAVIORS,
-    STORAGE_KEYS.DBT_DIARY_ENTRIES,
-    STORAGE_KEYS.DBT_SETTINGS,
+    STORAGE_KEYS.BEHAVIORS,
+    STORAGE_KEYS.DIARY_ENTRIES,
+    STORAGE_KEYS.SETTINGS,
     STORAGE_KEYS.READ_ARTICLES,
   ];
 
@@ -39,66 +39,70 @@ const StorageDataViewer = () => {
     setLoading(true);
     try {
       const dataObj = {};
-      
+
       for (const key of keysToDisplay) {
         const value = await AsyncStorage.getItem(key);
         let parsedValue = null;
-        
+
         try {
           parsedValue = value ? JSON.parse(value) : null;
         } catch (e) {
           parsedValue = value;
         }
-        
+
         // Special handling for Dictionary and Theory to count articles
         if (key === STORAGE_KEYS.DICTIONARY && parsedValue) {
           // Dictionary is a flat array of term objects
-          const totalTerms = Array.isArray(parsedValue) ? parsedValue.length : 0;
-          
+          const totalTerms = Array.isArray(parsedValue)
+            ? parsedValue.length
+            : 0;
+
           dataObj[key] = {
             value: parsedValue,
             size: value ? new TextEncoder().encode(value).length : 0,
             items: totalTerms,
             itemLabel: "терминов",
-            isSimpleCount: true
+            isSimpleCount: true,
           };
-        } 
-        else if (key === STORAGE_KEYS.THEORY && parsedValue) {
+        } else if (key === STORAGE_KEYS.THEORY && parsedValue) {
           const blockCounts = {};
           let totalArticles = 0;
-          
+
           // Theory has a blocks array with articles inside each block
           if (parsedValue && Array.isArray(parsedValue.blocks)) {
-            parsedValue.blocks.forEach(block => {
+            parsedValue.blocks.forEach((block) => {
               if (block && Array.isArray(block.articles)) {
                 blockCounts[block.id] = {
                   title: block.title,
-                  count: block.articles.length
+                  count: block.articles.length,
                 };
                 totalArticles += block.articles.length;
               }
             });
           }
-          
+
           dataObj[key] = {
             value: parsedValue,
             size: value ? new TextEncoder().encode(value).length : 0,
             items: totalArticles,
             blocks: blockCounts,
             blockCount: Object.keys(blockCounts).length,
-            itemLabel: "статей"
+            itemLabel: "статей",
           };
-        }
-        else {
+        } else {
           dataObj[key] = {
             value: parsedValue,
             size: value ? new TextEncoder().encode(value).length : 0,
-            items: parsedValue && typeof parsedValue === "object" ? 
-              (Array.isArray(parsedValue) ? parsedValue.length : Object.keys(parsedValue).length) : 0
+            items:
+              parsedValue && typeof parsedValue === "object"
+                ? Array.isArray(parsedValue)
+                  ? parsedValue.length
+                  : Object.keys(parsedValue).length
+                : 0,
           };
         }
       }
-      
+
       setStorageData(dataObj);
     } catch (error) {
       console.error("Error loading storage data:", error);
@@ -114,28 +118,28 @@ const StorageDataViewer = () => {
       setExpandedKey(key);
     }
   };
-  
+
   const copyToClipboard = (key) => {
     try {
       const data = storageData[key];
       if (!data || !data.value) return;
-      
+
       const content = JSON.stringify(data.value, null, 2);
       Clipboard.setString(content);
-      
+
       // Show feedback
       setCopiedKey(key);
       setTimeout(() => setCopiedKey(null), 2000);
-      
+
       // Platform specific feedback
-      if (Platform.OS === 'android') {
-        ToastAndroid.show('Скопировано в буфер обмена', ToastAndroid.SHORT);
+      if (Platform.OS === "android") {
+        ToastAndroid.show("Скопировано в буфер обмена", ToastAndroid.SHORT);
       } else {
-        Alert.alert('Скопировано', 'Данные скопированы в буфер обмена');
+        Alert.alert("Скопировано", "Данные скопированы в буфер обмена");
       }
     } catch (error) {
-      console.error('Error copying to clipboard:', error);
-      Alert.alert('Ошибка', 'Не удалось скопировать данные');
+      console.error("Error copying to clipboard:", error);
+      Alert.alert("Ошибка", "Не удалось скопировать данные");
     }
   };
 
@@ -153,7 +157,7 @@ const StorageDataViewer = () => {
   const formatData = (data) => {
     if (data === null) return "null";
     if (data === undefined) return "undefined";
-    
+
     try {
       return JSON.stringify(data, null, 2);
     } catch (e) {
@@ -174,92 +178,101 @@ const StorageDataViewer = () => {
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Данные хранилища</Text>
-        <TouchableOpacity 
-          style={styles.refreshButton} 
+        <TouchableOpacity
+          style={styles.refreshButton}
           onPress={loadStorageData}
         >
           <Ionicons name="refresh" size={20} color="#a0a0c0" />
         </TouchableOpacity>
       </View>
-      
+
       {keysToDisplay.map((key) => {
         const data = storageData[key];
         const isExpanded = expandedKey === key;
-        
+
         if (!data) return null;
-        
+
         return (
           <View key={key} style={styles.itemContainer}>
-            <TouchableOpacity 
-              style={styles.itemHeader} 
+            <TouchableOpacity
+              style={styles.itemHeader}
               onPress={() => toggleExpand(key)}
             >
               <View style={styles.itemTitleContainer}>
-                <Text style={styles.itemTitle}>
-                  {getKeyDisplayName(key)}
-                </Text>
+                <Text style={styles.itemTitle}>{getKeyDisplayName(key)}</Text>
                 <View style={styles.itemMeta}>
                   {key === STORAGE_KEYS.DICTIONARY && (
                     <Text style={styles.itemMetaText}>
-                      {data.items} {data.itemLabel || "элем."} • {formatBytes(data.size)}
+                      {data.items} {data.itemLabel || "элем."} •{" "}
+                      {formatBytes(data.size)}
                     </Text>
                   )}
                   {key === STORAGE_KEYS.THEORY && (
                     <Text style={styles.itemMetaText}>
-                      {data.items} {data.itemLabel || "элем."} ({data.blockCount} разделов) • {formatBytes(data.size)}
+                      {data.items} {data.itemLabel || "элем."} (
+                      {data.blockCount} разделов) • {formatBytes(data.size)}
                     </Text>
                   )}
-                  {key !== STORAGE_KEYS.DICTIONARY && key !== STORAGE_KEYS.THEORY && (
-                    <Text style={styles.itemMetaText}>
-                      {data.items} элем. • {formatBytes(data.size)}
-                    </Text>
-                  )}
+                  {key !== STORAGE_KEYS.DICTIONARY &&
+                    key !== STORAGE_KEYS.THEORY && (
+                      <Text style={styles.itemMetaText}>
+                        {data.items} элем. • {formatBytes(data.size)}
+                      </Text>
+                    )}
                 </View>
               </View>
               <View style={styles.actionsContainer}>
                 <TouchableOpacity
-                  style={[styles.copyButton, copiedKey === key && styles.copyButtonActive]}
+                  style={[
+                    styles.copyButton,
+                    copiedKey === key && styles.copyButtonActive,
+                  ]}
                   onPress={() => copyToClipboard(key)}
                 >
                   <Ionicons
-                    name={copiedKey === key ? "checkmark" : "copy-outline"} 
-                    size={18} 
+                    name={copiedKey === key ? "checkmark" : "copy-outline"}
+                    size={18}
                     color={copiedKey === key ? "#ffffff" : "#a0a0c0"}
                   />
                 </TouchableOpacity>
-                <Ionicons 
-                  name={isExpanded ? "chevron-up" : "chevron-down"} 
-                  size={22} 
-                  color="#a0a0c0" 
-                  style={{marginLeft: 12}}
-                />  
+                <Ionicons
+                  name={isExpanded ? "chevron-up" : "chevron-down"}
+                  size={22}
+                  color="#a0a0c0"
+                  style={{ marginLeft: 12 }}
+                />
               </View>
             </TouchableOpacity>
-            
+
             {isExpanded && (
-              <ScrollView 
-                style={styles.dataContainer}
-                horizontal={false}
-              >
+              <ScrollView style={styles.dataContainer} horizontal={false}>
                 {/* Special display for Dictionary */}
                 {key === STORAGE_KEYS.DICTIONARY && data.isSimpleCount ? (
                   <View style={styles.categoriesContainer}>
-                    <Text style={styles.categoriesTitle}>Словарь содержит {data.items} терминов</Text>
+                    <Text style={styles.categoriesTitle}>
+                      Словарь содержит {data.items} терминов
+                    </Text>
                     <View style={styles.divider} />
                     <Text style={styles.dataText}>
                       {formatData(data.value)}
                     </Text>
                   </View>
                 ) : null}
-                
+
                 {/* Special display for Theory blocks */}
                 {key === STORAGE_KEYS.THEORY && data.blocks ? (
                   <View style={styles.categoriesContainer}>
-                    <Text style={styles.categoriesTitle}>Количество статей по разделам:</Text>
+                    <Text style={styles.categoriesTitle}>
+                      Количество статей по разделам:
+                    </Text>
                     {Object.entries(data.blocks).map(([blockId, blockData]) => (
                       <View key={blockId} style={styles.categoryItem}>
-                        <Text style={styles.categoryName}>{blockData.title}</Text>
-                        <Text style={styles.categoryCount}>{blockData.count}</Text>
+                        <Text style={styles.categoryName}>
+                          {blockData.title}
+                        </Text>
+                        <Text style={styles.categoryCount}>
+                          {blockData.count}
+                        </Text>
                       </View>
                     ))}
                     <View style={styles.divider} />
@@ -268,13 +281,14 @@ const StorageDataViewer = () => {
                     </Text>
                   </View>
                 ) : null}
-                
+
                 {/* Default display for other keys or when special handling is not applicable */}
-                {(key !== STORAGE_KEYS.DICTIONARY || !data.isSimpleCount) && (key !== STORAGE_KEYS.THEORY || !data.blocks) && (
-                  <Text style={styles.dataText}>
-                    {formatData(data.value)}
-                  </Text>
-                )}
+                {(key !== STORAGE_KEYS.DICTIONARY || !data.isSimpleCount) &&
+                  (key !== STORAGE_KEYS.THEORY || !data.blocks) && (
+                    <Text style={styles.dataText}>
+                      {formatData(data.value)}
+                    </Text>
+                  )}
               </ScrollView>
             )}
           </View>
@@ -409,7 +423,7 @@ const styles = StyleSheet.create({
     height: 1,
     backgroundColor: "rgba(100, 100, 140, 0.5)",
     marginVertical: 16,
-  }
+  },
 });
 
 export default StorageDataViewer;

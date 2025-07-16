@@ -1,6 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // Import from other service modules
+import { getDataVersions, getDictionary, getTheory } from "./contentService";
 import {
   addBehavior,
   deleteBehavior,
@@ -11,8 +12,7 @@ import {
   getDiaryEntryByDate,
   saveDiaryEntry,
   updateBehavior,
-} from "./dbtDiaryService";
-import { getDataVersions, getDictionary, getTheory } from "./contentService";
+} from "./diaryService";
 import {
   getReadArticles,
   markArticleAsRead,
@@ -112,7 +112,7 @@ export {
   checkForUpdates,
   deleteBehavior,
   deleteDiaryEntry,
-  // From dbtDiaryService
+  // From diaryService
   getBehaviors,
   getDataVersions,
   getDiaryEntries,

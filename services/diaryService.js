@@ -7,7 +7,7 @@ import { STORAGE_KEYS } from "./storageConfig";
  */
 export const getBehaviors = async () => {
   try {
-    const behaviorsData = await AsyncStorage.getItem(STORAGE_KEYS.DBT_BEHAVIORS);
+    const behaviorsData = await AsyncStorage.getItem(STORAGE_KEYS.BEHAVIORS);
     return behaviorsData ? JSON.parse(behaviorsData) : [];
   } catch (error) {
     console.error("Error getting behaviors:", error);
@@ -25,9 +25,9 @@ export const addBehavior = async (behavior) => {
     if (!behavior || !behavior.name || !behavior.type) {
       throw new Error("Invalid behavior data");
     }
-    
+
     const behaviors = await getBehaviors();
-    
+
     // Generate a unique ID
     const id = Date.now().toString();
     const newBehavior = {
@@ -35,16 +35,16 @@ export const addBehavior = async (behavior) => {
       id,
       createdAt: new Date().toISOString(),
     };
-    
+
     // Add to behaviors array
     behaviors.push(newBehavior);
-    
+
     // Save back to AsyncStorage
     await AsyncStorage.setItem(
-      STORAGE_KEYS.DBT_BEHAVIORS,
+      STORAGE_KEYS.BEHAVIORS,
       JSON.stringify(behaviors)
     );
-    
+
     return newBehavior;
   } catch (error) {
     console.error("Error adding behavior:", error);
@@ -63,32 +63,32 @@ export const updateBehavior = async (id, updates) => {
     if (!id || !updates) {
       throw new Error("Invalid update data");
     }
-    
+
     const behaviors = await getBehaviors();
-    
+
     // Find the behavior to update
-    const index = behaviors.findIndex(b => b.id === id);
-    
+    const index = behaviors.findIndex((b) => b.id === id);
+
     if (index === -1) {
       console.warn(`Behavior with id ${id} not found`);
       return null;
     }
-    
+
     // Update the behavior
     const updatedBehavior = {
       ...behaviors[index],
       ...updates,
       updatedAt: new Date().toISOString(),
     };
-    
+
     behaviors[index] = updatedBehavior;
-    
+
     // Save back to AsyncStorage
     await AsyncStorage.setItem(
-      STORAGE_KEYS.DBT_BEHAVIORS,
+      STORAGE_KEYS.BEHAVIORS,
       JSON.stringify(behaviors)
     );
-    
+
     return updatedBehavior;
   } catch (error) {
     console.error("Error updating behavior:", error);
@@ -106,23 +106,23 @@ export const deleteBehavior = async (id) => {
     if (!id) {
       throw new Error("Invalid behavior ID");
     }
-    
+
     const behaviors = await getBehaviors();
-    
+
     // Filter out the behavior to delete
-    const updatedBehaviors = behaviors.filter(b => b.id !== id);
-    
+    const updatedBehaviors = behaviors.filter((b) => b.id !== id);
+
     // If no behavior was removed, return false
     if (updatedBehaviors.length === behaviors.length) {
       return false;
     }
-    
+
     // Save back to AsyncStorage
     await AsyncStorage.setItem(
-      STORAGE_KEYS.DBT_BEHAVIORS,
+      STORAGE_KEYS.BEHAVIORS,
       JSON.stringify(updatedBehaviors)
     );
-    
+
     return true;
   } catch (error) {
     console.error("Error deleting behavior:", error);
@@ -136,7 +136,7 @@ export const deleteBehavior = async (id) => {
  */
 export const getDiaryEntries = async () => {
   try {
-    const entriesData = await AsyncStorage.getItem(STORAGE_KEYS.DBT_DIARY_ENTRIES);
+    const entriesData = await AsyncStorage.getItem(STORAGE_KEYS.DIARY_ENTRIES);
     return entriesData ? JSON.parse(entriesData) : [];
   } catch (error) {
     console.error("Error getting diary entries:", error);
@@ -152,7 +152,10 @@ export const getDiaryEntries = async () => {
 export const getDiaryEntryByDate = async (dateString) => {
   try {
     const entries = await getDiaryEntries();
-    return entries.find(entry => entry.date.substring(0, 10) === dateString) || null;
+    return (
+      entries.find((entry) => entry.date.substring(0, 10) === dateString) ||
+      null
+    );
   } catch (error) {
     console.error("Error getting diary entry by date:", error);
     return null;
@@ -169,15 +172,17 @@ export const saveDiaryEntry = async (entry) => {
     if (!entry || !entry.date) {
       throw new Error("Invalid diary entry data");
     }
-    
+
     const entries = await getDiaryEntries();
     const dateString = entry.date.substring(0, 10);
-    
+
     // Check if an entry for this date already exists
-    const existingIndex = entries.findIndex(e => e.date.substring(0, 10) === dateString);
-    
+    const existingIndex = entries.findIndex(
+      (e) => e.date.substring(0, 10) === dateString
+    );
+
     let updatedEntry;
-    
+
     if (existingIndex !== -1) {
       // Update existing entry
       updatedEntry = {
@@ -185,7 +190,7 @@ export const saveDiaryEntry = async (entry) => {
         ...entry,
         updatedAt: new Date().toISOString(),
       };
-      
+
       entries[existingIndex] = updatedEntry;
     } else {
       // Create new entry
@@ -195,16 +200,16 @@ export const saveDiaryEntry = async (entry) => {
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       };
-      
+
       entries.push(updatedEntry);
     }
-    
+
     // Save back to AsyncStorage
     await AsyncStorage.setItem(
-      STORAGE_KEYS.DBT_DIARY_ENTRIES,
+      STORAGE_KEYS.DIARY_ENTRIES,
       JSON.stringify(entries)
     );
-    
+
     return updatedEntry;
   } catch (error) {
     console.error("Error saving diary entry:", error);
@@ -222,23 +227,23 @@ export const deleteDiaryEntry = async (id) => {
     if (!id) {
       throw new Error("Invalid diary entry ID");
     }
-    
+
     const entries = await getDiaryEntries();
-    
+
     // Filter out the entry to delete
-    const updatedEntries = entries.filter(entry => entry.id !== id);
-    
+    const updatedEntries = entries.filter((entry) => entry.id !== id);
+
     // If no entry was removed, return false
     if (updatedEntries.length === entries.length) {
       return false;
     }
-    
+
     // Save back to AsyncStorage
     await AsyncStorage.setItem(
-      STORAGE_KEYS.DBT_DIARY_ENTRIES,
+      STORAGE_KEYS.DIARY_ENTRIES,
       JSON.stringify(updatedEntries)
     );
-    
+
     return true;
   } catch (error) {
     console.error("Error deleting diary entry:", error);
@@ -255,8 +260,8 @@ export const deleteDiaryEntry = async (id) => {
 export const getDiaryEntriesInRange = async (startDate, endDate) => {
   try {
     const entries = await getDiaryEntries();
-    
-    return entries.filter(entry => {
+
+    return entries.filter((entry) => {
       const entryDate = entry.date.substring(0, 10);
       return entryDate >= startDate && entryDate <= endDate;
     });
@@ -272,7 +277,7 @@ export const getDiaryEntriesInRange = async (startDate, endDate) => {
  */
 export const clearBehaviors = async () => {
   try {
-    await AsyncStorage.removeItem(STORAGE_KEYS.DBT_BEHAVIORS);
+    await AsyncStorage.removeItem(STORAGE_KEYS.BEHAVIORS);
     return true;
   } catch (error) {
     console.error("Error clearing behaviors:", error);
@@ -286,7 +291,7 @@ export const clearBehaviors = async () => {
  */
 export const clearDiaryHistory = async () => {
   try {
-    await AsyncStorage.removeItem(STORAGE_KEYS.DBT_DIARY_ENTRIES);
+    await AsyncStorage.removeItem(STORAGE_KEYS.DIARY_ENTRIES);
     return true;
   } catch (error) {
     console.error("Error clearing diary history:", error);

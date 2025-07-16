@@ -21,7 +21,7 @@ import {
   getLastUpdateCheckTime,
   resetReadingProgress,
 } from "../../services/dataService";
-import { clearBehaviors, clearDiaryHistory } from "../../services/dbtDiaryService";
+import { clearBehaviors, clearDiaryHistory } from "../../services/diaryService";
 
 const APP_VERSION = appJson.expo.version;
 
@@ -256,7 +256,7 @@ export default function Settings() {
               </View>
               <Text style={styles.buttonText}>Сбросить прогресс чтения</Text>
             </TouchableOpacity>
-            
+
             <TouchableOpacity
               style={styles.button}
               onPress={handleClearBehaviors}
@@ -267,7 +267,7 @@ export default function Settings() {
               </View>
               <Text style={styles.buttonText}>Очистить список поведений</Text>
             </TouchableOpacity>
-            
+
             <TouchableOpacity
               style={styles.button}
               onPress={handleClearDiaryHistory}

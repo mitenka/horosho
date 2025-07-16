@@ -10,10 +10,10 @@ export const STORAGE_KEYS = {
   THEORY_VERSION: "@horosho/theory_version",
   LAST_UPDATE_CHECK: "@horosho/last_update_check",
   READ_ARTICLES: "@horosho/read_articles",
-  // DBT Diary Card storage keys
-  DBT_BEHAVIORS: "@horosho/dbt/behaviors",
-  DBT_DIARY_ENTRIES: "@horosho/dbt/diary_entries",
-  DBT_SETTINGS: "@horosho/dbt/settings",
+  // Diary Card storage keys
+  BEHAVIORS: "@horosho/behaviors",
+  DIARY_ENTRIES: "@horosho/diary_entries",
+  SETTINGS: "@horosho/settings",
 };
 
 // GitHub raw content configuration

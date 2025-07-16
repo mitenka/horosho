@@ -6,7 +6,7 @@ import {
   saveDiaryEntry,
 } from "../services/dataService";
 
-export const useDbtDiaryContext = () => {
+export const useDiaryContext = () => {
   const [diaryEntries, setDiaryEntries] = useState([]);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [currentDiaryEntry, setCurrentDiaryEntry] = useState(null);

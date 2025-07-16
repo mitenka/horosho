@@ -2,9 +2,9 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import { AppState } from "react-native";
 import { initializeData } from "../services/dataService";
 
+import { useBehaviorsContext } from "./behaviorsContext";
 import { useContentContext } from "./contentContext";
-import { useDbtBehaviorsContext } from "./dbtBehaviorsContext";
-import { useDbtDiaryContext } from "./dbtDiaryContext";
+import { useDiaryContext } from "./diaryContext";
 import { useReadingProgressContext } from "./readingProgressContext";
 import { useUpdateContext } from "./updateContext";
 
@@ -16,8 +16,8 @@ export const DataProvider = ({ children }) => {
 
   const contentContext = useContentContext();
   const readingProgressContext = useReadingProgressContext();
-  const dbtBehaviorsContext = useDbtBehaviorsContext();
-  const dbtDiaryContext = useDbtDiaryContext();
+  const behaviorsContext = useBehaviorsContext();
+  const diaryContext = useDiaryContext();
   const updateContext = useUpdateContext();
 
   const { dictionary, theory, loadContent } = contentContext;
@@ -58,11 +58,11 @@ export const DataProvider = ({ children }) => {
         await loadData();
 
         await Promise.all([
-          dbtBehaviorsContext.loadBehaviors(),
-          dbtDiaryContext.loadDiaryEntries(),
+          behaviorsContext.loadBehaviors(),
+          diaryContext.loadDiaryEntries(),
         ]);
 
-        await dbtDiaryContext.loadDiaryEntryByDate(new Date());
+        await diaryContext.loadDiaryEntryByDate(new Date());
 
         updateContext.checkForUpdatesAndReload(
           loadContent,
@@ -122,9 +122,9 @@ export const DataProvider = ({ children }) => {
       ),
     loadData,
 
-    ...dbtBehaviorsContext,
+    ...behaviorsContext,
 
-    ...dbtDiaryContext,
+    ...diaryContext,
   };
 
   return <DataContext.Provider value={value}>{children}</DataContext.Provider>;
