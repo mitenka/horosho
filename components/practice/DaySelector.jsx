@@ -171,11 +171,6 @@ const styles = StyleSheet.create({
   },
   selectedDayContainer: {
     backgroundColor: "#ff3b30",
-    elevation: 4,
-    shadowColor: "#ff3b30",
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.4,
-    shadowRadius: 4,
   },
   todayContainer: {
     borderWidth: 2,
