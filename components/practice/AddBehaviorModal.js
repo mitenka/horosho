@@ -65,17 +65,16 @@ const AddBehaviorModal = ({ visible, onClose }) => {
   return (
     <Modal
       animationType="slide"
-      transparent={true}
+      presentationStyle="pageSheet"
       visible={visible}
       onRequestClose={onClose}
     >
-      <View style={styles.modalOverlay}>
-        <View
-          style={[
-            styles.modalContainer,
-            { paddingTop: Math.max(insets.top, 10) },
-          ]}
-        >
+      <View
+        style={[
+          styles.modalContainer,
+          { paddingTop: insets.top + 10 },
+        ]}
+      >
           <View style={styles.header}>
             <Text style={styles.headerTitle}>Добавить поведение</Text>
             <TouchableOpacity onPress={onClose} style={styles.closeButton}>
@@ -190,46 +189,29 @@ const AddBehaviorModal = ({ visible, onClose }) => {
               <Text style={styles.addButtonText}>Добавить</Text>
             </TouchableOpacity>
           </View>
-        </View>
       </View>
     </Modal>
   );
 };
 
 const styles = StyleSheet.create({
-  modalOverlay: {
-    flex: 1,
-    justifyContent: "flex-end",
-    backgroundColor: "rgba(0, 0, 0, 0.6)",
-  },
   modalContainer: {
-    height: "95%",
-    backgroundColor: "#3a3a5e",
-    borderTopLeftRadius: 24,
-    borderTopRightRadius: 24,
     flex: 1,
-    overflow: "hidden",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: -4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 10,
+    backgroundColor: "#2d2d4a",
     // paddingTop is applied dynamically based on safe area insets
   },
   header: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-    borderBottomWidth: 1,
-    borderBottomColor: "rgba(255, 255, 255, 0.12)",
+    paddingHorizontal: 20,
+    paddingVertical: 0,
   },
   headerTitle: {
-    fontSize: 20,
-    fontWeight: "700",
+    fontSize: 24,
+    fontWeight: "600",
     color: "#fff",
-    letterSpacing: 0.4,
+    letterSpacing: 0.3,
   },
   closeButton: {
     padding: 8,

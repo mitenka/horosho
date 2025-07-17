@@ -1,6 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import React, { useEffect, useState } from "react";
-import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Alert, Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useData } from "../../contexts/DataContext";
 import {
   getBehaviorEntry,
@@ -8,12 +8,16 @@ import {
   saveBehaviorEntry,
 } from "../../services/dataService";
 import { formatDateToString } from "../../utils/dateUtils";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import AddBehaviorModal from "./AddBehaviorModal";
 
 const BehaviorsSection = ({ selectedDate }) => {
   const { behaviors, deleteBehavior } = useData();
+  const insets = useSafeAreaInsets();
   const [isDeleting, setIsDeleting] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
+  const [showExportModal, setShowExportModal] = useState(false);
+  const [exportDays, setExportDays] = useState(7);
   const [behaviorEntries, setBehaviorEntries] = useState({});
 
   // Load behavior entries for the selected date
@@ -251,14 +255,24 @@ const BehaviorsSection = ({ selectedDate }) => {
 
   return (
     <View style={styles.container}>
-      {/* Add behavior button */}
-      <TouchableOpacity
-        style={styles.addButton}
-        onPress={() => setShowAddModal(true)}
-      >
-        <Ionicons name="add-circle-outline" size={20} color="#fff" />
-        <Text style={styles.addButtonText}>Добавить</Text>
-      </TouchableOpacity>
+      {/* Action buttons */}
+      <View style={styles.buttonRow}>
+        <TouchableOpacity
+          style={styles.addButton}
+          onPress={() => setShowAddModal(true)}
+        >
+          <Ionicons name="add-circle-outline" size={20} color="#fff" />
+          <Text style={styles.addButtonText}>Добавить</Text>
+        </TouchableOpacity>
+        
+        <TouchableOpacity
+          style={styles.exportButtonMain}
+          onPress={() => setShowExportModal(true)}
+        >
+          <Ionicons name="download-outline" size={20} color="#fff" />
+          <Text style={styles.exportButtonText}>Экспорт</Text>
+        </TouchableOpacity>
+      </View>
 
       {/* Behaviors list */}
       <View style={styles.listContent}>
@@ -286,6 +300,71 @@ const BehaviorsSection = ({ selectedDate }) => {
         visible={showAddModal}
         onClose={() => setShowAddModal(false)}
       />
+      
+      {/* Export Modal */}
+      <Modal
+        visible={showExportModal}
+        animationType="slide"
+        presentationStyle="pageSheet"
+        onRequestClose={() => setShowExportModal(false)}
+      >
+        <View style={[
+          styles.exportModalContainer,
+          { paddingTop: insets.top + 10 },
+        ]}>
+          <View style={styles.exportModalHeader}>
+            <Text style={styles.exportModalTitle}>Экспорт данных</Text>
+            <TouchableOpacity
+              style={styles.exportModalCloseButton}
+              onPress={() => setShowExportModal(false)}
+            >
+              <Ionicons name="close" size={24} color="#fff" />
+            </TouchableOpacity>
+          </View>
+          
+          <View style={styles.exportModalContent}>
+            <Text style={styles.exportModalLabel}>Количество дней для экспорта</Text>
+            
+            <View style={styles.daySelector}>
+              {[3, 7, 14, 30].map((days) => (
+                <TouchableOpacity
+                  key={days}
+                  style={[
+                    styles.daySelectorButton,
+                    exportDays === days && styles.daySelectorButtonActive,
+                  ]}
+                  onPress={() => setExportDays(days)}
+                >
+                  <Text
+                    style={[
+                      styles.daySelectorButtonText,
+                      exportDays === days && styles.daySelectorButtonTextActive,
+                    ]}
+                  >
+                    {days} {days === 1 ? 'день' : days < 5 ? 'дня' : 'дней'}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </View>
+          
+          <View style={[
+            styles.exportModalFooter,
+            { paddingBottom: Math.max(insets.bottom, 8) },
+          ]}>
+            <TouchableOpacity
+              style={styles.exportButton}
+              onPress={() => {
+                // TODO: Implement export logic
+                console.log(`Exporting ${exportDays} days of data`);
+                setShowExportModal(false);
+              }}
+            >
+              <Text style={styles.exportButtonText}>Экспортировать</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -412,7 +491,13 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontWeight: "600",
   },
+  buttonRow: {
+    flexDirection: "row",
+    gap: 12,
+    marginBottom: 16,
+  },
   addButton: {
+    flex: 1,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
@@ -420,8 +505,23 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     paddingHorizontal: 16,
     borderRadius: 12,
-    marginBottom: 16,
-    alignSelf: "flex-start",
+    gap: 8,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  exportButtonMain: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "rgba(255, 255, 255, 0.15)",
+    paddingVertical: 14,
+    paddingHorizontal: 16,
+    borderRadius: 12,
+    gap: 8,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.2,
@@ -431,7 +531,12 @@ const styles = StyleSheet.create({
   addButtonText: {
     color: "#fff",
     fontWeight: "600",
-    marginLeft: 8,
+    fontSize: 18,
+    letterSpacing: 0.3,
+  },
+  exportButtonText: {
+    color: "#fff",
+    fontWeight: "600",
     fontSize: 18,
     letterSpacing: 0.3,
   },
@@ -454,6 +559,91 @@ const styles = StyleSheet.create({
   emptyIcon: {
     marginTop: 18,
     opacity: 0.7,
+  },
+  exportModalContainer: {
+    flex: 1,
+    backgroundColor: "#2d2d4a",
+  },
+  exportModalHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingHorizontal: 20,
+    paddingVertical: 0,
+  },
+  exportModalTitle: {
+    fontSize: 24,
+    fontWeight: "600",
+    color: "#fff",
+    letterSpacing: 0.3,
+  },
+  exportModalCloseButton: {
+    padding: 8,
+    borderRadius: 20,
+  },
+  exportModalContent: {
+    flex: 1,
+    padding: 12,
+    paddingBottom: 4,
+  },
+  exportModalLabel: {
+    fontSize: 17,
+    color: "rgba(255, 255, 255, 0.9)",
+    marginBottom: 18,
+    letterSpacing: 0.3,
+  },
+  daySelector: {
+    flexDirection: "row",
+    backgroundColor: "rgba(255, 255, 255, 0.12)",
+    borderRadius: 14,
+    overflow: "hidden",
+    marginBottom: 22,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 1,
+  },
+  daySelectorButton: {
+    flex: 1,
+    paddingVertical: 16,
+    alignItems: "center",
+  },
+  daySelectorButtonActive: {
+    backgroundColor: "#ff3b30",
+  },
+  daySelectorButtonText: {
+    fontSize: 15,
+    color: "rgba(255, 255, 255, 0.7)",
+    letterSpacing: 0.3,
+  },
+  daySelectorButtonTextActive: {
+    color: "#fff",
+    fontWeight: "600",
+    letterSpacing: 0.4,
+  },
+  exportModalFooter: {
+    padding: 14,
+    paddingHorizontal: 18,
+    borderTopWidth: 1,
+    borderTopColor: "rgba(255, 255, 255, 0.12)",
+  },
+  exportButton: {
+    backgroundColor: "#ff3b30",
+    borderRadius: 16,
+    paddingVertical: 18,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.25,
+    shadowRadius: 5,
+    elevation: 5,
+  },
+  exportButtonText: {
+    color: "#fff",
+    fontSize: 18,
+    fontWeight: "700",
+    letterSpacing: 0.5,
   },
 });
 
