@@ -1,40 +1,237 @@
 import { Ionicons } from "@expo/vector-icons";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useData } from "../../contexts/DataContext";
+import {
+  getBehaviorEntry,
+  removeBehaviorEntry,
+  saveBehaviorEntry,
+} from "../../services/dataService";
+import { formatDateToString } from "../../utils/dateUtils";
+import AddBehaviorModal from "./AddBehaviorModal";
 
-/**
- * BehaviorsSection component displays a list of tracked behaviors
- */
-const BehaviorsSection = ({ onAddBehavior }) => {
+const BehaviorsSection = ({ selectedDate }) => {
   const { behaviors, deleteBehavior } = useData();
   const [isDeleting, setIsDeleting] = useState(false);
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [behaviorEntries, setBehaviorEntries] = useState({});
 
-  const displayBehaviors = [...behaviors];
-  
-  const handleDeleteBehavior = (id, name) => {
+  // Load behavior entries for the selected date
+  useEffect(() => {
+    const loadBehaviorEntries = async () => {
+      if (!selectedDate || !behaviors.length) return;
+
+      const dateString = formatDateToString(selectedDate);
+      const entries = {};
+
+      for (const behavior of behaviors) {
+        const entry = await getBehaviorEntry(dateString, behavior.id);
+        if (entry) {
+          entries[behavior.id] = {
+            desire: entry.desire,
+            action: entry.action,
+          };
+        }
+      }
+
+      setBehaviorEntries(entries);
+    };
+
+    loadBehaviorEntries();
+  }, [selectedDate, behaviors]);
+
+  const handleDeleteBehavior = async (behaviorId, behaviorName) => {
     Alert.alert(
-      "Удаление поведения",
-      `Вы уверены, что хотите удалить "${name}"?`,
+      "Удалить поведение",
+      `Вы уверены, что хотите удалить "${behaviorName}"?`,
       [
-        { text: "Отмена", style: "cancel" },
-        { 
-          text: "Удалить", 
+        {
+          text: "Отмена",
+          style: "cancel",
+        },
+        {
+          text: "Удалить",
           style: "destructive",
           onPress: async () => {
             setIsDeleting(true);
             try {
-              await deleteBehavior(id);
+              await deleteBehavior(behaviorId);
             } catch (error) {
               console.error("Error deleting behavior:", error);
               Alert.alert("Ошибка", "Не удалось удалить поведение");
             } finally {
               setIsDeleting(false);
             }
-          } 
+          },
         },
       ]
     );
+  };
+
+  const handleDesireChange = async (behaviorId, value) => {
+    const dateString = formatDateToString(selectedDate);
+    const behavior = behaviors.find((b) => b.id === behaviorId);
+    const currentEntry = behaviorEntries[behaviorId] || {};
+
+    // If same value is selected, remove it (toggle behavior)
+    const newDesire = currentEntry.desire === value ? undefined : value;
+    const newAction = currentEntry.action;
+
+    // Update local state
+    const newEntries = { ...behaviorEntries };
+    if (newDesire !== undefined || newAction !== undefined) {
+      newEntries[behaviorId] = { desire: newDesire, action: newAction };
+    } else {
+      delete newEntries[behaviorId];
+    }
+    setBehaviorEntries(newEntries);
+
+    // Save to storage
+    if (newDesire !== undefined || newAction !== undefined) {
+      await saveBehaviorEntry(dateString, behaviorId, {
+        name: behavior.name,
+        type: behavior.type,
+        desire: newDesire,
+        action: newAction,
+      });
+    } else {
+      await removeBehaviorEntry(dateString, behaviorId);
+    }
+  };
+
+  const handleActionChange = async (behaviorId, value) => {
+    const dateString = formatDateToString(selectedDate);
+    const behavior = behaviors.find((b) => b.id === behaviorId);
+    const currentEntry = behaviorEntries[behaviorId] || {};
+
+    // If same value is selected, remove it (toggle behavior)
+    const newAction = currentEntry.action === value ? undefined : value;
+    const newDesire = currentEntry.desire;
+
+    // Update local state
+    const newEntries = { ...behaviorEntries };
+    if (newDesire !== undefined || newAction !== undefined) {
+      newEntries[behaviorId] = { desire: newDesire, action: newAction };
+    } else {
+      delete newEntries[behaviorId];
+    }
+    setBehaviorEntries(newEntries);
+
+    // Save to storage
+    if (newDesire !== undefined || newAction !== undefined) {
+      await saveBehaviorEntry(dateString, behaviorId, {
+        name: behavior.name,
+        type: behavior.type,
+        desire: newDesire,
+        action: newAction,
+      });
+    } else {
+      await removeBehaviorEntry(dateString, behaviorId);
+    }
+  };
+
+  const renderDesireScale = (behaviorId) => {
+    const currentDesire = behaviorEntries[behaviorId]?.desire;
+
+    return (
+      <View style={styles.scaleContainer}>
+        <Text style={styles.scaleLabel}>Выраженность желания</Text>
+        <View style={styles.scaleButtons}>
+          {[0, 1, 2, 3, 4, 5].map((value) => (
+            <TouchableOpacity
+              key={value}
+              style={[
+                styles.scaleButton,
+                currentDesire === value && styles.scaleButtonActive,
+              ]}
+              onPress={() => handleDesireChange(behaviorId, value)}
+            >
+              <Text
+                style={[
+                  styles.scaleButtonText,
+                  currentDesire === value && styles.scaleButtonTextActive,
+                ]}
+              >
+                {value}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+      </View>
+    );
+  };
+
+  const renderActionControl = (behaviorId, behaviorType) => {
+    const currentAction = behaviorEntries[behaviorId]?.action;
+
+    if (behaviorType === "boolean") {
+      return (
+        <View style={styles.scaleContainer}>
+          <Text style={styles.scaleLabel}>Действие</Text>
+          <View style={styles.actionButtons}>
+            <TouchableOpacity
+              style={[
+                styles.actionButton,
+                currentAction === false && styles.actionButtonActive,
+              ]}
+              onPress={() => handleActionChange(behaviorId, false)}
+            >
+              <Text
+                style={[
+                  styles.actionButtonText,
+                  currentAction === false && styles.actionButtonTextActive,
+                ]}
+              >
+                ✗
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                styles.actionButton,
+                currentAction === true && styles.actionButtonActive,
+              ]}
+              onPress={() => handleActionChange(behaviorId, true)}
+            >
+              <Text
+                style={[
+                  styles.actionButtonText,
+                  currentAction === true && styles.actionButtonTextActive,
+                ]}
+              >
+                ✓
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      );
+    } else {
+      return (
+        <View style={styles.scaleContainer}>
+          <Text style={styles.scaleLabel}>Действие</Text>
+          <View style={styles.scaleButtons}>
+            {[0, 1, 2, 3, 4, 5].map((value) => (
+              <TouchableOpacity
+                key={value}
+                style={[
+                  styles.scaleButton,
+                  currentAction === value && styles.scaleButtonActive,
+                ]}
+                onPress={() => handleActionChange(behaviorId, value)}
+              >
+                <Text
+                  style={[
+                    styles.scaleButtonText,
+                    currentAction === value && styles.scaleButtonTextActive,
+                  ]}
+                >
+                  {value}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+        </View>
+      );
+    }
   };
 
   // Empty state content
@@ -55,33 +252,40 @@ const BehaviorsSection = ({ onAddBehavior }) => {
   return (
     <View style={styles.container}>
       {/* Add behavior button */}
-      <TouchableOpacity style={styles.addButton} onPress={onAddBehavior}>
-        <Ionicons name="add-circle-outline" size={18} color="#fff" />
+      <TouchableOpacity
+        style={styles.addButton}
+        onPress={() => setShowAddModal(true)}
+      >
+        <Ionicons name="add-circle-outline" size={20} color="#fff" />
         <Text style={styles.addButtonText}>Добавить</Text>
       </TouchableOpacity>
 
       {/* Behaviors list */}
       <View style={styles.listContent}>
-        {displayBehaviors.length > 0
-          ? displayBehaviors.map((item) => (
+        {behaviors.length > 0
+          ? behaviors.map((item) => (
               <View key={item.id} style={styles.behaviorItem}>
-                <View style={styles.behaviorInfo}>
+                <View style={styles.behaviorHeader}>
                   <Text style={styles.behaviorName}>{item.name}</Text>
-                  <Text style={styles.behaviorType}>
-                    {item.type === "boolean" ? "Да/Нет" : "Шкала 0-5"}
-                  </Text>
+                  <TouchableOpacity
+                    style={styles.deleteButton}
+                    onPress={() => handleDeleteBehavior(item.id, item.name)}
+                    disabled={isDeleting}
+                  >
+                    <Ionicons name="trash-outline" size={20} color="#ff3b30" />
+                  </TouchableOpacity>
                 </View>
-                <TouchableOpacity 
-                  style={styles.deleteButton} 
-                  onPress={() => handleDeleteBehavior(item.id, item.name)}
-                  disabled={isDeleting}
-                >
-                  <Ionicons name="trash-outline" size={20} color="#ff3b30" />
-                </TouchableOpacity>
+
+                {renderDesireScale(item.id)}
+                {renderActionControl(item.id, item.type)}
               </View>
             ))
           : renderEmptyComponent()}
       </View>
+      <AddBehaviorModal
+        visible={showAddModal}
+        onClose={() => setShowAddModal(false)}
+      />
     </View>
   );
 };

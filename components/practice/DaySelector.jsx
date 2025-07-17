@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { getTodayDate, isFutureDate, getDaysArray } from "../../utils/dateUtils";
 
 export default function DaySelector({
   onDaySelected,
@@ -13,30 +14,22 @@ export default function DaySelector({
 }) {
   const scrollViewRef = useRef(null);
   const [selectedDate, setSelectedDate] = useState(
-    propSelectedDate || new Date()
+    propSelectedDate || getTodayDate()
   );
   const [days, setDays] = useState([]);
 
   const generateDays = () => {
-    const today = new Date();
-    const daysArray = [];
-
-    for (let i = 7; i > 0; i--) {
-      const date = new Date();
-      date.setDate(today.getDate() - i);
-      daysArray.push(date);
-    }
-
-    daysArray.push(today);
-
-    for (let i = 1; i <= 2; i++) {
-      const date = new Date();
-      date.setDate(today.getDate() + i);
-      daysArray.push(date);
-    }
-
+    const daysArray = getDaysArray(getTodayDate());
     setDays(daysArray);
-    setSelectedDate(today);
+
+    // Use propSelectedDate if provided, otherwise use today
+    const initialDate = propSelectedDate || getTodayDate();
+    setSelectedDate(initialDate);
+
+    // Notify parent of initial date
+    if (onDaySelected && !propSelectedDate) {
+      onDaySelected(getTodayDate());
+    }
   };
 
   useEffect(() => {
@@ -76,15 +69,8 @@ export default function DaySelector({
     }
   };
 
-  const isFutureDate = (date) => {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    date.setHours(0, 0, 0, 0);
-    return date > today;
-  };
-
   const isToday = (date) => {
-    const today = new Date();
+    const today = getTodayDate();
     return (
       date.getDate() === today.getDate() &&
       date.getMonth() === today.getMonth() &&

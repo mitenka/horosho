@@ -51,7 +51,7 @@ export default function Index() {
         showsVerticalScrollIndicator={false}
         bounces={true}
       >
-        <BehaviorsSection onAddBehavior={handleOpenAddBehaviorModal} />
+        <BehaviorsSection selectedDate={selectedDate} onAddBehavior={handleOpenAddBehaviorModal} />
       </ScrollView>
 
       <AddBehaviorModal

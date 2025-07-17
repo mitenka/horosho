@@ -1,5 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { STORAGE_KEYS } from "./storageConfig";
+import { getLocalISOString } from "../utils/dateUtils";
 
 /**
  * Retrieves all behaviors from AsyncStorage
@@ -33,7 +34,7 @@ export const addBehavior = async (behavior) => {
     const newBehavior = {
       ...behavior,
       id,
-      createdAt: new Date().toISOString(),
+      createdAt: getLocalISOString(),
     };
 
     // Add to behaviors array
@@ -78,7 +79,7 @@ export const updateBehavior = async (id, updates) => {
     const updatedBehavior = {
       ...behaviors[index],
       ...updates,
-      updatedAt: new Date().toISOString(),
+      updatedAt: getLocalISOString(),
     };
 
     behaviors[index] = updatedBehavior;
@@ -132,15 +133,15 @@ export const deleteBehavior = async (id) => {
 
 /**
  * Retrieves all diary entries from AsyncStorage
- * @returns {Promise<Array>} - array of diary entry objects
+ * @returns {Promise<Object>} - object with date keys and entry objects
  */
 export const getDiaryEntries = async () => {
   try {
     const entriesData = await AsyncStorage.getItem(STORAGE_KEYS.DIARY_ENTRIES);
-    return entriesData ? JSON.parse(entriesData) : [];
+    return entriesData ? JSON.parse(entriesData) : {};
   } catch (error) {
     console.error("Error getting diary entries:", error);
-    return [];
+    return {};
   }
 };
 
@@ -152,10 +153,7 @@ export const getDiaryEntries = async () => {
 export const getDiaryEntryByDate = async (dateString) => {
   try {
     const entries = await getDiaryEntries();
-    return (
-      entries.find((entry) => entry.date.substring(0, 10) === dateString) ||
-      null
-    );
+    return entries[dateString] || null;
   } catch (error) {
     console.error("Error getting diary entry by date:", error);
     return null;
@@ -188,7 +186,7 @@ export const saveDiaryEntry = async (entry) => {
       updatedEntry = {
         ...entries[existingIndex],
         ...entry,
-        updatedAt: new Date().toISOString(),
+        updatedAt: getLocalISOString(),
       };
 
       entries[existingIndex] = updatedEntry;
@@ -197,8 +195,8 @@ export const saveDiaryEntry = async (entry) => {
       updatedEntry = {
         ...entry,
         id: Date.now().toString(),
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
+        createdAt: getLocalISOString(),
+        updatedAt: getLocalISOString(),
       };
 
       entries.push(updatedEntry);
@@ -251,25 +249,7 @@ export const deleteDiaryEntry = async (id) => {
   }
 };
 
-/**
- * Gets entries for a date range
- * @param {string} startDate - Start date in ISO format (YYYY-MM-DD)
- * @param {string} endDate - End date in ISO format (YYYY-MM-DD)
- * @returns {Promise<Array>} - array of diary entries in the range
- */
-export const getDiaryEntriesInRange = async (startDate, endDate) => {
-  try {
-    const entries = await getDiaryEntries();
 
-    return entries.filter((entry) => {
-      const entryDate = entry.date.substring(0, 10);
-      return entryDate >= startDate && entryDate <= endDate;
-    });
-  } catch (error) {
-    console.error("Error getting diary entries in range:", error);
-    return [];
-  }
-};
 
 /**
  * Clears all behaviors data
@@ -282,6 +262,87 @@ export const clearBehaviors = async () => {
   } catch (error) {
     console.error("Error clearing behaviors:", error);
     return false;
+  }
+};
+
+/**
+ * Saves a behavior entry for a specific date
+ * @param {string} dateString - Date in YYYY-MM-DD format
+ * @param {string} behaviorId - ID of the behavior
+ * @param {Object} behaviorData - Behavior data with name, type, desire, action
+ * @returns {Promise<boolean>} - Whether the operation was successful
+ */
+export const saveBehaviorEntry = async (dateString, behaviorId, behaviorData) => {
+  try {
+    const entries = await getDiaryEntries();
+    
+    if (!entries[dateString]) {
+      entries[dateString] = { behaviors: [] };
+    }
+    
+    const behaviorIndex = entries[dateString].behaviors.findIndex(b => b.id === behaviorId);
+    
+    if (behaviorIndex >= 0) {
+      entries[dateString].behaviors[behaviorIndex] = { id: behaviorId, ...behaviorData };
+    } else {
+      entries[dateString].behaviors.push({ id: behaviorId, ...behaviorData });
+    }
+    
+    await AsyncStorage.setItem(STORAGE_KEYS.DIARY_ENTRIES, JSON.stringify(entries));
+    return true;
+  } catch (error) {
+    console.error("Error saving behavior entry:", error);
+    return false;
+  }
+};
+
+/**
+ * Removes a behavior entry for a specific date
+ * @param {string} dateString - Date in YYYY-MM-DD format
+ * @param {string} behaviorId - ID of the behavior
+ * @returns {Promise<boolean>} - Whether the operation was successful
+ */
+export const removeBehaviorEntry = async (dateString, behaviorId) => {
+  try {
+    const entries = await getDiaryEntries();
+    
+    if (!entries[dateString]) {
+      return true;
+    }
+    
+    entries[dateString].behaviors = entries[dateString].behaviors.filter(b => b.id !== behaviorId);
+    
+    // If no behaviors left for this date, remove the date entry
+    if (entries[dateString].behaviors.length === 0) {
+      delete entries[dateString];
+    }
+    
+    await AsyncStorage.setItem(STORAGE_KEYS.DIARY_ENTRIES, JSON.stringify(entries));
+    return true;
+  } catch (error) {
+    console.error("Error removing behavior entry:", error);
+    return false;
+  }
+};
+
+/**
+ * Gets a behavior entry for a specific date and behavior ID
+ * @param {string} dateString - Date in YYYY-MM-DD format
+ * @param {string} behaviorId - ID of the behavior
+ * @returns {Promise<Object|null>} - Behavior entry or null if not found
+ */
+export const getBehaviorEntry = async (dateString, behaviorId) => {
+  try {
+    const entries = await getDiaryEntries();
+    
+    if (!entries[dateString]) {
+      return null;
+    }
+    
+    return entries[dateString].behaviors.find(b => b.id === behaviorId) || null;
+  } catch (error) {
+    console.error("Error getting behavior entry:", error);
+    return null;
   }
 };
 

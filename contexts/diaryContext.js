@@ -5,10 +5,11 @@ import {
   getDiaryEntryByDate,
   saveDiaryEntry,
 } from "../services/dataService";
+import { getTodayDate, formatDateToString } from "../utils/dateUtils";
 
 export const useDiaryContext = () => {
   const [diaryEntries, setDiaryEntries] = useState([]);
-  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [selectedDate, setSelectedDate] = useState(getTodayDate());
   const [currentDiaryEntry, setCurrentDiaryEntry] = useState(null);
 
   const loadDiaryEntries = async () => {
@@ -27,7 +28,7 @@ export const useDiaryContext = () => {
       // Format date to YYYY-MM-DD
       const dateString =
         date instanceof Date
-          ? date.toISOString().substring(0, 10)
+          ? formatDateToString(date)
           : date.substring(0, 10);
 
       const entry = await getDiaryEntryByDate(dateString);
@@ -46,7 +47,7 @@ export const useDiaryContext = () => {
       // Update the current entry if it's for the currently selected date
       if (
         savedEntry.date.substring(0, 10) ===
-        selectedDate.toISOString().substring(0, 10)
+        formatDateToString(selectedDate)
       ) {
         setCurrentDiaryEntry(savedEntry);
       }

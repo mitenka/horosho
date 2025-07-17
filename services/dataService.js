@@ -6,10 +6,12 @@ import {
   addBehavior,
   deleteBehavior,
   deleteDiaryEntry,
+  getBehaviorEntry,
   getBehaviors,
   getDiaryEntries,
-  getDiaryEntriesInRange,
   getDiaryEntryByDate,
+  removeBehaviorEntry,
+  saveBehaviorEntry,
   saveDiaryEntry,
   updateBehavior,
 } from "./diaryService";
@@ -122,10 +124,10 @@ export {
   deleteBehavior,
   deleteDiaryEntry,
   // From diaryService
+  getBehaviorEntry,
   getBehaviors,
   getDataVersions,
   getDiaryEntries,
-  getDiaryEntriesInRange,
   getDiaryEntryByDate,
   // From dictionaryService
   getDictionary,
@@ -135,7 +137,9 @@ export {
   getTheory,
   markArticleAsRead,
   markArticleAsUnread,
+  removeBehaviorEntry,
   resetReadingProgress,
+  saveBehaviorEntry,
   saveDiaryEntry,
   updateBehavior,
   // From settingsService
