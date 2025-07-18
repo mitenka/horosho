@@ -11,7 +11,6 @@ import { useContentContext } from "./contentContext";
 import { useDiaryContext } from "./diaryContext";
 import { useReadingProgressContext } from "./readingProgressContext";
 import { useUpdateContext } from "./updateContext";
-import { getTodayDate } from "../utils/dateUtils";
 
 const DataContext = createContext();
 

@@ -4,7 +4,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getDataVersions, getDictionary, getTheory } from "./contentService";
 import {
   addBehavior,
-  clearBehaviors,
   deleteBehavior,
   getBehaviorEntry,
   getBehaviors,
@@ -12,7 +11,6 @@ import {
   removeBehaviorEntry,
   saveBehaviorEntry,
   updateBehavior,
-  clearDiaryHistory,
 } from "./diaryService";
 import {
   getReadArticles,
@@ -22,8 +20,8 @@ import {
 } from "./readingProgressService";
 import {
   getSettings,
-  saveSettings,
   initializeSettings,
+  saveSettings,
   updateSetting,
 } from "./settingsService";
 import { STORAGE_KEYS, dictionary, meta, theory } from "./storageConfig";
@@ -101,7 +99,7 @@ export const initializeData = async () => {
         AsyncStorage.setItem(STORAGE_KEYS.THEORY_VERSION, meta.theoryVersion)
       );
     }
-    
+
     // Initialize settings with default values if needed
     await initializeSettings();
 
@@ -131,18 +129,18 @@ export {
   getLastUpdateCheckTime,
   // From readingProgressService
   getReadArticles,
+  // From settingsService
+  getSettings,
   getTheory,
+  initializeSettings,
   markArticleAsRead,
   markArticleAsUnread,
   removeBehaviorEntry,
   resetReadingProgress,
   saveBehaviorEntry,
-  updateBehavior,
-  // From settingsService
-  getSettings,
   saveSettings,
-  initializeSettings,
-  updateSetting,
+  updateBehavior,
   // From updateService
   updateLastCheckTime,
+  updateSetting,
 };

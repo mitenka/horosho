@@ -1,13 +1,10 @@
 import { useState } from "react";
-import {
-  getDiaryEntries,
-} from "../services/dataService";
-import { getTodayDate, formatDateToString } from "../utils/dateUtils";
+import { getDiaryEntries } from "../services/dataService";
+import { getTodayDate } from "../utils/dateUtils";
 
 export const useDiaryContext = () => {
   const [diaryEntries, setDiaryEntries] = useState([]);
   const [selectedDate, setSelectedDate] = useState(getTodayDate());
-  const [currentDiaryEntry, setCurrentDiaryEntry] = useState(null);
 
   const loadDiaryEntries = async () => {
     try {
@@ -27,7 +24,6 @@ export const useDiaryContext = () => {
   return {
     diaryEntries,
     selectedDate,
-    currentDiaryEntry,
     loadDiaryEntries,
     selectDate: handleSelectDate,
   };
