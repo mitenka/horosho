@@ -1,8 +1,12 @@
 import React, { useRef } from "react";
-import { WebView } from "react-native-webview";
 import { View } from "react-native";
+import { WebView } from "react-native-webview";
 
-const WebViewExporter = ({ diaryData, controlAssessment, onExportComplete }) => {
+const WebViewExporter = ({
+  diaryData,
+  controlAssessment,
+  onExportComplete,
+}) => {
   const webViewRef = useRef(null);
 
   const generateHTML = (data, assessment) => {
@@ -10,22 +14,32 @@ const WebViewExporter = ({ diaryData, controlAssessment, onExportComplete }) => 
     const tableRows = Object.entries(data || {})
       .map(([date, entry]) => {
         const behaviors = entry.behaviors || [];
-        if (behaviors.length === 0) return '';
-        
-        return behaviors.map(behavior => `
+        if (behaviors.length === 0) return "";
+
+        return behaviors
+          .map(
+            (behavior) => `
           <tr>
             <td>${date}</td>
             <td>${behavior.name}</td>
-            <td>${behavior.type === 'boolean' ? 'Да/Нет' : 'Шкала'}</td>
-            <td>${behavior.desire !== undefined ? behavior.desire : '-'}</td>
-            <td>${behavior.action !== undefined ? 
-              (behavior.type === 'boolean' ? (behavior.action ? '✓' : '✗') : behavior.action) 
-              : '-'}</td>
+            <td>${behavior.type === "boolean" ? "Да/Нет" : "Шкала"}</td>
+            <td>${behavior.desire !== undefined ? behavior.desire : "-"}</td>
+            <td>${
+              behavior.action !== undefined
+                ? behavior.type === "boolean"
+                  ? behavior.action
+                    ? "✓"
+                    : "✗"
+                  : behavior.action
+                : "-"
+            }</td>
           </tr>
-        `).join('');
+        `
+          )
+          .join("");
       })
-      .filter(row => row)
-      .join('');
+      .filter((row) => row)
+      .join("");
 
     return `
       <!DOCTYPE html>
@@ -89,7 +103,9 @@ const WebViewExporter = ({ diaryData, controlAssessment, onExportComplete }) => 
         <body>
           <div class="container">
             <h1>Дневник поведения</h1>
-            ${tableRows ? `
+            ${
+              tableRows
+                ? `
               <table>
                 <thead>
                   <tr>
@@ -104,31 +120,43 @@ const WebViewExporter = ({ diaryData, controlAssessment, onExportComplete }) => 
                   ${tableRows}
                 </tbody>
               </table>
-            ` : `
+            `
+                : `
               <div class="empty-state">
                 Нет данных для отображения
               </div>
-            `}
+            `
+            }
             
-            ${assessment ? `
+            ${
+              assessment
+                ? `
               <div style="margin-top: 32px; padding-top: 24px; border-top: 2px solid #e1e5e9;">
-                <h2 style="color: #2d2d4a; font-size: 20px; margin-bottom: 16px;">Как вы считаете, насколько вы способны влиять или управлять:</h2>
+                <h2 style="color: #2d2d4a; font-size: 20px; margin-bottom: 16px;">Как вы считаете, насколько вы способны влиять на или управлять:</h2>
                 <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-top: 16px;">
                   <div style="text-align: center; padding: 16px; background: #f8f9fa; border-radius: 12px;">
                     <h3 style="margin: 0 0 8px 0; color: #2d2d4a; font-size: 16px;">Мыслями</h3>
-                    <div style="font-size: 24px; font-weight: 600; color: #667eea;">${assessment.thoughts !== null ? assessment.thoughts : '-'}</div>
+                    <div style="font-size: 24px; font-weight: 600; color: #667eea;">${
+                      assessment.thoughts !== null ? assessment.thoughts : "-"
+                    }</div>
                   </div>
                   <div style="text-align: center; padding: 16px; background: #f8f9fa; border-radius: 12px;">
                     <h3 style="margin: 0 0 8px 0; color: #2d2d4a; font-size: 16px;">Эмоциями</h3>
-                    <div style="font-size: 24px; font-weight: 600; color: #667eea;">${assessment.emotions !== null ? assessment.emotions : '-'}</div>
+                    <div style="font-size: 24px; font-weight: 600; color: #667eea;">${
+                      assessment.emotions !== null ? assessment.emotions : "-"
+                    }</div>
                   </div>
                   <div style="text-align: center; padding: 16px; background: #f8f9fa; border-radius: 12px;">
                     <h3 style="margin: 0 0 8px 0; color: #2d2d4a; font-size: 16px;">Действиями</h3>
-                    <div style="font-size: 24px; font-weight: 600; color: #667eea;">${assessment.actions !== null ? assessment.actions : '-'}</div>
+                    <div style="font-size: 24px; font-weight: 600; color: #667eea;">${
+                      assessment.actions !== null ? assessment.actions : "-"
+                    }</div>
                   </div>
                 </div>
               </div>
-            ` : ''}
+            `
+                : ""
+            }
           </div>
           
           <canvas id="exportCanvas" width="800" height="600" style="display: none;"></canvas>
@@ -161,17 +189,25 @@ const WebViewExporter = ({ diaryData, controlAssessment, onExportComplete }) => 
               ctx.fillText('Дневник поведения', canvas.width / 2, 100);
               
               // Draw table data
-              const tableData = ${JSON.stringify(Object.entries(data || {}).flatMap(([date, entry]) => 
-                (entry.behaviors || []).map(behavior => [
-                  date,
-                  behavior.name,
-                  behavior.type === 'boolean' ? 'Да/Нет' : 'Шкала',
-                  behavior.desire !== undefined ? behavior.desire.toString() : '-',
-                  behavior.action !== undefined ? 
-                    (behavior.type === 'boolean' ? (behavior.action ? '✓' : '✗') : behavior.action.toString()) 
-                    : '-'
-                ])
-              ))};
+              const tableData = ${JSON.stringify(
+                Object.entries(data || {}).flatMap(([date, entry]) =>
+                  (entry.behaviors || []).map((behavior) => [
+                    date,
+                    behavior.name,
+                    behavior.type === "boolean" ? "Да/Нет" : "Шкала",
+                    behavior.desire !== undefined
+                      ? behavior.desire.toString()
+                      : "-",
+                    behavior.action !== undefined
+                      ? behavior.type === "boolean"
+                        ? behavior.action
+                          ? "✓"
+                          : "✗"
+                        : behavior.action.toString()
+                      : "-",
+                  ])
+                )
+              )};
               
               if (tableData.length > 0) {
                 // Draw table headers
@@ -254,11 +290,11 @@ const WebViewExporter = ({ diaryData, controlAssessment, onExportComplete }) => 
   const handleMessage = (event) => {
     try {
       const message = JSON.parse(event.nativeEvent.data);
-      if (message.type === 'export_complete') {
+      if (message.type === "export_complete") {
         onExportComplete(message.data);
       }
     } catch (error) {
-      console.error('Error parsing WebView message:', error);
+      console.error("Error parsing WebView message:", error);
     }
   };
 

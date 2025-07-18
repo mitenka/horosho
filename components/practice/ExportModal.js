@@ -2,7 +2,7 @@ import { Ionicons } from "@expo/vector-icons";
 import * as FileSystem from "expo-file-system";
 import * as MediaLibrary from "expo-media-library";
 import React, { useState } from "react";
-import { Alert, Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Alert, Modal, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import ControlAssessment from "./ControlAssessment";
 import { getDiaryEntries } from "../../services/diaryService";
@@ -120,33 +120,39 @@ const ExportModal = ({
           </TouchableOpacity>
         </View>
 
-        <View style={styles.content}>
-          <Text style={styles.label}>Выберите период для экспорта:</Text>
+        <ScrollView 
+          style={styles.contentScroll}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.scrollContent}
+        >
+          <View style={styles.content}>
+            <Text style={styles.label}>Выберите период для экспорта:</Text>
 
-          <View style={styles.daySelector}>
-            {dayOptions.map((days) => (
-              <TouchableOpacity
-                key={days}
-                style={[
-                  styles.daySelectorButton,
-                  exportDays === days && styles.daySelectorButtonActive,
-                ]}
-                onPress={() => onExportDaysChange(days)}
-              >
-                <Text
+            <View style={styles.daySelector}>
+              {dayOptions.map((days) => (
+                <TouchableOpacity
+                  key={days}
                   style={[
-                    styles.daySelectorButtonText,
-                    exportDays === days && styles.daySelectorButtonTextActive,
+                    styles.daySelectorButton,
+                    exportDays === days && styles.daySelectorButtonActive,
                   ]}
+                  onPress={() => onExportDaysChange(days)}
                 >
-                  {days} {days === 1 ? "день" : days < 5 ? "дня" : "дней"}
-                </Text>
-              </TouchableOpacity>
-            ))}
+                  <Text
+                    style={[
+                      styles.daySelectorButtonText,
+                      exportDays === days && styles.daySelectorButtonTextActive,
+                    ]}
+                  >
+                    {days} {days === 1 ? "день" : days < 5 ? "дня" : "дней"}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+            
+            <ControlAssessment onAssessmentChange={setControlAssessment} />
           </View>
-          
-          <ControlAssessment onAssessmentChange={setControlAssessment} />
-        </View>
+        </ScrollView>
 
         <View
           style={[styles.footer, { paddingBottom: Math.max(insets.bottom, 8) }]}
@@ -195,6 +201,12 @@ const styles = StyleSheet.create({
   closeButton: {
     padding: 8,
     borderRadius: 20,
+  },
+  contentScroll: {
+    flex: 1,
+  },
+  scrollContent: {
+    flexGrow: 1,
   },
   content: {
     flex: 1,

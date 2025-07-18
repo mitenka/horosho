@@ -1,17 +1,17 @@
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 const ControlAssessment = ({ onAssessmentChange }) => {
   const [assessments, setAssessments] = useState({
-    thoughts: null,    // Мыслями
-    emotions: null,    // Эмоциями  
-    actions: null,     // Действиями
+    thoughts: null, // Мыслями
+    emotions: null, // Эмоциями
+    actions: null, // Действиями
   });
 
   const categories = [
-    { key: 'thoughts', label: 'Мыслями' },
-    { key: 'emotions', label: 'Эмоциями' },
-    { key: 'actions', label: 'Действиями' },
+    { key: "thoughts", label: "Мыслями" },
+    { key: "emotions", label: "Эмоциями" },
+    { key: "actions", label: "Действиями" },
   ];
 
   const handleScalePress = (category, value) => {
@@ -19,9 +19,9 @@ const ControlAssessment = ({ onAssessmentChange }) => {
       ...assessments,
       [category]: assessments[category] === value ? null : value,
     };
-    
+
     setAssessments(newAssessments);
-    
+
     // Notify parent component
     if (onAssessmentChange) {
       onAssessmentChange(newAssessments);
@@ -56,11 +56,11 @@ const ControlAssessment = ({ onAssessmentChange }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={styles.card}>
       <Text style={styles.title}>
-        Насколько вы можете управлять:
+        Как вы считаете, насколько вы способны влиять на или управлять:
       </Text>
-      
+
       {categories.map((category) => (
         <View key={category.key} style={styles.categoryContainer}>
           <Text style={styles.categoryLabel}>{category.label}</Text>
@@ -72,18 +72,24 @@ const ControlAssessment = ({ onAssessmentChange }) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
+  card: {
     backgroundColor: "rgba(255, 255, 255, 0.08)",
     borderRadius: 16,
     padding: 20,
-    marginBottom: 20,
+    marginBottom: 16,
     borderWidth: 1,
     borderColor: "rgba(255, 255, 255, 0.12)",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
   },
   title: {
     color: "#fff",
     fontSize: 18,
     fontWeight: "600",
+    letterSpacing: 0.3,
     marginBottom: 20,
     textAlign: "left",
   },
