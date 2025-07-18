@@ -61,7 +61,7 @@ const SkillsAssessment = ({ selectedDate }) => {
   }
 
   return (
-    <View style={styles.container}>
+    <View style={styles.card}>
       <Text style={styles.title}>Как вы использовали навыки сегодня?</Text>
       
       <View style={styles.optionsContainer}>
@@ -91,9 +91,18 @@ const SkillsAssessment = ({ selectedDate }) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    marginTop: 24,
-    paddingHorizontal: 16,
+  card: {
+    backgroundColor: "rgba(255, 255, 255, 0.08)",
+    borderRadius: 16,
+    padding: 20,
+    marginBottom: 16,
+    borderWidth: 1,
+    borderColor: "rgba(255, 255, 255, 0.12)",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
   },
   title: {
     fontSize: 18,
@@ -128,15 +137,14 @@ const styles = StyleSheet.create({
     elevation: 6,
   },
   optionText: {
-    fontSize: 14,
+    fontSize: 16,
     color: "rgba(255, 255, 255, 0.8)",
-    lineHeight: 20,
+    lineHeight: 22,
     textAlign: "left",
     letterSpacing: 0.2,
   },
   selectedOptionText: {
     color: "#fff",
-    fontWeight: "600",
   },
 });
 
