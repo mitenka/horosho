@@ -4,6 +4,7 @@ import * as MediaLibrary from "expo-media-library";
 import React, { useState } from "react";
 import { Alert, Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import ControlAssessment from "./ControlAssessment";
 import { getDiaryEntries } from "../../services/diaryService";
 import WebViewExporter from "./WebViewExporter";
 
@@ -17,6 +18,7 @@ const ExportModal = ({
   const dayOptions = [7, 14, 30];
   const [isExporting, setIsExporting] = useState(false);
   const [diaryData, setDiaryData] = useState(null);
+  const [controlAssessment, setControlAssessment] = useState(null);
   const [showWebView, setShowWebView] = useState(false);
 
   const handleExport = async () => {
@@ -142,6 +144,8 @@ const ExportModal = ({
               </TouchableOpacity>
             ))}
           </View>
+          
+          <ControlAssessment onAssessmentChange={setControlAssessment} />
         </View>
 
         <View
@@ -161,6 +165,7 @@ const ExportModal = ({
         {showWebView && (
           <WebViewExporter
             diaryData={diaryData}
+            controlAssessment={controlAssessment}
             onExportComplete={handleExportComplete}
           />
         )}

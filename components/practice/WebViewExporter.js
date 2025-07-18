@@ -2,10 +2,10 @@ import React, { useRef } from "react";
 import { WebView } from "react-native-webview";
 import { View } from "react-native";
 
-const WebViewExporter = ({ diaryData, onExportComplete }) => {
+const WebViewExporter = ({ diaryData, controlAssessment, onExportComplete }) => {
   const webViewRef = useRef(null);
 
-  const generateHTML = (data) => {
+  const generateHTML = (data, assessment) => {
     // Convert diary data to table rows
     const tableRows = Object.entries(data || {})
       .map(([date, entry]) => {
@@ -109,6 +109,26 @@ const WebViewExporter = ({ diaryData, onExportComplete }) => {
                 Нет данных для отображения
               </div>
             `}
+            
+            ${assessment ? `
+              <div style="margin-top: 32px; padding-top: 24px; border-top: 2px solid #e1e5e9;">
+                <h2 style="color: #2d2d4a; font-size: 20px; margin-bottom: 16px;">Как вы считаете, насколько вы способны влиять или управлять:</h2>
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-top: 16px;">
+                  <div style="text-align: center; padding: 16px; background: #f8f9fa; border-radius: 12px;">
+                    <h3 style="margin: 0 0 8px 0; color: #2d2d4a; font-size: 16px;">Мыслями</h3>
+                    <div style="font-size: 24px; font-weight: 600; color: #667eea;">${assessment.thoughts !== null ? assessment.thoughts : '-'}</div>
+                  </div>
+                  <div style="text-align: center; padding: 16px; background: #f8f9fa; border-radius: 12px;">
+                    <h3 style="margin: 0 0 8px 0; color: #2d2d4a; font-size: 16px;">Эмоциями</h3>
+                    <div style="font-size: 24px; font-weight: 600; color: #667eea;">${assessment.emotions !== null ? assessment.emotions : '-'}</div>
+                  </div>
+                  <div style="text-align: center; padding: 16px; background: #f8f9fa; border-radius: 12px;">
+                    <h3 style="margin: 0 0 8px 0; color: #2d2d4a; font-size: 16px;">Действиями</h3>
+                    <div style="font-size: 24px; font-weight: 600; color: #667eea;">${assessment.actions !== null ? assessment.actions : '-'}</div>
+                  </div>
+                </div>
+              </div>
+            ` : ''}
           </div>
           
           <canvas id="exportCanvas" width="800" height="600" style="display: none;"></canvas>
@@ -246,7 +266,7 @@ const WebViewExporter = ({ diaryData, onExportComplete }) => {
     <View style={{ width: 1, height: 1, opacity: 0 }}>
       <WebView
         ref={webViewRef}
-        source={{ html: generateHTML(diaryData) }}
+        source={{ html: generateHTML(diaryData, controlAssessment) }}
         onMessage={handleMessage}
         javaScriptEnabled={true}
         domStorageEnabled={true}
