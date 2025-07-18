@@ -9,9 +9,9 @@ const ControlAssessment = ({ onAssessmentChange }) => {
   });
 
   const categories = [
-    { key: "thoughts", label: "Мыслями" },
-    { key: "emotions", label: "Эмоциями" },
-    { key: "actions", label: "Действиями" },
+    { key: "thoughts", label: "Мысли" },
+    { key: "emotions", label: "Эмоции" },
+    { key: "actions", label: "Поведение" },
   ];
 
   const handleScalePress = (category, value) => {
@@ -58,7 +58,7 @@ const ControlAssessment = ({ onAssessmentChange }) => {
   return (
     <View style={styles.card}>
       <Text style={styles.title}>
-        Как вы считаете, насколько вы способны влиять на или управлять:
+        Как вы оцениваете влияние на свои мысли, эмоции и поведение?
       </Text>
 
       {categories.map((category) => (
@@ -67,6 +67,10 @@ const ControlAssessment = ({ onAssessmentChange }) => {
           {renderScaleButtons(category.key)}
         </View>
       ))}
+      
+      <Text style={styles.helperText}>
+        0 — совсем нет, 5 — полностью
+      </Text>
     </View>
   );
 };
@@ -133,6 +137,13 @@ const styles = StyleSheet.create({
   selectedScaleText: {
     color: "#fff",
     fontWeight: "600",
+  },
+  helperText: {
+    color: "rgba(255, 255, 255, 0.6)",
+    fontSize: 14,
+    fontStyle: "italic",
+    textAlign: "center",
+    marginTop: 12,
   },
 });
 

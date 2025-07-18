@@ -132,22 +132,22 @@ const WebViewExporter = ({
               assessment
                 ? `
               <div style="margin-top: 32px; padding-top: 24px; border-top: 2px solid #e1e5e9;">
-                <h2 style="color: #2d2d4a; font-size: 20px; margin-bottom: 16px;">Как вы считаете, насколько вы способны влиять на или управлять:</h2>
+                <h2 style="color: #2d2d4a; font-size: 20px; margin-bottom: 16px;">Как вы оцениваете влияние на свои мысли, эмоции и поведение?</h2>
                 <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-top: 16px;">
                   <div style="text-align: center; padding: 16px; background: #f8f9fa; border-radius: 12px;">
-                    <h3 style="margin: 0 0 8px 0; color: #2d2d4a; font-size: 16px;">Мыслями</h3>
+                    <h3 style="margin: 0 0 8px 0; color: #2d2d4a; font-size: 16px;">Мысли</h3>
                     <div style="font-size: 24px; font-weight: 600; color: #667eea;">${
                       assessment.thoughts !== null ? assessment.thoughts : "-"
                     }</div>
                   </div>
                   <div style="text-align: center; padding: 16px; background: #f8f9fa; border-radius: 12px;">
-                    <h3 style="margin: 0 0 8px 0; color: #2d2d4a; font-size: 16px;">Эмоциями</h3>
+                    <h3 style="margin: 0 0 8px 0; color: #2d2d4a; font-size: 16px;">Эмоции</h3>
                     <div style="font-size: 24px; font-weight: 600; color: #667eea;">${
                       assessment.emotions !== null ? assessment.emotions : "-"
                     }</div>
                   </div>
                   <div style="text-align: center; padding: 16px; background: #f8f9fa; border-radius: 12px;">
-                    <h3 style="margin: 0 0 8px 0; color: #2d2d4a; font-size: 16px;">Действиями</h3>
+                    <h3 style="margin: 0 0 8px 0; color: #2d2d4a; font-size: 16px;">Поведение</h3>
                     <div style="font-size: 24px; font-weight: 600; color: #667eea;">${
                       assessment.actions !== null ? assessment.actions : "-"
                     }</div>
