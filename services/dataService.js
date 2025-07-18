@@ -4,16 +4,15 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getDataVersions, getDictionary, getTheory } from "./contentService";
 import {
   addBehavior,
+  clearBehaviors,
   deleteBehavior,
-  deleteDiaryEntry,
   getBehaviorEntry,
   getBehaviors,
   getDiaryEntries,
-  getDiaryEntryByDate,
   removeBehaviorEntry,
   saveBehaviorEntry,
-  saveDiaryEntry,
   updateBehavior,
+  clearDiaryHistory,
 } from "./diaryService";
 import {
   getReadArticles,
@@ -122,13 +121,11 @@ export {
   addBehavior,
   checkForUpdates,
   deleteBehavior,
-  deleteDiaryEntry,
   // From diaryService
   getBehaviorEntry,
   getBehaviors,
   getDataVersions,
   getDiaryEntries,
-  getDiaryEntryByDate,
   // From dictionaryService
   getDictionary,
   getLastUpdateCheckTime,
@@ -140,7 +137,6 @@ export {
   removeBehaviorEntry,
   resetReadingProgress,
   saveBehaviorEntry,
-  saveDiaryEntry,
   updateBehavior,
   // From settingsService
   getSettings,

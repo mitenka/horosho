@@ -72,8 +72,6 @@ export const DataProvider = ({ children }) => {
           diaryContext.loadDiaryEntries(),
         ]);
 
-        await diaryContext.loadDiaryEntryByDate(getTodayDate());
-
         updateContext.checkForUpdatesAndReload(
           loadContent,
           loadReadingProgress,
