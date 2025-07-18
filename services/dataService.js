@@ -7,11 +7,13 @@ import {
   deleteBehavior,
   getBehaviorEntry,
   getBehaviors,
+  getDiaryCompletionStatus,
   getDiaryEntries,
   getSkillsAssessment,
   getSkillsAssessmentOptions,
   removeBehaviorEntry,
   saveBehaviorEntry,
+  saveDiaryCompletionStatus,
   saveSkillsAssessment,
   updateBehavior,
 } from "./diaryService";
@@ -133,6 +135,7 @@ export {
   // From readingProgressService
   getReadArticles,
   // From settingsService
+  getDiaryCompletionStatus,
   getSettings,
   getSkillsAssessment,
   getSkillsAssessmentOptions,
@@ -143,6 +146,7 @@ export {
   removeBehaviorEntry,
   resetReadingProgress,
   saveBehaviorEntry,
+  saveDiaryCompletionStatus,
   saveSkillsAssessment,
   saveSettings,
   updateBehavior,

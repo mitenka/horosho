@@ -337,3 +337,48 @@ export const getSkillsAssessmentOptions = (useFeminineVerbs = false) => {
     ];
   }
 };
+
+/**
+ * Saves diary completion status for a specific date
+ * @param {string} dateString - Date in YYYY-MM-DD format
+ * @param {boolean} isCompleted - Whether the diary is completed for this date
+ * @returns {Promise<boolean>} - Whether the operation was successful
+ */
+export const saveDiaryCompletionStatus = async (dateString, isCompleted) => {
+  try {
+    const entries = await getDiaryEntries();
+    
+    if (!entries[dateString]) {
+      entries[dateString] = { behaviors: [] };
+    }
+    
+    if (isCompleted) {
+      entries[dateString].isCompleted = true;
+    } else {
+      // Remove the property entirely when false
+      delete entries[dateString].isCompleted;
+    }
+    
+    await AsyncStorage.setItem(STORAGE_KEYS.DIARY_ENTRIES, JSON.stringify(entries));
+    return true;
+  } catch (error) {
+    console.error("Error saving diary completion status:", error);
+    return false;
+  }
+};
+
+/**
+ * Gets diary completion status for a specific date
+ * @param {string} dateString - Date in YYYY-MM-DD format
+ * @returns {Promise<boolean>} - Whether the diary is completed for this date
+ */
+export const getDiaryCompletionStatus = async (dateString) => {
+  try {
+    const entries = await getDiaryEntries();
+    const entry = entries[dateString];
+    return entry?.isCompleted || false;
+  } catch (error) {
+    console.error("Error getting diary completion status:", error);
+    return false;
+  }
+};

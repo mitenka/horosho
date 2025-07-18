@@ -10,6 +10,7 @@ import { formatDateToString } from "../../utils/dateUtils";
 import AddBehaviorModal from "./AddBehaviorModal";
 import ActionButtons from "./ActionButtons";
 import BehaviorsList from "./BehaviorsList";
+import DiaryCompletionToggle from "./DiaryCompletionToggle";
 import ExportModal from "./ExportModal";
 import SkillsAssessment from "./SkillsAssessment";
 
@@ -124,7 +125,9 @@ const BehaviorsSection = ({ selectedDate }) => {
         onAddBehavior={() => setShowAddModal(true)}
         onExport={() => setShowExportModal(true)}
       />
-      
+
+      <DiaryCompletionToggle />
+
       <BehaviorsList
         behaviors={behaviors}
         behaviorEntries={behaviorEntries}
