@@ -1,14 +1,14 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Alert } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons } from "@expo/vector-icons";
+import React from "react";
+import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
-const BehaviorItem = ({ 
-  behavior, 
-  entry, 
-  onDesireChange, 
-  onActionChange, 
+const BehaviorItem = ({
+  behavior,
+  entry,
+  onDesireChange,
+  onActionChange,
   onDelete,
-  isDeleting 
+  isDeleting,
 }) => {
   const handleDelete = () => {
     Alert.alert(
@@ -58,27 +58,11 @@ const BehaviorItem = ({
   };
 
   const renderActionControl = () => {
-    if (behavior.type === 'boolean') {
+    if (behavior.type === "boolean") {
       return (
         <View style={styles.actionContainer}>
           <Text style={styles.actionLabel}>Действие</Text>
           <View style={styles.actionButtons}>
-            <TouchableOpacity
-              style={[
-                styles.actionButton,
-                entry?.action === true && styles.actionButtonActive,
-              ]}
-              onPress={() => onActionChange(behavior.id, true)}
-            >
-              <Text
-                style={[
-                  styles.actionButtonText,
-                  entry?.action === true && styles.actionButtonTextActive,
-                ]}
-              >
-                ✓
-              </Text>
-            </TouchableOpacity>
             <TouchableOpacity
               style={[
                 styles.actionButton,
@@ -93,6 +77,22 @@ const BehaviorItem = ({
                 ]}
               >
                 ✗
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                styles.actionButton,
+                entry?.action === true && styles.actionButtonActive,
+              ]}
+              onPress={() => onActionChange(behavior.id, true)}
+            >
+              <Text
+                style={[
+                  styles.actionButtonText,
+                  entry?.action === true && styles.actionButtonTextActive,
+                ]}
+              >
+                ✓
               </Text>
             </TouchableOpacity>
           </View>
@@ -140,7 +140,7 @@ const BehaviorItem = ({
           <Ionicons name="trash-outline" size={20} color="#ff6b6b" />
         </TouchableOpacity>
       </View>
-      
+
       {renderDesireScale()}
       {renderActionControl()}
     </View>

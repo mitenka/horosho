@@ -1,20 +1,24 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, Modal, StyleSheet } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Ionicons } from "@expo/vector-icons";
+import React from "react";
+import { Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-const ExportModal = ({ 
-  visible, 
-  onClose, 
-  exportDays, 
-  onExportDaysChange, 
-  onExport 
+const ExportModal = ({
+  visible,
+  onClose,
+  exportDays,
+  onExportDaysChange,
+  onExport,
 }) => {
   const insets = useSafeAreaInsets();
-  const dayOptions = [1, 7, 30];
+  const dayOptions = [7, 14, 30];
 
   return (
-    <Modal visible={visible} animationType="slide" presentationStyle="pageSheet">
+    <Modal
+      visible={visible}
+      animationType="slide"
+      presentationStyle="pageSheet"
+    >
       <View style={[styles.container, { paddingTop: insets.top }]}>
         <View style={styles.header}>
           <Text style={styles.title}>Экспорт данных</Text>
@@ -22,10 +26,10 @@ const ExportModal = ({
             <Ionicons name="close" size={28} color="#fff" />
           </TouchableOpacity>
         </View>
-        
+
         <View style={styles.content}>
           <Text style={styles.label}>Выберите период для экспорта:</Text>
-          
+
           <View style={styles.daySelector}>
             {dayOptions.map((days) => (
               <TouchableOpacity
@@ -42,14 +46,16 @@ const ExportModal = ({
                     exportDays === days && styles.daySelectorButtonTextActive,
                   ]}
                 >
-                  {days} {days === 1 ? 'день' : days < 5 ? 'дня' : 'дней'}
+                  {days} {days === 1 ? "день" : days < 5 ? "дня" : "дней"}
                 </Text>
               </TouchableOpacity>
             ))}
           </View>
         </View>
-        
-        <View style={[styles.footer, { paddingBottom: Math.max(insets.bottom, 8) }]}>
+
+        <View
+          style={[styles.footer, { paddingBottom: Math.max(insets.bottom, 8) }]}
+        >
           <TouchableOpacity style={styles.exportButton} onPress={onExport}>
             <Text style={styles.exportButtonText}>Экспортировать</Text>
           </TouchableOpacity>
