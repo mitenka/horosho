@@ -117,12 +117,6 @@ const BehaviorsSection = ({ selectedDate }) => {
     }
   };
 
-  const handleExport = () => {
-    // TODO: Implement export logic
-    console.log(`Exporting ${exportDays} days of data`);
-    setShowExportModal(false);
-  };
-
   return (
     <View style={styles.container}>
       <ActionButtons
