@@ -8,8 +8,11 @@ import {
   getBehaviorEntry,
   getBehaviors,
   getDiaryEntries,
+  getSkillsAssessment,
+  getSkillsAssessmentOptions,
   removeBehaviorEntry,
   saveBehaviorEntry,
+  saveSkillsAssessment,
   updateBehavior,
 } from "./diaryService";
 import {
@@ -131,6 +134,8 @@ export {
   getReadArticles,
   // From settingsService
   getSettings,
+  getSkillsAssessment,
+  getSkillsAssessmentOptions,
   getTheory,
   initializeSettings,
   markArticleAsRead,
@@ -138,6 +143,7 @@ export {
   removeBehaviorEntry,
   resetReadingProgress,
   saveBehaviorEntry,
+  saveSkillsAssessment,
   saveSettings,
   updateBehavior,
   // From updateService

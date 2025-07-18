@@ -257,3 +257,83 @@ export const clearDiaryHistory = async () => {
     return false;
   }
 };
+
+/**
+ * Saves skills assessment for a specific date
+ * @param {string} dateString - Date in YYYY-MM-DD format
+ * @param {number|null} assessmentValue - Assessment value (0-7) or null to remove
+ * @returns {Promise<boolean>} - Whether the operation was successful
+ */
+export const saveSkillsAssessment = async (dateString, assessmentValue) => {
+  try {
+    const entries = await getDiaryEntries();
+    
+    if (!entries[dateString]) {
+      entries[dateString] = { behaviors: [] };
+    }
+    
+    if (assessmentValue !== null) {
+      entries[dateString].skillsAssessment = assessmentValue;
+    } else {
+      // Remove the property entirely when value is null
+      delete entries[dateString].skillsAssessment;
+    }
+    
+    await AsyncStorage.setItem(STORAGE_KEYS.DIARY_ENTRIES, JSON.stringify(entries));
+    return true;
+  } catch (error) {
+    console.error("Error saving skills assessment:", error);
+    return false;
+  }
+};
+
+/**
+ * Gets skills assessment for a specific date
+ * @param {string} dateString - Date in YYYY-MM-DD format
+ * @returns {Promise<number|null>} - Assessment value or null if not found
+ */
+export const getSkillsAssessment = async (dateString) => {
+  try {
+    const entries = await getDiaryEntries();
+    const entry = entries[dateString];
+    // Important: check for undefined, not falsy, to properly handle index 0
+    if (entry && entry.skillsAssessment !== undefined) {
+      return entry.skillsAssessment;
+    }
+    return null;
+  } catch (error) {
+    console.error("Error getting skills assessment:", error);
+    return null;
+  }
+};
+
+/**
+ * Gets skills assessment options with proper gender forms
+ * @param {boolean} useFeminineVerbs - Whether to use feminine verb forms
+ * @returns {Array<string>} - Array of assessment options
+ */
+export const getSkillsAssessmentOptions = (useFeminineVerbs = false) => {
+  if (useFeminineVerbs) {
+    return [
+      'Не думала о навыках и не использовала',
+      'Думала о навыках, не хотела применять, не использовала',
+      'Думала о навыках, хотела применить, но не использовала',
+      'Старалась, но не смогла применить навыки',
+      'Старалась, смогла применить навыки, но они не помогли',
+      'Старалась, смогла применить навыки, они помогли',
+      'Использовала навыки, не стараясь (автоматически), они не помогли',
+      'Использовала навыки, не стараясь (автоматически), они помогли'
+    ];
+  } else {
+    return [
+      'Не думал о навыках и не использовал',
+      'Думал о навыках, не хотел применять, не использовал',
+      'Думал о навыках, хотел применить, но не использовал',
+      'Старался, но не смог применить навыки',
+      'Старался, смог применить навыки, но они не помогли',
+      'Старался, смог применить навыки, они помогли',
+      'Использовал навыки, не стараясь (автоматически), они не помогли',
+      'Использовал навыки, не стараясь (автоматически), они помогли'
+    ];
+  }
+};

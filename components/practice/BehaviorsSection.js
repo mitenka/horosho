@@ -11,6 +11,7 @@ import AddBehaviorModal from "./AddBehaviorModal";
 import ActionButtons from "./ActionButtons";
 import BehaviorsList from "./BehaviorsList";
 import ExportModal from "./ExportModal";
+import SkillsAssessment from "./SkillsAssessment";
 
 const BehaviorsSection = ({ selectedDate }) => {
   const { behaviors, deleteBehavior } = useData();
@@ -132,6 +133,8 @@ const BehaviorsSection = ({ selectedDate }) => {
         onDeleteBehavior={handleDeleteBehavior}
         isDeleting={isDeleting}
       />
+      
+      <SkillsAssessment selectedDate={selectedDate} />
       
       <AddBehaviorModal
         visible={showAddModal}
