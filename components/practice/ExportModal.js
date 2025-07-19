@@ -194,9 +194,9 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
-    fontWeight: "600",
+    fontWeight: "700",
     color: "#fff",
-    letterSpacing: 0.3,
+    letterSpacing: 0.4,
   },
   closeButton: {
     padding: 8,

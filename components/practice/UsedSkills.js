@@ -180,7 +180,7 @@ const styles = StyleSheet.create({
   },
   title: {
     color: "#fff",
-    fontSize: 22,
+    fontSize: 20,
     fontWeight: "700",
     marginBottom: 20,
     letterSpacing: 0.4,
@@ -193,7 +193,7 @@ const styles = StyleSheet.create({
     fontStyle: "italic",
   },
   categoryContainer: {
-    marginBottom: 28,
+    marginBottom: 24,
   },
   categoryTitle: {
     fontSize: 18,
