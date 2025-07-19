@@ -113,13 +113,10 @@ const UsedSkills = () => {
         key={skill}
         style={[
           styles.skillItem,
-          { 
-            borderColor: categoryColor,
-            shadowColor: isSelected ? categoryColor : "#000",
-          },
           isSelected && {
             ...styles.skillItemSelected,
-            shadowColor: categoryColor,
+            backgroundColor: `${categoryColor}15`, // 15 = 8.5% opacity
+            borderColor: `${categoryColor}4D`, // 4D = 30% opacity
           },
         ]}
         onPress={() => handleSkillToggle(skill)}
@@ -131,7 +128,7 @@ const UsedSkills = () => {
               key={index}
               style={[
                 part.bold && styles.boldText,
-                isSelected && styles.skillTextSelected,
+                isSelected && { color: categoryColor },
               ]}
             >
               {part.text}
@@ -222,35 +219,31 @@ const styles = StyleSheet.create({
   },
   skillItem: {
     backgroundColor: "rgba(255, 255, 255, 0.08)",
-    borderRadius: 14,
-    paddingVertical: 14,
+    borderRadius: 16,
+    paddingVertical: 16,
     paddingHorizontal: 18,
     marginBottom: 8,
     borderWidth: 1,
+    borderColor: "rgba(255, 255, 255, 0.12)",
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 2,
-    transform: [{ scale: 1 }],
   },
   skillItemSelected: {
-    backgroundColor: "rgba(255, 255, 255, 0.18)",
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.6,
-    shadowRadius: 12,
-    elevation: 8,
-    transform: [{ scale: 1.02 }],
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 6,
+    elevation: 4,
   },
   skillText: {
-    color: "rgba(255, 255, 255, 0.85)",
+    color: "rgba(255, 255, 255, 0.8)",
     fontSize: 16,
-    fontWeight: "400",
+    fontWeight: "500",
     letterSpacing: 0.3,
     lineHeight: 22,
     textAlign: "left",
-  },
-  skillTextSelected: {
-    color: "#fff",
   },
   boldText: {
     fontWeight: "700",
