@@ -138,7 +138,7 @@ const BehaviorsSection = ({ selectedDate }) => {
         isDeleting={isDeleting}
       />
       
-      <SkillsAssessment />
+      <SkillsAssessment selectedDate={selectedDate} />
       
       <UsedSkills />
 
