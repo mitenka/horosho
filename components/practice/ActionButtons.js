@@ -6,7 +6,7 @@ const ActionButtons = ({ onAddBehavior, onExport }) => {
   return (
     <View style={styles.buttonRow}>
       <TouchableOpacity style={styles.addButton} onPress={onAddBehavior}>
-        <Ionicons name="add" size={24} color="#fff" />
+        <Ionicons name="add-circle-outline" size={24} color="#fff" />
         <Text style={styles.addButtonText}>Добавить</Text>
       </TouchableOpacity>
       
