@@ -5,16 +5,19 @@ import { getDataVersions, getDictionary, getTheory } from "./contentService";
 import {
   addBehavior,
   deleteBehavior,
+  getAvailableSkills,
   getBehaviorEntry,
   getBehaviors,
   getDiaryCompletionStatus,
   getDiaryEntries,
   getSkillsAssessment,
   getSkillsAssessmentOptions,
+  getUsedSkills,
   removeBehaviorEntry,
   saveBehaviorEntry,
   saveDiaryCompletionStatus,
   saveSkillsAssessment,
+  saveUsedSkills,
   updateBehavior,
 } from "./diaryService";
 import {
@@ -135,11 +138,13 @@ export {
   // From readingProgressService
   getReadArticles,
   // From settingsService
+  getAvailableSkills,
   getDiaryCompletionStatus,
   getSettings,
   getSkillsAssessment,
   getSkillsAssessmentOptions,
   getTheory,
+  getUsedSkills,
   initializeSettings,
   markArticleAsRead,
   markArticleAsUnread,
@@ -149,6 +154,7 @@ export {
   saveDiaryCompletionStatus,
   saveSkillsAssessment,
   saveSettings,
+  saveUsedSkills,
   updateBehavior,
   // From updateService
   updateLastCheckTime,

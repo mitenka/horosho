@@ -382,3 +382,107 @@ export const getDiaryCompletionStatus = async (dateString) => {
     return false;
   }
 };
+
+/**
+ * Gets the complete list of available skills organized by categories
+ * @returns {Object} - Skills organized by categories
+ */
+export const getAvailableSkills = () => {
+  return {
+    mindfulness: {
+      title: "Осознанность",
+      skills: [
+        "**Мудрый разум**",
+        "**Наблюдение:** замечать",
+        "**Описание:** добавлять слова, только факты",
+        "**Участие:** погружаться в происходящее",
+        "**Безоценочность**",
+        "**Однонаправленность:** здесь и сейчас",
+        "**Эффективность:** фокусировка на том, что работает"
+      ]
+    },
+    interpersonal: {
+      title: "Межличностная эффективность",
+      skills: [
+        "**DEAR:** объективная эффективность",
+        "**MAN:** осознанность в достижении цели",
+        "**GIVE:** эффективность отношений",
+        "**FAST:** эффективность самоуважения",
+        "**Валидация**",
+        "**Стратегии изменения поведения**"
+      ]
+    },
+    emotionRegulation: {
+      title: "Регуляция эмоций",
+      skills: [
+        "**Проверка фактов**",
+        "**Противоположное действие**",
+        "**Решение проблемы**",
+        "**A:** позитивные эмоции",
+        "**B:** мастерство",
+        "**C:** заблаговременный поиск решений",
+        "**PLEASE:** снижение уязвимости",
+        "**Осознанное отношение к текущей эмоции**"
+      ]
+    },
+    stressTolerance: {
+      title: "Переживание стресса",
+      skills: [
+        "**СТОП:** остановись",
+        "**За и против**",
+        "**Физиологические методы (ТРУД):** холодная вода, интенсивная физнагрузка, медленное дыхание, сканирование и расслабление тела",
+        "**ACCEPTS:** отвлечение",
+        "**Пять органов чувств:** забота о себе",
+        "**IMPROVE:** улучшить момент",
+        "**Радикальное принятие**",
+        "**Готовность, полуулыбка, раскрытые ладони**",
+        "**Осознанное отношение к текущим мыслям**"
+      ]
+    }
+  };
+};
+
+/**
+ * Saves used skills for a specific date
+ * @param {string} dateString - Date in YYYY-MM-DD format
+ * @param {string[]} usedSkills - Array of skill names that were used
+ * @returns {Promise<boolean>} - Whether the operation was successful
+ */
+export const saveUsedSkills = async (dateString, usedSkills) => {
+  try {
+    const entries = await getDiaryEntries();
+    
+    if (!entries[dateString]) {
+      entries[dateString] = { behaviors: [] };
+    }
+    
+    if (usedSkills && usedSkills.length > 0) {
+      entries[dateString].usedSkills = usedSkills;
+    } else {
+      // Remove the property entirely when empty
+      delete entries[dateString].usedSkills;
+    }
+    
+    await AsyncStorage.setItem(STORAGE_KEYS.DIARY_ENTRIES, JSON.stringify(entries));
+    return true;
+  } catch (error) {
+    console.error("Error saving used skills:", error);
+    return false;
+  }
+};
+
+/**
+ * Gets used skills for a specific date
+ * @param {string} dateString - Date in YYYY-MM-DD format
+ * @returns {Promise<string[]>} - Array of used skill names
+ */
+export const getUsedSkills = async (dateString) => {
+  try {
+    const entries = await getDiaryEntries();
+    const entry = entries[dateString];
+    return entry?.usedSkills || [];
+  } catch (error) {
+    console.error("Error getting used skills:", error);
+    return [];
+  }
+};

@@ -9,6 +9,46 @@ const WebViewExporter = ({
 }) => {
   const webViewRef = useRef(null);
 
+  // Generate used skills section for export
+  const generateUsedSkillsSection = (data) => {
+    const skillCategories = {
+      mindfulness: { title: "Осознанность", color: "#4CAF50" },
+      interpersonal: { title: "Межличностная эффективность", color: "#2196F3" },
+      emotionRegulation: { title: "Регуляция эмоций", color: "#FF9800" },
+      stressTolerance: { title: "Переживание стресса", color: "#FF5722" }
+    };
+
+    // Collect all used skills by date and category
+    const skillsByDate = {};
+    Object.entries(data || {}).forEach(([date, entry]) => {
+      if (entry.usedSkills && entry.usedSkills.length > 0) {
+        skillsByDate[date] = entry.usedSkills;
+      }
+    });
+
+    if (Object.keys(skillsByDate).length === 0) {
+      return "";
+    }
+
+    return `
+      <div style="margin-top: 32px; padding-top: 24px; border-top: 2px solid #e1e5e9;">
+        <h2 style="color: #2d2d4a; font-size: 20px; margin-bottom: 16px;">Использованные навыки</h2>
+        ${Object.entries(skillsByDate).map(([date, skills]) => `
+          <div style="margin-bottom: 20px; padding: 16px; background: #f8f9fa; border-radius: 12px;">
+            <h3 style="margin: 0 0 12px 0; color: #2d2d4a; font-size: 16px; font-weight: 600;">${date}</h3>
+            <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+              ${skills.map(skill => {
+                // Parse markdown-style bold text for display
+                const cleanSkill = skill.replace(/\*\*(.*?)\*\*/g, '$1');
+                return `<span style="padding: 6px 12px; background: white; border-radius: 8px; font-size: 14px; color: #495057; border-left: 3px solid #667eea;">${cleanSkill}</span>`;
+              }).join('')}
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    `;
+  };
+
   const generateHTML = (data, assessment) => {
     // Convert diary data to table rows
     const tableRows = Object.entries(data || {})
@@ -157,6 +197,8 @@ const WebViewExporter = ({
             `
                 : ""
             }
+            
+            ${generateUsedSkillsSection(data)}
           </div>
           
           <canvas id="exportCanvas" width="800" height="600" style="display: none;"></canvas>

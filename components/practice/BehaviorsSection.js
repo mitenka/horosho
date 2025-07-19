@@ -13,6 +13,7 @@ import BehaviorsList from "./BehaviorsList";
 import DiaryCompletionToggle from "./DiaryCompletionToggle";
 import ExportModal from "./ExportModal";
 import SkillsAssessment from "./SkillsAssessment";
+import UsedSkills from "./UsedSkills";
 
 const BehaviorsSection = ({ selectedDate }) => {
   const { behaviors, deleteBehavior } = useData();
@@ -137,8 +138,10 @@ const BehaviorsSection = ({ selectedDate }) => {
         isDeleting={isDeleting}
       />
       
-      <SkillsAssessment selectedDate={selectedDate} />
+      <SkillsAssessment />
       
+      <UsedSkills />
+
       <AddBehaviorModal
         visible={showAddModal}
         onClose={() => setShowAddModal(false)}
