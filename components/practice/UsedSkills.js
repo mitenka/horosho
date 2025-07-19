@@ -164,7 +164,7 @@ const UsedSkills = () => {
   }
 
   return (
-    <View style={styles.card}>
+    <View style={styles.container}>
       <Text style={styles.title}>Использованные за день навыки</Text>
       
       {Object.entries(availableSkills).map(([categoryKey, categoryData]) =>
@@ -175,25 +175,15 @@ const UsedSkills = () => {
 };
 
 const styles = StyleSheet.create({
-  card: {
-    backgroundColor: "rgba(255, 255, 255, 0.08)",
-    borderRadius: 16,
-    padding: 20,
-    marginBottom: 16,
-    borderWidth: 1,
-    borderColor: "rgba(255, 255, 255, 0.12)",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
+  container: {
+    marginBottom: 20,
   },
   title: {
     color: "#fff",
-    fontSize: 18,
-    fontWeight: "600",
-    letterSpacing: 0.3,
+    fontSize: 22,
+    fontWeight: "700",
     marginBottom: 20,
+    letterSpacing: 0.4,
     textAlign: "left",
   },
   loadingText: {
