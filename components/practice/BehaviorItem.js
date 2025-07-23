@@ -33,7 +33,7 @@ const BehaviorItem = ({
       <View style={styles.scaleContainer}>
         <Text style={styles.scaleLabel}>Желание</Text>
         <View style={styles.scaleButtons}>
-          {[1, 2, 3, 4, 5].map((value) => (
+          {[0, 1, 2, 3, 4, 5].map((value) => (
             <TouchableOpacity
               key={value}
               style={[
@@ -103,7 +103,7 @@ const BehaviorItem = ({
         <View style={styles.scaleContainer}>
           <Text style={styles.scaleLabel}>Действие</Text>
           <View style={styles.scaleButtons}>
-            {[1, 2, 3, 4, 5].map((value) => (
+            {[0, 1, 2, 3, 4, 5].map((value) => (
               <TouchableOpacity
                 key={value}
                 style={[
