@@ -55,15 +55,15 @@ const UsedSkills = () => {
   const getCategoryColor = (categoryKey) => {
     switch (categoryKey) {
       case "mindfulness":
-        return "#4CAF50"; // green
+        return "#4CAF50"; // bright green
       case "interpersonal":
-        return "#2196F3"; // blue
+        return "#2196F3"; // bright blue
       case "emotionRegulation":
-        return "#FF9800"; // orange
+        return "#FF9800"; // bright orange
       case "stressTolerance":
-        return "#FF5722"; // coral/deep orange
+        return "#CE93D8"; // lighter purple
       default:
-        return "#9E9E9E"; // grey
+        return "#9E9E9E"; // fallback grey (should not be used)
     }
   };
 
