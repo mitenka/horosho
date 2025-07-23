@@ -193,6 +193,17 @@ export default function Dictionary() {
                 </Text>
               </View>
 
+              {selectedTerm?.example && (
+                <View style={styles.exampleContainer}>
+                  <Text style={styles.exampleLabel}>Пример</Text>
+                  <View style={styles.exampleContent}>
+                    <Text style={styles.exampleText}>
+                      {selectedTerm.example}
+                    </Text>
+                  </View>
+                </View>
+              )}
+
               {selectedTerm?.relatedTermIds.length > 0 && (
                 <View style={styles.relatedTermsContainer}>
                   <Text style={styles.relatedTermsLabel}>
@@ -323,6 +334,40 @@ const styles = StyleSheet.create({
     fontSize: 17,
     lineHeight: 26,
     color: "#f0f0f0",
+  },
+  exampleContainer: {
+    marginBottom: 28,
+  },
+  exampleLabel: {
+    fontSize: 18,
+    fontWeight: "600",
+    color: "#a0a0d0",
+    marginBottom: 12,
+    letterSpacing: 0.2,
+  },
+  exampleContent: {
+    backgroundColor: "rgba(45, 45, 65, 0.5)",
+    borderRadius: 12,
+    borderWidth: 2,
+    borderStyle: "dashed",
+    borderColor: "rgba(124, 179, 66, 0.6)",
+    padding: 2,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  exampleText: {
+    fontSize: 17,
+    lineHeight: 26,
+    fontStyle: "italic",
+    color: "#7CB342",
+    letterSpacing: 0.3,
+    padding: 18,
+    backgroundColor: "rgba(45, 45, 65, 0.3)",
+    borderRadius: 10,
+    fontWeight: "500",
   },
   relatedTermsContainer: {
     marginBottom: 16,
