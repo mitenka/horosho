@@ -36,6 +36,7 @@ const BehaviorItem = ({
           {[0, 1, 2, 3, 4, 5].map((value) => (
             <TouchableOpacity
               key={value}
+              activeOpacity={0.8}
               style={[
                 styles.scaleButton,
                 entry?.desire === value && styles.scaleButtonActive,
@@ -64,6 +65,7 @@ const BehaviorItem = ({
           <Text style={styles.actionLabel}>Действие</Text>
           <View style={styles.actionButtons}>
             <TouchableOpacity
+              activeOpacity={0.8}
               style={[
                 styles.actionButton,
                 entry?.action === false && styles.actionButtonActive,
@@ -80,6 +82,7 @@ const BehaviorItem = ({
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
+              activeOpacity={0.8}
               style={[
                 styles.actionButton,
                 entry?.action === true && styles.actionButtonActive,
@@ -106,6 +109,7 @@ const BehaviorItem = ({
             {[0, 1, 2, 3, 4, 5].map((value) => (
               <TouchableOpacity
                 key={value}
+                activeOpacity={0.8}
                 style={[
                   styles.scaleButton,
                   entry?.action === value && styles.scaleButtonActive,
@@ -190,7 +194,7 @@ const styles = StyleSheet.create({
   scaleButtons: {
     flexDirection: "row",
     justifyContent: "space-between",
-    gap: 8,
+    gap: 6,
   },
   scaleButton: {
     flex: 1,
@@ -213,7 +217,7 @@ const styles = StyleSheet.create({
     elevation: 6,
   },
   scaleButtonText: {
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: "500",
     color: "rgba(255, 255, 255, 0.8)",
   },
@@ -233,7 +237,7 @@ const styles = StyleSheet.create({
   },
   actionButtons: {
     flexDirection: "row",
-    gap: 12,
+    gap: 6,
   },
   actionButton: {
     flex: 1,
