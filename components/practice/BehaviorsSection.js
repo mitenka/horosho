@@ -152,6 +152,7 @@ const BehaviorsSection = ({ selectedDate }) => {
         onClose={() => setShowExportModal(false)}
         exportDays={exportDays}
         onExportDaysChange={setExportDays}
+        selectedDate={selectedDate}
       />
     </View>
   );

@@ -1,55 +1,31 @@
 import { Ionicons } from "@expo/vector-icons";
-import * as FileSystem from "expo-file-system";
-import * as MediaLibrary from "expo-media-library";
+
 import React, { useState } from "react";
 import { Alert, Modal, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import Slider from "@react-native-community/slider";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import ControlAssessment from "./ControlAssessment";
-import { getDiaryEntries } from "../../services/diaryService";
-import WebViewExporter from "./WebViewExporter";
+
+
 
 const ExportModal = ({
   visible,
   onClose,
   exportDays,
   onExportDaysChange,
+  selectedDate,
 }) => {
   const insets = useSafeAreaInsets();
-  const dayOptions = [7, 14, 30];
+
   const [isExporting, setIsExporting] = useState(false);
-  const [diaryData, setDiaryData] = useState(null);
   const [controlAssessment, setControlAssessment] = useState(null);
-  const [showWebView, setShowWebView] = useState(false);
 
   const handleExport = async () => {
     try {
       setIsExporting(true);
       
-      // Request media library permissions
-      const { status } = await MediaLibrary.requestPermissionsAsync();
-      if (status !== 'granted') {
-        Alert.alert('Ошибка', 'Необходимо разрешение для сохранения в фотоленту');
-        setIsExporting(false);
-        return;
-      }
-      
-      // Load diary entries
-      const entries = await getDiaryEntries();
-      
-      // Filter entries by selected days
-      const cutoffDate = new Date();
-      cutoffDate.setDate(cutoffDate.getDate() - exportDays);
-      
-      const filteredEntries = {};
-      Object.entries(entries || {}).forEach(([date, entry]) => {
-        const entryDate = new Date(date);
-        if (entryDate >= cutoffDate) {
-          filteredEntries[date] = entry;
-        }
-      });
-      
-      setDiaryData(filteredEntries);
-      setShowWebView(true);
+      // Простое уведомление - функция экспорта отключена
+      Alert.alert('Экспорт', 'Функция экспорта временно отключена');
       
     } catch (error) {
       console.error('Export error:', error);
@@ -58,53 +34,7 @@ const ExportModal = ({
     }
   };
 
-  const handleExportComplete = async (base64Data) => {
-    try {
-      // Convert base64 to file URI
-      const filename = `diary_export_${new Date().toISOString().split('T')[0]}.png`;
-      const fileUri = `${FileSystem.documentDirectory}${filename}`;
-      
-      // Remove data:image/png;base64, prefix
-      const base64Image = base64Data.replace(/^data:image\/png;base64,/, '');
-      
-      // Write file
-      await FileSystem.writeAsStringAsync(fileUri, base64Image, {
-        encoding: FileSystem.EncodingType.Base64,
-      });
-      
-      // Create asset and save to album
-      const asset = await MediaLibrary.createAssetAsync(fileUri);
-      
-      // Try to get or create "Сойдёт" album
-      let album;
-      try {
-        const albums = await MediaLibrary.getAlbumsAsync();
-        album = albums.find(a => a.title === 'Сойдёт');
-        
-        if (!album) {
-          album = await MediaLibrary.createAlbumAsync('Сойдёт', asset, false);
-        } else {
-          await MediaLibrary.addAssetsToAlbumAsync([asset], album, false);
-        }
-      } catch (albumError) {
-        console.log('Album creation/addition failed, but image saved to camera roll');
-      }
-      
-      // Clean up temporary file
-      await FileSystem.deleteAsync(fileUri, { idempotent: true });
-      
-      Alert.alert('Успешно', 'Изображение сохранено в фотоленту');
-      
-    } catch (error) {
-      console.error('Save error:', error);
-      Alert.alert('Ошибка', 'Не удалось сохранить изображение');
-    } finally {
-      setIsExporting(false);
-      setShowWebView(false);
-      setDiaryData(null);
-      onClose();
-    }
-  };
+
 
   return (
     <Modal
@@ -126,28 +56,22 @@ const ExportModal = ({
           contentContainerStyle={styles.scrollContent}
         >
           <View style={styles.content}>
-            <Text style={styles.label}>Выберите период для экспорта:</Text>
+            <Text style={styles.label}>Период экспорта: {exportDays} {exportDays === 1 ? 'день' : exportDays < 5 ? 'дня' : 'дней'}</Text>
 
-            <View style={styles.daySelector}>
-              {dayOptions.map((days) => (
-                <TouchableOpacity
-                  key={days}
-                  style={[
-                    styles.daySelectorButton,
-                    exportDays === days && styles.daySelectorButtonActive,
-                  ]}
-                  onPress={() => onExportDaysChange(days)}
-                >
-                  <Text
-                    style={[
-                      styles.daySelectorButtonText,
-                      exportDays === days && styles.daySelectorButtonTextActive,
-                    ]}
-                  >
-                    {days} {days === 1 ? "день" : days < 5 ? "дня" : "дней"}
-                  </Text>
-                </TouchableOpacity>
-              ))}
+            <View style={styles.sliderContainer}>
+              <Text style={styles.sliderLabel}>7</Text>
+              <Slider
+                style={styles.slider}
+                minimumValue={7}
+                maximumValue={14}
+                step={1}
+                value={exportDays}
+                onValueChange={onExportDaysChange}
+                minimumTrackTintColor="#ff3b30"
+                maximumTrackTintColor="rgba(255, 255, 255, 0.3)"
+                thumbTintColor="#ff3b30"
+              />
+              <Text style={styles.sliderLabel}>14</Text>
             </View>
             
             <ControlAssessment onAssessmentChange={setControlAssessment} />
@@ -168,13 +92,7 @@ const ExportModal = ({
           </TouchableOpacity>
         </View>
         
-        {showWebView && (
-          <WebViewExporter
-            diaryData={diaryData}
-            controlAssessment={controlAssessment}
-            onExportComplete={handleExportComplete}
-          />
-        )}
+
       </View>
     </Modal>
   );
@@ -219,35 +137,38 @@ const styles = StyleSheet.create({
     marginBottom: 18,
     letterSpacing: 0.3,
   },
-  daySelector: {
+  sliderContainer: {
     flexDirection: "row",
+    alignItems: "center",
     backgroundColor: "rgba(255, 255, 255, 0.12)",
-    borderRadius: 14,
-    overflow: "hidden",
-    marginBottom: 22,
+    borderRadius: 12,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    marginBottom: 12,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.1,
     shadowRadius: 2,
     elevation: 1,
   },
-  daySelectorButton: {
+  slider: {
     flex: 1,
-    paddingVertical: 16,
-    alignItems: "center",
+    height: 40,
+    marginHorizontal: 12,
   },
-  daySelectorButtonActive: {
-    backgroundColor: "#ff3b30",
-  },
-  daySelectorButtonText: {
-    fontSize: 15,
+  sliderLabel: {
+    fontSize: 16,
     color: "rgba(255, 255, 255, 0.7)",
-    letterSpacing: 0.3,
-  },
-  daySelectorButtonTextActive: {
-    color: "#fff",
     fontWeight: "600",
-    letterSpacing: 0.4,
+    minWidth: 20,
+    textAlign: "center",
+  },
+  hint: {
+    fontSize: 14,
+    color: "rgba(255, 255, 255, 0.6)",
+    textAlign: "center",
+    marginBottom: 22,
+    fontStyle: "italic",
   },
   footer: {
     padding: 14,
