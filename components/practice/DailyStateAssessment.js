@@ -130,13 +130,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   scaleButtonActive: {
-    backgroundColor: "#FFD700",
+    backgroundColor: "rgba(255, 215, 0, 0.8)",
     borderColor: "#FFD700",
     shadowColor: "#FFD700",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
-    elevation: 3,
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.2,
+    shadowRadius: 6,
+    elevation: 2,
   },
   scaleButtonText: {
     fontSize: 16,
