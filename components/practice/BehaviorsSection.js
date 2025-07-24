@@ -11,6 +11,7 @@ import AddBehaviorModal from "./AddBehaviorModal";
 import AddButton from "./AddButton";
 import ActionButtons from "./ActionButtons";
 import BehaviorsList from "./BehaviorsList";
+import DailyStateAssessment from "./DailyStateAssessment";
 import DiaryCompletionToggle from "./DiaryCompletionToggle";
 import EmptyState from "./EmptyState";
 import ExportModal from "./ExportModal";
@@ -146,6 +147,8 @@ const BehaviorsSection = ({ selectedDate }) => {
       />
 
       <DiaryCompletionToggle />
+
+      <DailyStateAssessment selectedDate={selectedDate} />
 
       <BehaviorsList
         behaviors={behaviors}

@@ -486,3 +486,62 @@ export const getUsedSkills = async (dateString) => {
     return [];
   }
 };
+
+/**
+ * Saves daily state assessment for a specific date
+ * @param {string} dateString - Date in YYYY-MM-DD format
+ * @param {Object} dailyState - State object with emotional, physical, and pleasure values (0-5)
+ * @returns {Promise<boolean>} - Whether the operation was successful
+ */
+export const saveDailyState = async (dateString, dailyState) => {
+  try {
+    if (!dailyState || typeof dailyState !== 'object') {
+      throw new Error('Invalid daily state data');
+    }
+
+    const { emotional, physical, pleasure } = dailyState;
+    
+    // Validate state values - allow null or numbers between 0 and 5
+    const validateValue = (value) => {
+      return value === null || (typeof value === "number" && value >= 0 && value <= 5);
+    };
+    
+    if (!validateValue(emotional) || !validateValue(physical) || !validateValue(pleasure)) {
+      throw new Error("Invalid state values. Values must be null or numbers between 0 and 5");
+    }
+
+    const entries = await getDiaryEntries();
+    
+    if (!entries[dateString]) {
+      entries[dateString] = { behaviors: [] };
+    }
+    
+    entries[dateString].dailyState = {
+      emotional,
+      physical,
+      pleasure,
+    };
+    
+    await AsyncStorage.setItem(STORAGE_KEYS.DIARY_ENTRIES, JSON.stringify(entries));
+    return true;
+  } catch (error) {
+    console.error("Error saving daily state:", error);
+    return false;
+  }
+};
+
+/**
+ * Gets daily state assessment for a specific date
+ * @param {string} dateString - Date in YYYY-MM-DD format
+ * @returns {Promise<Object|null>} - State object or null if not found
+ */
+export const getDailyState = async (dateString) => {
+  try {
+    const entries = await getDiaryEntries();
+    const entry = entries[dateString];
+    return entry?.dailyState || null;
+  } catch (error) {
+    console.error("Error getting daily state:", error);
+    return null;
+  }
+};
