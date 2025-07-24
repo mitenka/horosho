@@ -221,14 +221,16 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   fixedTopArea: {
-    padding: 12,
+    paddingHorizontal: 20,
+    paddingVertical: 12,
     paddingBottom: 4,
   },
   suggestionsScrollView: {
     flex: 1,
   },
   suggestionsScrollContainer: {
-    padding: 12,
+    paddingHorizontal: 20,
+    paddingVertical: 12,
     paddingTop: 6,
     paddingBottom: 20,
   },
@@ -291,7 +293,7 @@ const styles = StyleSheet.create({
   },
   footer: {
     padding: 14,
-    paddingHorizontal: 18,
+    paddingHorizontal: 20,
     borderTopWidth: 1,
     borderTopColor: "rgba(255, 255, 255, 0.12)",
   },

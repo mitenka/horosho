@@ -56,7 +56,7 @@ const ExportModal = ({
           contentContainerStyle={styles.scrollContent}
         >
           <View style={styles.content}>
-            <Text style={styles.label}>Период экспорта: {exportDays} {exportDays === 1 ? 'день' : exportDays < 5 ? 'дня' : 'дней'}</Text>
+            <Text style={styles.label}>Период экспорта: {exportDays === 7 ? 'неделя' : exportDays === 14 ? 'две недели' : `${exportDays} ${exportDays === 1 ? 'день' : exportDays < 5 ? 'дня' : 'дней'}`}</Text>
 
             <View style={styles.sliderContainer}>
               <Text style={styles.sliderLabel}>7</Text>
@@ -128,39 +128,41 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    padding: 12,
+    paddingHorizontal: 20,
+    paddingVertical: 12,
     paddingBottom: 4,
   },
   label: {
-    fontSize: 17,
-    color: "rgba(255, 255, 255, 0.9)",
-    marginBottom: 18,
-    letterSpacing: 0.3,
+    fontSize: 20,
+    fontWeight: "600",
+    color: "#fff",
+    marginBottom: 24,
+    letterSpacing: 0.4,
   },
   sliderContainer: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "rgba(255, 255, 255, 0.12)",
-    borderRadius: 12,
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    marginBottom: 12,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-    elevation: 1,
+    backgroundColor: "rgba(255, 255, 255, 0.08)",
+    borderRadius: 20,
+    paddingHorizontal: 24,
+    paddingVertical: 16,
+    marginBottom: 20,
+    shadowColor: "#ff3b30",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.15,
+    shadowRadius: 8,
+    elevation: 6,
   },
   slider: {
     flex: 1,
-    height: 40,
-    marginHorizontal: 12,
+    height: 44,
+    marginHorizontal: 16,
   },
   sliderLabel: {
-    fontSize: 16,
-    color: "rgba(255, 255, 255, 0.7)",
+    fontSize: 18,
+    color: "rgba(255, 255, 255, 0.8)",
     fontWeight: "600",
-    minWidth: 20,
+    minWidth: 24,
     textAlign: "center",
   },
   hint: {
@@ -172,7 +174,7 @@ const styles = StyleSheet.create({
   },
   footer: {
     padding: 14,
-    paddingHorizontal: 18,
+    paddingHorizontal: 20,
     borderTopWidth: 1,
     borderTopColor: "rgba(255, 255, 255, 0.12)",
   },
