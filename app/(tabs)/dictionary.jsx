@@ -193,13 +193,17 @@ export default function Dictionary() {
                 </Text>
               </View>
 
-              {selectedTerm?.example && (
+              {selectedTerm?.examples && selectedTerm.examples !== null && selectedTerm.examples.length > 0 && (
                 <View style={styles.exampleContainer}>
-                  <Text style={styles.exampleLabel}>Пример</Text>
+                  <Text style={styles.exampleLabel}>
+                    {selectedTerm.examples.length === 1 ? 'Пример' : 'Примеры'}
+                  </Text>
                   <View style={styles.exampleContent}>
-                    <Text style={styles.exampleText}>
-                      {selectedTerm.example}
-                    </Text>
+                    {selectedTerm.examples.map((example, index) => (
+                      <Text key={index} style={[styles.exampleText, index > 0 && { marginTop: 8 }]}>
+                        {selectedTerm.examples.length > 1 && `${index + 1}. `}{example}
+                      </Text>
+                    ))}
                   </View>
                 </View>
               )}
