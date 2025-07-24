@@ -81,7 +81,7 @@ const DiaryCompletionToggle = () => {
 
 const styles = StyleSheet.create({
   container: {
-    marginBottom: 20,
+    marginBottom: 24,
   },
   toggle: {
     backgroundColor: "rgba(255, 255, 255, 0.08)",

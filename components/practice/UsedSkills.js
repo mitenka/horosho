@@ -176,14 +176,14 @@ const UsedSkills = () => {
 
 const styles = StyleSheet.create({
   container: {
-    marginBottom: 20,
+    marginBottom: 24,
   },
   title: {
     color: "#fff",
     fontSize: 20,
     fontWeight: "700",
-    marginTop: 32,
-    marginBottom: 20,
+    marginTop: 24,
+    marginBottom: 16,
     letterSpacing: 0.4,
     textAlign: "left",
   },

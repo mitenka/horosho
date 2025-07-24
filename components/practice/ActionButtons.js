@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
   buttonRow: {
     flexDirection: "row",
     gap: 12,
-    marginBottom: 20,
+    marginBottom: 24,
   },
   addButton: {
     flex: 1,

@@ -104,13 +104,14 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "700",
     color: "#fff",
+    marginTop: 24,
     marginBottom: 16,
     textAlign: "left",
     letterSpacing: 0.4,
   },
   optionsContainer: {
     gap: 12,
-    marginBottom: 20,
+    marginBottom: 24,
   },
   optionButton: {
     backgroundColor: "rgba(255, 255, 255, 0.08)",
