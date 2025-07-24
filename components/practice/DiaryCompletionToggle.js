@@ -1,8 +1,11 @@
-import React, { useState, useEffect } from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import React, { useEffect, useState } from "react";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useData } from "../../contexts/DataContext";
-import { getDiaryCompletionStatus, saveDiaryCompletionStatus } from "../../services/dataService";
+import {
+  getDiaryCompletionStatus,
+  saveDiaryCompletionStatus,
+} from "../../services/dataService";
 import { formatDateToString } from "../../utils/dateUtils";
 
 const DiaryCompletionToggle = () => {
@@ -31,10 +34,10 @@ const DiaryCompletionToggle = () => {
 
   const handleToggle = async () => {
     const newStatus = !isCompleted;
-    
+
     // Optimistic update
     setIsCompleted(newStatus);
-    
+
     try {
       await saveDiaryCompletionStatus(dateString, newStatus);
     } catch (error) {
@@ -64,11 +67,13 @@ const DiaryCompletionToggle = () => {
         <View style={styles.content}>
           <View style={styles.textContainer}>
             <Text style={[styles.label, isCompleted && styles.completedLabel]}>
-              Дневник заполнен сегодня
+              Дневник заполнен сегодня?
             </Text>
           </View>
-          
-          <View style={[styles.checkbox, isCompleted && styles.completedCheckbox]}>
+
+          <View
+            style={[styles.checkbox, isCompleted && styles.completedCheckbox]}
+          >
             {isCompleted && (
               <Ionicons name="checkmark" size={18} color="#fff" />
             )}
