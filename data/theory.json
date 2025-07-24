@@ -20,7 +20,7 @@
       "title": "Основы",
       "description": "Предварительные знания, которые помогут лучше освоить навыки ДПТ",
       "icon": "book-outline",
-      "color": "#FF7043",
+      "color": "#FF0000",
       "articles": [
         {
           "id": "setting-goals",
