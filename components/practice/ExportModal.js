@@ -1,12 +1,18 @@
 import { Ionicons } from "@expo/vector-icons";
 
-import React, { useState } from "react";
-import { Alert, Modal, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Slider from "@react-native-community/slider";
+import React, { useState } from "react";
+import {
+  Alert,
+  Modal,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import ControlAssessment from "./ControlAssessment";
-
-
 
 const ExportModal = ({
   visible,
@@ -23,18 +29,15 @@ const ExportModal = ({
   const handleExport = async () => {
     try {
       setIsExporting(true);
-      
+
       // Простое уведомление - функция экспорта отключена
-      Alert.alert('Экспорт', 'Функция экспорта временно отключена');
-      
+      Alert.alert("Экспорт", "Функция экспорта временно отключена");
     } catch (error) {
-      console.error('Export error:', error);
-      Alert.alert('Ошибка', 'Не удалось экспортировать данные');
+      console.error("Export error:", error);
+      Alert.alert("Ошибка", "Не удалось экспортировать данные");
       setIsExporting(false);
     }
   };
-
-
 
   return (
     <Modal
@@ -50,13 +53,22 @@ const ExportModal = ({
           </TouchableOpacity>
         </View>
 
-        <ScrollView 
+        <ScrollView
           style={styles.contentScroll}
           showsVerticalScrollIndicator={false}
           contentContainerStyle={styles.scrollContent}
         >
           <View style={styles.content}>
-            <Text style={styles.label}>Период экспорта: {exportDays === 7 ? 'неделя' : exportDays === 14 ? 'две недели' : `${exportDays} ${exportDays === 1 ? 'день' : exportDays < 5 ? 'дня' : 'дней'}`}</Text>
+            <Text style={styles.label}>
+              Период экспорта:{" "}
+              {exportDays === 7
+                ? "неделя"
+                : exportDays === 14
+                ? "две недели"
+                : `${exportDays} ${
+                    exportDays === 1 ? "день" : exportDays < 5 ? "дня" : "дней"
+                  }`}
+            </Text>
 
             <View style={styles.sliderContainer}>
               <Text style={styles.sliderLabel}>7</Text>
@@ -73,7 +85,7 @@ const ExportModal = ({
               />
               <Text style={styles.sliderLabel}>14</Text>
             </View>
-            
+
             <ControlAssessment onAssessmentChange={setControlAssessment} />
           </View>
         </ScrollView>
@@ -81,8 +93,11 @@ const ExportModal = ({
         <View
           style={[styles.footer, { paddingBottom: Math.max(insets.bottom, 8) }]}
         >
-          <TouchableOpacity 
-            style={[styles.exportButton, isExporting && styles.exportButtonDisabled]} 
+          <TouchableOpacity
+            style={[
+              styles.exportButton,
+              isExporting && styles.exportButtonDisabled,
+            ]}
             onPress={handleExport}
             disabled={isExporting}
           >
@@ -91,8 +106,6 @@ const ExportModal = ({
             </Text>
           </TouchableOpacity>
         </View>
-        
-
       </View>
     </Modal>
   );
