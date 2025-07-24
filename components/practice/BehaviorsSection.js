@@ -8,9 +8,11 @@ import {
 } from "../../services/dataService";
 import { formatDateToString } from "../../utils/dateUtils";
 import AddBehaviorModal from "./AddBehaviorModal";
+import AddButton from "./AddButton";
 import ActionButtons from "./ActionButtons";
 import BehaviorsList from "./BehaviorsList";
 import DiaryCompletionToggle from "./DiaryCompletionToggle";
+import EmptyState from "./EmptyState";
 import ExportModal from "./ExportModal";
 import SkillsAssessment from "./SkillsAssessment";
 import UsedSkills from "./UsedSkills";
@@ -120,6 +122,22 @@ const BehaviorsSection = ({ selectedDate }) => {
     }
   };
 
+  // If no behaviors exist, show only the add button and empty state
+  if (behaviors.length === 0) {
+    return (
+      <View style={styles.container}>
+        <AddButton onAddBehavior={() => setShowAddModal(true)} />
+        <EmptyState />
+        
+        <AddBehaviorModal
+          visible={showAddModal}
+          onClose={() => setShowAddModal(false)}
+        />
+      </View>
+    );
+  }
+
+  // If behaviors exist, show all sections
   return (
     <View style={styles.container}>
       <ActionButtons
