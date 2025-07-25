@@ -36,8 +36,8 @@ const ExportModal = ({
       // Короткая задержка для визуального эффекта
       await new Promise((resolve) => setTimeout(resolve, 500));
 
-      // Меняем анимацию на fade для плавного перехода к превью
-      setModalAnimationType("fade");
+      // Меняем анимацию на none для плавного перехода к превью
+      setModalAnimationType("none");
 
       // Небольшая задержка чтобы изменение анимации применилось
       await new Promise((resolve) => setTimeout(resolve, 50));
