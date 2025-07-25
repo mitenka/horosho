@@ -60,7 +60,7 @@ const ImagePreview = ({ visible, onClose }) => {
   return (
     <Modal
       visible={visible}
-      animationType="slide"
+      animationType="fade"
       presentationStyle="overFullScreen"
       transparent={false}
     >

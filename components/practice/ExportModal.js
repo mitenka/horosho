@@ -27,6 +27,7 @@ const ExportModal = ({
   const [isExporting, setIsExporting] = useState(false);
   const [controlAssessment, setControlAssessment] = useState(null);
   const [showImagePreview, setShowImagePreview] = useState(false);
+  const [modalAnimationType, setModalAnimationType] = useState("slide");
 
   const handleExport = async () => {
     try {
@@ -34,6 +35,12 @@ const ExportModal = ({
 
       // Короткая задержка для визуального эффекта
       await new Promise((resolve) => setTimeout(resolve, 500));
+
+      // Меняем анимацию на fade для плавного перехода к превью
+      setModalAnimationType("fade");
+
+      // Небольшая задержка чтобы изменение анимации применилось
+      await new Promise((resolve) => setTimeout(resolve, 50));
 
       // Сначала закрываем текущую модалку, затем открываем превью
       onClose();
@@ -62,15 +69,24 @@ const ExportModal = ({
       // Сбрасываем ControlAssessment
       setControlAssessment(null);
 
+      // Сбрасываем анимацию обратно к slide
+      setModalAnimationType("slide");
+
       // onClose() уже вызван в handleExport, повторно не нужен
     }, 300); // Небольшая задержка для плавности
+  };
+
+  // Обработчик обычного закрытия (крестик)
+  const handleNormalClose = () => {
+    // Оставляем стандартную анимацию slide
+    onClose();
   };
 
   return (
     <>
       <Modal
         visible={visible}
-        animationType="slide"
+        animationType={modalAnimationType}
         presentationStyle="pageSheet"
       >
         <View style={[styles.container, { paddingTop: insets.top }]}>
@@ -81,7 +97,10 @@ const ExportModal = ({
             ]}
           >
             <Text style={styles.title}>Экспорт данных</Text>
-            <TouchableOpacity style={styles.closeButton} onPress={onClose}>
+            <TouchableOpacity
+              style={styles.closeButton}
+              onPress={handleNormalClose}
+            >
               <Ionicons name="close" size={28} color="#fff" />
             </TouchableOpacity>
           </View>
