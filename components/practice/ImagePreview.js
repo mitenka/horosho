@@ -1,4 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
+import { LinearGradient } from "expo-linear-gradient";
 import * as Sharing from "expo-sharing";
 import React, { useRef, useState } from "react";
 import {
@@ -64,7 +65,10 @@ const ImagePreview = ({ visible, onClose }) => {
       presentationStyle="overFullScreen"
       transparent={false}
     >
-      <View style={[styles.container, { paddingTop: insets.top }]}>
+      <LinearGradient
+        colors={["#3a3a5e", "#2d2d4a"]}
+        style={[styles.container, { paddingTop: insets.top }]}
+      >
         {/* Кнопка закрытия */}
         <TouchableOpacity style={styles.closeButton} onPress={onClose}>
           <Ionicons name="close" size={28} color="#fff" />
@@ -112,7 +116,7 @@ const ImagePreview = ({ visible, onClose }) => {
             </Text>
           </TouchableOpacity>
         </View>
-      </View>
+      </LinearGradient>
     </Modal>
   );
 };
@@ -120,7 +124,6 @@ const ImagePreview = ({ visible, onClose }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f5f5f5",
   },
   closeButton: {
     position: "absolute",
