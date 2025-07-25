@@ -13,6 +13,9 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { captureRef } from "react-native-view-shot";
 
+// Константа для дополнительного отступа кнопки закрытия от верха
+const CLOSE_BUTTON_TOP_OFFSET = 31;
+
 const ImagePreview = ({ visible, onClose }) => {
   const insets = useSafeAreaInsets();
   const [isSharing, setIsSharing] = useState(false);
@@ -70,7 +73,13 @@ const ImagePreview = ({ visible, onClose }) => {
         style={[styles.container, { paddingTop: insets.top }]}
       >
         {/* Кнопка закрытия */}
-        <TouchableOpacity style={styles.closeButton} onPress={onClose}>
+        <TouchableOpacity
+          style={[
+            styles.closeButton,
+            { top: insets.top + CLOSE_BUTTON_TOP_OFFSET },
+          ]}
+          onPress={onClose}
+        >
           <Ionicons name="close" size={28} color="#fff" />
         </TouchableOpacity>
 
@@ -127,8 +136,8 @@ const styles = StyleSheet.create({
   },
   closeButton: {
     position: "absolute",
-    top: 60,
-    right: 20,
+    // top убран - теперь используется динамический отступ с insets.top
+    right: 30, // Увеличен отступ справа для лучшего позиционирования
     zIndex: 10,
     backgroundColor: "rgba(0, 0, 0, 0.6)",
     borderRadius: 20,
