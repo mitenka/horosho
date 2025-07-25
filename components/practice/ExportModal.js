@@ -13,6 +13,7 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import ControlAssessment from "./ControlAssessment";
+import ImagePreview from "./ImagePreview";
 
 const ExportModal = ({
   visible,
@@ -25,13 +26,24 @@ const ExportModal = ({
 
   const [isExporting, setIsExporting] = useState(false);
   const [controlAssessment, setControlAssessment] = useState(null);
+  const [showImagePreview, setShowImagePreview] = useState(false);
 
   const handleExport = async () => {
     try {
       setIsExporting(true);
 
-      // Простое уведомление - функция экспорта отключена
-      Alert.alert("Экспорт", "Функция экспорта временно отключена");
+      // Короткая задержка для визуального эффекта
+      await new Promise((resolve) => setTimeout(resolve, 500));
+
+      // Сначала закрываем текущую модалку, затем открываем превью
+      onClose();
+
+      // Небольшая задержка для плавного перехода
+      setTimeout(() => {
+        setShowImagePreview(true);
+      }, 100);
+
+      setIsExporting(false);
     } catch (error) {
       console.error("Export error:", error);
       Alert.alert("Ошибка", "Не удалось экспортировать данные");
@@ -39,75 +51,107 @@ const ExportModal = ({
     }
   };
 
+  const handlePreviewClose = () => {
+    setShowImagePreview(false);
+
+    // Сбрасываем состояние (модалка уже закрыта в handleExport)
+    setTimeout(() => {
+      // Сбрасываем слайдер к 7 дням
+      onExportDaysChange(7);
+
+      // Сбрасываем ControlAssessment
+      setControlAssessment(null);
+
+      // onClose() уже вызван в handleExport, повторно не нужен
+    }, 300); // Небольшая задержка для плавности
+  };
+
   return (
-    <Modal
-      visible={visible}
-      animationType="slide"
-      presentationStyle="pageSheet"
-    >
-      <View style={[styles.container, { paddingTop: insets.top }]}>
-        <View style={styles.header}>
-          <Text style={styles.title}>Экспорт данных</Text>
-          <TouchableOpacity style={styles.closeButton} onPress={onClose}>
-            <Ionicons name="close" size={28} color="#fff" />
-          </TouchableOpacity>
-        </View>
-
-        <ScrollView
-          style={styles.contentScroll}
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={styles.scrollContent}
-        >
-          <View style={styles.content}>
-            <Text style={styles.label}>
-              Период экспорта:{" "}
-              {exportDays === 7
-                ? "неделя"
-                : exportDays === 14
-                ? "две недели"
-                : `${exportDays} ${
-                    exportDays === 1 ? "день" : exportDays < 5 ? "дня" : "дней"
-                  }`}
-            </Text>
-
-            <View style={styles.sliderContainer}>
-              <Text style={styles.sliderLabel}>7</Text>
-              <Slider
-                style={styles.slider}
-                minimumValue={7}
-                maximumValue={14}
-                step={1}
-                value={exportDays}
-                onValueChange={onExportDaysChange}
-                minimumTrackTintColor="#ff3b30"
-                maximumTrackTintColor="rgba(255, 255, 255, 0.3)"
-                thumbTintColor="#ff3b30"
-              />
-              <Text style={styles.sliderLabel}>14</Text>
-            </View>
-
-            <ControlAssessment onAssessmentChange={setControlAssessment} />
-          </View>
-        </ScrollView>
-
-        <View
-          style={[styles.footer, { paddingBottom: Math.max(insets.bottom, 8) }]}
-        >
-          <TouchableOpacity
+    <>
+      <Modal
+        visible={visible}
+        animationType="slide"
+        presentationStyle="pageSheet"
+      >
+        <View style={[styles.container, { paddingTop: insets.top }]}>
+          <View
             style={[
-              styles.exportButton,
-              isExporting && styles.exportButtonDisabled,
+              styles.header,
+              { paddingHorizontal: 16, paddingVertical: 12 },
             ]}
-            onPress={handleExport}
-            disabled={isExporting}
           >
-            <Text style={styles.exportButtonText}>
-              {isExporting ? "Экспортируется..." : "Экспортировать"}
-            </Text>
-          </TouchableOpacity>
+            <Text style={styles.title}>Экспорт данных</Text>
+            <TouchableOpacity style={styles.closeButton} onPress={onClose}>
+              <Ionicons name="close" size={28} color="#fff" />
+            </TouchableOpacity>
+          </View>
+
+          <ScrollView
+            style={styles.contentScroll}
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={styles.scrollContent}
+          >
+            <View style={styles.content}>
+              <Text style={styles.label}>
+                Период экспорта:{" "}
+                {exportDays === 7
+                  ? "неделя"
+                  : exportDays === 14
+                  ? "две недели"
+                  : `${exportDays} ${
+                      exportDays === 1
+                        ? "день"
+                        : exportDays < 5
+                        ? "дня"
+                        : "дней"
+                    }`}
+              </Text>
+
+              <View style={styles.sliderContainer}>
+                <Text style={styles.sliderLabel}>7</Text>
+                <Slider
+                  style={styles.slider}
+                  minimumValue={7}
+                  maximumValue={14}
+                  step={1}
+                  value={exportDays}
+                  onValueChange={onExportDaysChange}
+                  minimumTrackTintColor="#ff3b30"
+                  maximumTrackTintColor="rgba(255, 255, 255, 0.3)"
+                  thumbTintColor="#ff3b30"
+                />
+                <Text style={styles.sliderLabel}>14</Text>
+              </View>
+
+              <ControlAssessment onAssessmentChange={setControlAssessment} />
+            </View>
+          </ScrollView>
+
+          <View
+            style={[
+              styles.footer,
+              { paddingBottom: Math.max(insets.bottom, 8) },
+            ]}
+          >
+            <TouchableOpacity
+              style={[
+                styles.exportButton,
+                isExporting && styles.exportButtonDisabled,
+              ]}
+              onPress={handleExport}
+              disabled={isExporting}
+            >
+              <Text style={styles.exportButtonText}>
+                {isExporting ? "Экспортируется..." : "Экспортировать"}
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
-      </View>
-    </Modal>
+      </Modal>
+
+      {/* Компонент превью изображения */}
+      <ImagePreview visible={showImagePreview} onClose={handlePreviewClose} />
+    </>
   );
 };
 
