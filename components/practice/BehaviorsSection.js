@@ -33,7 +33,7 @@ const BehaviorsSection = ({ selectedDate }) => {
       fadeAnim.setValue(0);
       Animated.timing(fadeAnim, {
         toValue: 1,
-        duration: 360,
+        duration: 120,
         useNativeDriver: true,
       }).start();
     }
