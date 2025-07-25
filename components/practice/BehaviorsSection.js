@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { StyleSheet, View } from "react-native";
+import React, { useEffect, useRef, useState } from "react";
+import { Animated, StyleSheet } from "react-native";
 import { useData } from "../../contexts/DataContext";
 import {
   getBehaviorEntry,
@@ -7,9 +7,9 @@ import {
   saveBehaviorEntry,
 } from "../../services/dataService";
 import { formatDateToString } from "../../utils/dateUtils";
+import ActionButtons from "./ActionButtons";
 import AddBehaviorModal from "./AddBehaviorModal";
 import AddButton from "./AddButton";
-import ActionButtons from "./ActionButtons";
 import BehaviorsList from "./BehaviorsList";
 import DailyStateAssessment from "./DailyStateAssessment";
 import DiaryCompletionToggle from "./DiaryCompletionToggle";
@@ -19,12 +19,25 @@ import SkillsAssessment from "./SkillsAssessment";
 import UsedSkills from "./UsedSkills";
 
 const BehaviorsSection = ({ selectedDate }) => {
-  const { behaviors, deleteBehavior } = useData();
+  const { behaviors, deleteBehavior, isLoadingBehaviors } = useData();
   const [isDeleting, setIsDeleting] = useState(false);
+  const fadeAnim = useRef(new Animated.Value(0)).current;
   const [showAddModal, setShowAddModal] = useState(false);
   const [showExportModal, setShowExportModal] = useState(false);
   const [exportDays, setExportDays] = useState(7);
   const [behaviorEntries, setBehaviorEntries] = useState({});
+
+  // Fade-in animation when loading completes
+  useEffect(() => {
+    if (!isLoadingBehaviors) {
+      fadeAnim.setValue(0);
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 360,
+        useNativeDriver: true,
+      }).start();
+    }
+  }, [isLoadingBehaviors, fadeAnim]);
 
   // Load behavior entries for the selected date
   useEffect(() => {
@@ -123,24 +136,29 @@ const BehaviorsSection = ({ selectedDate }) => {
     }
   };
 
+  // Show nothing while behaviors are being loaded to prevent flickering
+  if (isLoadingBehaviors) {
+    return null;
+  }
+
   // If no behaviors exist, show only the add button and empty state
   if (behaviors.length === 0) {
     return (
-      <View style={styles.container}>
+      <Animated.View style={[styles.container, { opacity: fadeAnim }]}>
         <AddButton onAddBehavior={() => setShowAddModal(true)} />
         <EmptyState />
-        
+
         <AddBehaviorModal
           visible={showAddModal}
           onClose={() => setShowAddModal(false)}
         />
-      </View>
+      </Animated.View>
     );
   }
 
   // If behaviors exist, show all sections
   return (
-    <View style={styles.container}>
+    <Animated.View style={[styles.container, { opacity: fadeAnim }]}>
       <ActionButtons
         onAddBehavior={() => setShowAddModal(true)}
         onExport={() => setShowExportModal(true)}
@@ -158,16 +176,16 @@ const BehaviorsSection = ({ selectedDate }) => {
         onDeleteBehavior={handleDeleteBehavior}
         isDeleting={isDeleting}
       />
-      
+
       <SkillsAssessment selectedDate={selectedDate} />
-      
+
       <UsedSkills />
 
       <AddBehaviorModal
         visible={showAddModal}
         onClose={() => setShowAddModal(false)}
       />
-      
+
       <ExportModal
         visible={showExportModal}
         onClose={() => setShowExportModal(false)}
@@ -175,7 +193,7 @@ const BehaviorsSection = ({ selectedDate }) => {
         onExportDaysChange={setExportDays}
         selectedDate={selectedDate}
       />
-    </View>
+    </Animated.View>
   );
 };
 

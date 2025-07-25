@@ -7,15 +7,19 @@ import {
 } from "../services/dataService";
 export const useBehaviorsContext = () => {
   const [behaviors, setBehaviors] = useState([]);
+  const [isLoadingBehaviors, setIsLoadingBehaviors] = useState(true);
 
   const loadBehaviors = async () => {
     try {
+      setIsLoadingBehaviors(true);
       const behaviorsData = await getBehaviors();
       setBehaviors(behaviorsData);
       return behaviorsData;
     } catch (error) {
       console.error("Error loading behaviors:", error);
       return [];
+    } finally {
+      setIsLoadingBehaviors(false);
     }
   };
 
@@ -57,6 +61,7 @@ export const useBehaviorsContext = () => {
 
   return {
     behaviors,
+    isLoadingBehaviors,
     loadBehaviors,
     addBehavior: handleAddBehavior,
     updateBehavior: handleUpdateBehavior,
