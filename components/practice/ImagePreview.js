@@ -12,21 +12,24 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { captureRef } from "react-native-view-shot";
+import DiaryTable from "./DiaryTable";
 
 // Константа для дополнительного отступа кнопки закрытия от верха
 const CLOSE_BUTTON_TOP_OFFSET = 31;
 
-const ImagePreview = ({ visible, onClose }) => {
+const ImagePreview = ({ visible, onClose, exportDays, selectedDate }) => {
   const insets = useSafeAreaInsets();
   const [isSharing, setIsSharing] = useState(false);
   const [isLayoutReady, setIsLayoutReady] = useState(false);
+  const [isOffscreenReady, setIsOffscreenReady] = useState(false);
   const imageRef = useRef();
+  const offscreenRef = useRef(); // Ref для невидимого компонента экспорта
 
   const handleShare = async () => {
     try {
       setIsSharing(true);
 
-      if (!isLayoutReady) {
+      if (!isOffscreenReady) {
         Alert.alert("Ошибка", "Изображение еще не готово. Попробуйте еще раз.");
         setIsSharing(false);
         return;
@@ -35,12 +38,12 @@ const ImagePreview = ({ visible, onClose }) => {
       // Небольшая задержка для стабильности
       await new Promise((resolve) => setTimeout(resolve, 200));
 
-      // Создаем изображение в высоком разрешении с правильными пропорциями
-      const uri = await captureRef(imageRef, {
+      // Создаем изображение с невидимого offscreen компонента в полном размере
+      const uri = await captureRef(offscreenRef, {
         format: "png",
         quality: 1.0,
         result: "tmpfile",
-        pixelRatio: 3, // Увеличиваем разрешение без изменения пропорций
+        pixelRatio: 3, // Увеличиваем разрешение для высокого качества
       });
 
       // Делимся изображением
@@ -83,20 +86,18 @@ const ImagePreview = ({ visible, onClose }) => {
           <Ionicons name="close" size={28} color="#fff" />
         </TouchableOpacity>
 
-        {/* Контейнер для захвата изображения */}
+        {/* Контейнер для превью (масштабированный для экрана) */}
         <View
           ref={imageRef}
           style={styles.imageContainer}
           collapsable={false}
           onLayout={() => setIsLayoutReady(true)}
         >
-          <View style={styles.content}>
-            <Text style={styles.helloText}>Hello World</Text>
-            <Text style={styles.subtitle}>Экспорт из приложения Horosho</Text>
-            <View style={styles.decorativeElement}>
-              <Text style={styles.emoji}>🎉</Text>
-            </View>
-          </View>
+          <DiaryTable 
+            exportDays={exportDays} 
+            selectedDate={selectedDate}
+            isPreview={true}
+          />
         </View>
 
         {/* Кнопка поделиться - обычная, яркая */}
@@ -126,6 +127,20 @@ const ImagePreview = ({ visible, onClose }) => {
           </TouchableOpacity>
         </View>
       </LinearGradient>
+
+      {/* Невидимый offscreen компонент для экспорта в полном размере */}
+      <View
+        ref={offscreenRef}
+        style={styles.offscreenContainer}
+        collapsable={false}
+        onLayout={() => setIsOffscreenReady(true)}
+      >
+        <DiaryTable 
+          exportDays={exportDays} 
+          selectedDate={selectedDate}
+          isPreview={false}
+        />
+      </View>
     </Modal>
   );
 };
@@ -208,6 +223,12 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "700",
     letterSpacing: 0.5,
+  },
+  offscreenContainer: {
+    position: "absolute",
+    left: -10000, // Размещаем далеко за пределами экрана
+    top: -10000,
+    backgroundColor: "#fff",
   },
 });
 

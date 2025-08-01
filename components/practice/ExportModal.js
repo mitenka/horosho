@@ -169,7 +169,12 @@ const ExportModal = ({
       </Modal>
 
       {/* Компонент превью изображения */}
-      <ImagePreview visible={showImagePreview} onClose={handlePreviewClose} />
+      <ImagePreview 
+        visible={showImagePreview} 
+        onClose={handlePreviewClose}
+        exportDays={exportDays}
+        selectedDate={selectedDate}
+      />
     </>
   );
 };
