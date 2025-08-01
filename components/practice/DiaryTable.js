@@ -74,6 +74,23 @@ const DiaryTable = ({ exportDays, selectedDate, isPreview = false }) => {
     return { dayOfWeek, dayOfMonth };
   };
 
+  // Форматируем диапазон дат для подзаголовка
+  const formatDateRange = (dates) => {
+    if (dates.length === 0) return "";
+    
+    const firstDate = dates[0];
+    const lastDate = dates[dates.length - 1];
+    
+    const formatDate = (date) => {
+      return date.toLocaleDateString('ru-RU', { 
+        day: 'numeric', 
+        month: 'long' 
+      });
+    };
+    
+    return `${formatDate(firstDate)} — ${formatDate(lastDate)}`;
+  };
+
   const dates = generateDateRange();
 
   // Структура данных для таблицы (пока пустая, как просил пользователь)
@@ -188,8 +205,16 @@ const DiaryTable = ({ exportDays, selectedDate, isPreview = false }) => {
         : sizes.titleFontSize,
       fontWeight: "bold",
       textAlign: "center",
-      marginBottom: isPreview ? 2 : sizes.padding,
+      marginBottom: isPreview ? 1 : sizes.padding / 2,
       color: "#333",
+    },
+    subtitle: {
+      fontSize: isPreview
+        ? Math.max(6, sizes.sectionTitleFontSize * 0.5)
+        : sizes.sectionTitleFontSize,
+      textAlign: "center",
+      marginBottom: isPreview ? 2 : sizes.padding,
+      color: "#666",
     },
     headerRow: {
       flexDirection: "row",
@@ -205,13 +230,17 @@ const DiaryTable = ({ exportDays, selectedDate, isPreview = false }) => {
       padding: isPreview ? 1 : sizes.cellPadding,
       borderBottomWidth: 1,
       borderBottomColor: "#ddd",
-      minHeight: isPreview ? Math.max(8, sizes.rowHeight * 0.4) : sizes.rowHeight,
+      minHeight: isPreview
+        ? Math.max(8, sizes.rowHeight * 0.4)
+        : sizes.rowHeight,
       justifyContent: "center",
     },
     sectionHeaderRowLast: {
       backgroundColor: "#e9ecef",
       padding: isPreview ? 1 : sizes.cellPadding,
-      minHeight: isPreview ? Math.max(8, sizes.rowHeight * 0.4) : sizes.rowHeight,
+      minHeight: isPreview
+        ? Math.max(8, sizes.rowHeight * 0.4)
+        : sizes.rowHeight,
       justifyContent: "center",
       // Нет нижней границы для последней строки
     },
@@ -219,11 +248,15 @@ const DiaryTable = ({ exportDays, selectedDate, isPreview = false }) => {
       flexDirection: "row",
       borderBottomWidth: 1,
       borderBottomColor: "#eee",
-      minHeight: isPreview ? Math.max(8, sizes.rowHeight * 0.4) : sizes.rowHeight,
+      minHeight: isPreview
+        ? Math.max(8, sizes.rowHeight * 0.4)
+        : sizes.rowHeight,
     },
     dataRowLast: {
       flexDirection: "row",
-      minHeight: isPreview ? Math.max(8, sizes.rowHeight * 0.4) : sizes.rowHeight,
+      minHeight: isPreview
+        ? Math.max(8, sizes.rowHeight * 0.4)
+        : sizes.rowHeight,
       // Нет нижней границы для последней строки
     },
     labelColumn: {
@@ -318,7 +351,10 @@ const DiaryTable = ({ exportDays, selectedDate, isPreview = false }) => {
   return (
     <View style={dynamicStyles.container}>
       {/* Заголовок */}
-      <Text style={dynamicStyles.title}>Поведение</Text>
+      <Text style={dynamicStyles.title}>Дневниковая карточка</Text>
+      
+      {/* Подзаголовок с диапазоном дат */}
+      <Text style={dynamicStyles.subtitle}>{formatDateRange(dates)}</Text>
 
       {/* Единая таблица */}
       <View style={styles.table}>
@@ -354,13 +390,25 @@ const DiaryTable = ({ exportDays, selectedDate, isPreview = false }) => {
             );
           } else if (row.type === "section") {
             return (
-              <View key={rowIndex} style={isLastRow ? dynamicStyles.sectionHeaderRowLast : dynamicStyles.sectionHeaderRow}>
+              <View
+                key={rowIndex}
+                style={
+                  isLastRow
+                    ? dynamicStyles.sectionHeaderRowLast
+                    : dynamicStyles.sectionHeaderRow
+                }
+              >
                 <Text style={dynamicStyles.sectionTitle}>{row.label}</Text>
               </View>
             );
           } else {
             return (
-              <View key={rowIndex} style={isLastRow ? dynamicStyles.dataRowLast : dynamicStyles.dataRow}>
+              <View
+                key={rowIndex}
+                style={
+                  isLastRow ? dynamicStyles.dataRowLast : dynamicStyles.dataRow
+                }
+              >
                 <View style={dynamicStyles.labelColumn}>
                   <Text style={dynamicStyles.labelText}>{row.label}</Text>
                 </View>
