@@ -208,11 +208,23 @@ const DiaryTable = ({ exportDays, selectedDate, isPreview = false }) => {
       minHeight: isPreview ? Math.max(8, sizes.rowHeight * 0.4) : sizes.rowHeight,
       justifyContent: "center",
     },
+    sectionHeaderRowLast: {
+      backgroundColor: "#e9ecef",
+      padding: isPreview ? 1 : sizes.cellPadding,
+      minHeight: isPreview ? Math.max(8, sizes.rowHeight * 0.4) : sizes.rowHeight,
+      justifyContent: "center",
+      // Нет нижней границы для последней строки
+    },
     dataRow: {
       flexDirection: "row",
       borderBottomWidth: 1,
       borderBottomColor: "#eee",
       minHeight: isPreview ? Math.max(8, sizes.rowHeight * 0.4) : sizes.rowHeight,
+    },
+    dataRowLast: {
+      flexDirection: "row",
+      minHeight: isPreview ? Math.max(8, sizes.rowHeight * 0.4) : sizes.rowHeight,
+      // Нет нижней границы для последней строки
     },
     labelColumn: {
       flex: 2,
@@ -311,6 +323,7 @@ const DiaryTable = ({ exportDays, selectedDate, isPreview = false }) => {
       {/* Единая таблица */}
       <View style={styles.table}>
         {allRows.map((row, rowIndex) => {
+          const isLastRow = rowIndex === allRows.length - 1;
           if (row.type === "header") {
             return (
               <View key={rowIndex} style={dynamicStyles.headerRow}>
@@ -341,13 +354,13 @@ const DiaryTable = ({ exportDays, selectedDate, isPreview = false }) => {
             );
           } else if (row.type === "section") {
             return (
-              <View key={rowIndex} style={dynamicStyles.sectionHeaderRow}>
+              <View key={rowIndex} style={isLastRow ? dynamicStyles.sectionHeaderRowLast : dynamicStyles.sectionHeaderRow}>
                 <Text style={dynamicStyles.sectionTitle}>{row.label}</Text>
               </View>
             );
           } else {
             return (
-              <View key={rowIndex} style={dynamicStyles.dataRow}>
+              <View key={rowIndex} style={isLastRow ? dynamicStyles.dataRowLast : dynamicStyles.dataRow}>
                 <View style={dynamicStyles.labelColumn}>
                   <Text style={dynamicStyles.labelText}>{row.label}</Text>
                 </View>
