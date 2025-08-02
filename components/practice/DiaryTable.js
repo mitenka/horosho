@@ -151,14 +151,6 @@ const DiaryTable = ({
         title: "Использованные навыки",
         rows: [{ label: "Оценка (0-7)", key: "skillsAssessment" }],
       },
-      {
-        title: "Способность влиять и управлять",
-        rows: [
-          { label: "Мыслями:", key: "thoughtControl" },
-          { label: "Эмоциями:", key: "emotionControl" },
-          { label: "Действиями:", key: "actionControl" },
-        ],
-      },
     ],
   };
 
