@@ -7,7 +7,14 @@ const EXPORT_HEIGHT = 1200; // Фиксированная высота эксп�
 const MIN_DAYS = 7;
 const MAX_DAYS = 14;
 
-const DiaryTable = ({ exportDays, selectedDate, isPreview = false }) => {
+const DiaryTable = ({ 
+  exportDays, 
+  selectedDate, 
+  isPreview = false,
+  thoughtsControl = null,
+  emotionsControl = null,
+  actionsControl = null
+}) => {
   // Вычисляем адаптивные размеры на основе количества дней
   const getAdaptiveSizes = () => {
     const daysCount = Math.max(MIN_DAYS, Math.min(MAX_DAYS, exportDays));
@@ -89,6 +96,16 @@ const DiaryTable = ({ exportDays, selectedDate, isPreview = false }) => {
     };
     
     return `${formatDate(firstDate)} — ${formatDate(lastDate)}`;
+  };
+
+  // Форматируем объединенную строку с датами и управлением
+  const formatDateAndControlLine = () => {
+    const dateRange = formatDateRange(dates);
+    const formatValue = (value) => (value !== null && value !== undefined) ? value : "н/д";
+    
+    const controlPart = `Мысли: ${formatValue(thoughtsControl)} | Эмоции: ${formatValue(emotionsControl)} | Действия: ${formatValue(actionsControl)}`;
+    
+    return `${dateRange} • ${controlPart}`;
   };
 
   const dates = generateDateRange();
@@ -204,17 +221,20 @@ const DiaryTable = ({ exportDays, selectedDate, isPreview = false }) => {
         ? Math.max(8, sizes.titleFontSize * 0.5)
         : sizes.titleFontSize,
       fontWeight: "bold",
-      textAlign: "center",
+      textAlign: "left",
       marginBottom: isPreview ? 1 : sizes.padding / 2,
       color: "#333",
     },
-    subtitle: {
+    dateAndControlLine: {
       fontSize: isPreview
-        ? Math.max(6, sizes.sectionTitleFontSize * 0.5)
-        : sizes.sectionTitleFontSize,
-      textAlign: "center",
+        ? Math.max(5, sizes.labelFontSize * 0.5)
+        : sizes.labelFontSize,
+      textAlign: "left",
       marginBottom: isPreview ? 2 : sizes.padding,
       color: "#666",
+      lineHeight: isPreview
+        ? Math.max(6, sizes.labelFontSize * 0.5 * 1.2)
+        : sizes.labelFontSize * 1.2,
     },
     headerRow: {
       flexDirection: "row",
@@ -353,8 +373,8 @@ const DiaryTable = ({ exportDays, selectedDate, isPreview = false }) => {
       {/* Заголовок */}
       <Text style={dynamicStyles.title}>Дневниковая карточка</Text>
       
-      {/* Подзаголовок с диапазоном дат */}
-      <Text style={dynamicStyles.subtitle}>{formatDateRange(dates)}</Text>
+      {/* Объединенная строка с датами и управлением */}
+      <Text style={dynamicStyles.dateAndControlLine}>{formatDateAndControlLine()}</Text>
 
       {/* Единая таблица */}
       <View style={styles.table}>

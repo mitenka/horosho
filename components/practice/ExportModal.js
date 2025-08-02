@@ -174,6 +174,7 @@ const ExportModal = ({
         onClose={handlePreviewClose}
         exportDays={exportDays}
         selectedDate={selectedDate}
+        controlAssessment={controlAssessment}
       />
     </>
   );

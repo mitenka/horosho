@@ -17,7 +17,7 @@ import DiaryTable from "./DiaryTable";
 // Константа для дополнительного отступа кнопки закрытия от верха
 const CLOSE_BUTTON_TOP_OFFSET = 31;
 
-const ImagePreview = ({ visible, onClose, exportDays, selectedDate }) => {
+const ImagePreview = ({ visible, onClose, exportDays, selectedDate, controlAssessment }) => {
   const insets = useSafeAreaInsets();
   const [isSharing, setIsSharing] = useState(false);
   const [isLayoutReady, setIsLayoutReady] = useState(false);
@@ -97,6 +97,9 @@ const ImagePreview = ({ visible, onClose, exportDays, selectedDate }) => {
             exportDays={exportDays} 
             selectedDate={selectedDate}
             isPreview={true}
+            thoughtsControl={controlAssessment?.thoughts}
+            emotionsControl={controlAssessment?.emotions}
+            actionsControl={controlAssessment?.actions}
           />
         </View>
 
@@ -139,6 +142,9 @@ const ImagePreview = ({ visible, onClose, exportDays, selectedDate }) => {
           exportDays={exportDays} 
           selectedDate={selectedDate}
           isPreview={false}
+          thoughtsControl={controlAssessment?.thoughts}
+          emotionsControl={controlAssessment?.emotions}
+          actionsControl={controlAssessment?.actions}
         />
       </View>
     </Modal>
