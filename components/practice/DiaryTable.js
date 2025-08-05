@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
+import { getDiaryEntries } from "../../services/diaryService";
 
 // Константы для фиксированного размера экспорта
 const EXPORT_WIDTH = 900; // Фиксированная ширина экспорта
@@ -15,6 +16,134 @@ const DiaryTable = ({
   emotionsControl = null,
   actionsControl = null
 }) => {
+  const [diaryData, setDiaryData] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Загружаем данные дневника при монтировании компонента
+  useEffect(() => {
+    loadDiaryData();
+  }, [exportDays]);
+
+  const loadDiaryData = async () => {
+    try {
+      setIsLoading(true);
+      const entries = await getDiaryEntries();
+      setDiaryData(entries);
+    } catch (error) {
+      console.error('Error loading diary data:', error);
+      setDiaryData({});
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Форматируем дату в строку YYYY-MM-DD для поиска в данных дневника
+  const formatDateKey = (date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
+  // Извлекаем уникальные поведения за выбранный период
+  const extractUniqueBehaviors = (dates) => {
+    const behaviorMap = new Map();
+    
+    dates.forEach(date => {
+      const dateKey = formatDateKey(date);
+      const dayData = diaryData[dateKey];
+      
+      if (dayData && dayData.behaviors) {
+        dayData.behaviors.forEach(behavior => {
+          if (!behaviorMap.has(behavior.id)) {
+            behaviorMap.set(behavior.id, {
+              id: behavior.id,
+              name: behavior.name,
+              type: behavior.type
+            });
+          }
+        });
+      }
+    });
+    
+    return Array.from(behaviorMap.values());
+  };
+
+  // Получаем значение поведения для конкретной даты
+  const getBehaviorValue = (date, behaviorId, valueType) => {
+    const dateKey = formatDateKey(date);
+    const dayData = diaryData[dateKey];
+    
+    if (!dayData || !dayData.behaviors) return null;
+    
+    const behavior = dayData.behaviors.find(b => b.id === behaviorId);
+    if (!behavior) return null;
+    
+    const value = behavior[valueType];
+    if (value === null || value === undefined) return null;
+    
+    // Для булевых действий возвращаем символы
+    if (valueType === 'action' && behavior.type === 'boolean') {
+      return value ? '✓' : '—';
+    }
+    
+    return value;
+  };
+
+  // Получаем значение состояния для конкретной даты
+  const getDailyStateValue = (date, stateKey) => {
+    const dateKey = formatDateKey(date);
+    const dayData = diaryData[dateKey];
+    
+    if (!dayData || !dayData.dailyState) return null;
+    
+    const value = dayData.dailyState[stateKey];
+    return (value !== null && value !== undefined) ? value : null;
+  };
+
+  // Проверяем, заполнен ли дневник для конкретной даты
+  const isDiaryCompleted = (date) => {
+    const dateKey = formatDateKey(date);
+    const dayData = diaryData[dateKey];
+    
+    return dayData && dayData.isCompleted === true;
+  };
+
+  // Получаем оценку навыков для конкретной даты
+  const getSkillsAssessment = (date) => {
+    const dateKey = formatDateKey(date);
+    const dayData = diaryData[dateKey];
+    
+    if (!dayData) return null;
+    
+    const value = dayData.skillsAssessment;
+    return (value !== null && value !== undefined) ? value : null;
+  };
+
+  // Получаем значение для ячейки таблицы в зависимости от типа данных
+  const getCellValue = (date, row) => {
+    switch (row.type) {
+      case 'dailyState':
+        return getDailyStateValue(date, row.key);
+      case 'desire':
+        return getBehaviorValue(date, row.key, 'desire');
+      case 'action':
+        return getBehaviorValue(date, row.key, 'action');
+      case 'skills':
+        return getSkillsAssessment(date);
+      default:
+        return null;
+    }
+  };
+
+  // Форматируем значение для отображения в ячейке
+  const formatCellValue = (value) => {
+    if (value === null || value === undefined) {
+      return '—';
+    }
+    return String(value);
+  };
+
   // Вычисляем адаптивные размеры на основе количества дней
   const getAdaptiveSizes = () => {
     const daysCount = Math.max(MIN_DAYS, Math.min(MAX_DAYS, exportDays));
@@ -110,49 +239,65 @@ const DiaryTable = ({
 
   const dates = generateDateRange();
 
-  // Структура данных для таблицы (пока пустая, как просил пользователь)
-  const tableData = {
-    sections: [
+  // Извлекаем уникальные поведения за выбранный период
+  const uniqueBehaviors = extractUniqueBehaviors(dates);
+
+  // Создаем динамическую структуру данных для таблицы на основе реальных данных
+  const createTableData = () => {
+    const sections = [
       {
         title: "Состояние (0-5)",
         rows: [
-          { label: "Эмоциональное страдание", key: "emotional" },
-          { label: "Физическое страдание", key: "physical" },
-          { label: "Удовольствие", key: "pleasure" },
+          { label: "Эмоциональное страдание", key: "emotional", type: "dailyState" },
+          { label: "Физическое страдание", key: "physical", type: "dailyState" },
+          { label: "Удовольствие", key: "pleasure", type: "dailyState" },
         ],
       },
-      {
+    ];
+
+    // Добавляем секцию желаний, если есть поведения
+    if (uniqueBehaviors.length > 0) {
+      sections.push({
         title: "Желания, максимальная выраженность в течение дня (0-5)",
-        rows: [
-          { label: "Пропуск сессии или тренинга", key: "skipSession" },
-          {
-            label: "Импульсивные траты (такси, рестораны, подарки)",
-            key: "impulsiveSpending",
-          },
-          { label: "Необдуманные обещания", key: "rashPromises" },
-          { label: "Денежные долги", key: "moneyDebts" },
-          { label: "Проявление агрессии", key: "aggression" },
-        ],
-      },
-      {
+        rows: uniqueBehaviors.map(behavior => ({
+          label: behavior.name,
+          key: behavior.id,
+          type: "desire",
+          behaviorType: behavior.type
+        })),
+      });
+
+      // Добавляем секцию действий с теми же поведениями
+      sections.push({
         title: "Действия",
-        rows: [
-          { label: "Пропуск сессии или тренинга", key: "skippedSession" },
-          {
-            label: "Импульсивные траты (такси, рестораны, подарки)",
-            key: "impulsiveSpent",
-          },
-          { label: "Необдуманные обещания", key: "rashPromisesMade" },
-          { label: "Денежные долги", key: "moneyDebtsMade" },
-          { label: "Проявление агрессии", key: "aggressionShown" },
-        ],
-      },
-      {
-        title: "Использованные навыки",
-        rows: [{ label: "Оценка (0-7)", key: "skillsAssessment" }],
-      },
-    ],
+        rows: uniqueBehaviors.map(behavior => ({
+          label: behavior.name,
+          key: behavior.id,
+          type: "action",
+          behaviorType: behavior.type
+        })),
+      });
+    }
+
+    // Добавляем секцию использованных навыков
+    sections.push({
+      title: "Использованные навыки",
+      rows: [{ label: "Оценка (0-7)", key: "skillsAssessment", type: "skills" }],
+    });
+
+    return { sections };
   };
+
+  const tableData = createTableData();
+
+  // Если данные еще загружаются, показываем заглушку
+  if (isLoading) {
+    return (
+      <View style={isPreview ? { flex: 1, justifyContent: 'center', alignItems: 'center' } : { width: EXPORT_WIDTH, height: EXPORT_HEIGHT, justifyContent: 'center', alignItems: 'center', backgroundColor: '#fff' }}>
+        <Text style={{ fontSize: isPreview ? 12 : 16, color: '#666' }}>Загрузка данных дневника...</Text>
+      </View>
+    );
+  }
 
   // Создаем все строки таблицы в едином массиве
   const allRows = [
@@ -169,7 +314,7 @@ const DiaryTable = ({
     {
       type: "data",
       label: "Дневник заполнен сегодня?",
-      cells: dates.map(() => "-"),
+      cells: dates.map((date) => isDiaryCompleted(date) ? "✓" : "—"),
     },
   ];
 
@@ -187,7 +332,7 @@ const DiaryTable = ({
       allRows.push({
         type: "data",
         label: row.label,
-        cells: dates.map(() => "-"),
+        cells: dates.map((date) => formatCellValue(getCellValue(date, row))),
       });
     });
   });
