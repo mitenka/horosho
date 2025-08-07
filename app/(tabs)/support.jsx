@@ -2,6 +2,7 @@ import React, { useRef } from 'react';
 import { View, Text, StyleSheet, SafeAreaView, ScrollView } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useScrollToTop } from '@react-navigation/native';
+import SkillRules from '../../components/support/SkillRules';
 
 export default function SupportScreen() {
   const scrollViewRef = useRef(null);
@@ -20,10 +21,9 @@ export default function SupportScreen() {
         <ScrollView 
           ref={scrollViewRef}
           contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}
         >
-          <View style={styles.content}>
-            <Text style={styles.title}>Поддержка</Text>
-          </View>
+          <SkillRules />
         </ScrollView>
       </SafeAreaView>
     </LinearGradient>
@@ -38,19 +38,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
-    flexGrow: 1,
-    justifyContent: 'center',
-    padding: 20,
-  },
-  content: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    color: '#fff',
-    textAlign: 'center',
+    paddingTop: 20,
+    paddingBottom: 40,
   },
 });
