@@ -39,6 +39,17 @@ const cardWidth = width - 40; // Full width minus section margins
 // White border color to match the breathing square
 const cardBorderColor = '#ffffff';
 
+// Color palette for dividers (from SkillRules + harmonious additions)
+const dividerColors = [
+  '#81C784', // Green (from SkillRules - Осознанность)
+  '#FFB74D', // Orange (better contrast than brown)
+  '#F48FB1', // Pink (from SkillRules - Стрессоустойчивость)
+  '#64B5F6', // Blue (harmonious addition)
+  '#FF7043', // Coral (better contrast than brown)
+  '#FFD54F', // Yellow (better contrast than purple)
+  '#4DB6AC', // Teal (harmonious addition)
+];
+
 export default function TherapyAssumptions() {
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -71,7 +82,10 @@ export default function TherapyAssumptions() {
             }
           ]}>
             <Text style={styles.cardTitle}>{assumption.title}</Text>
-            <View style={styles.divider} />
+            <View style={[
+              styles.divider,
+              { backgroundColor: dividerColors[index % dividerColors.length] }
+            ]} />
             <Text style={styles.cardText}>{assumption.text}</Text>
           </View>
         ))}
@@ -125,7 +139,6 @@ const styles = StyleSheet.create({
   divider: {
     width: 50,
     height: 2,
-    backgroundColor: 'rgba(255, 255, 255, 0.4)',
     marginBottom: 16,
   },
   cardText: {
