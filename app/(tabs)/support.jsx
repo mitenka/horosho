@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, SafeAreaView, ScrollView } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useScrollToTop } from '@react-navigation/native';
 import SkillRules from '../../components/support/SkillRules';
+import BoxBreathing from '../../components/article/BoxBreathing';
 
 export default function SupportScreen() {
   const scrollViewRef = useRef(null);
@@ -23,7 +24,15 @@ export default function SupportScreen() {
           contentContainerStyle={styles.scrollContent}
           showsVerticalScrollIndicator={false}
         >
-          <SkillRules />
+          <View style={styles.skillsSection}>
+            <Text style={styles.sectionTitle}>Интенсивность эмоций по десятибальной шкале и навыки</Text>
+            <SkillRules />
+          </View>
+          
+          <View style={styles.breathingSection}>
+            <Text style={styles.sectionTitle}>Дыхание по квадрату</Text>
+            <BoxBreathing color="#ffffff" />
+          </View>
         </ScrollView>
       </SafeAreaView>
     </LinearGradient>
@@ -40,5 +49,22 @@ const styles = StyleSheet.create({
   scrollContent: {
     paddingTop: 20,
     paddingBottom: 40,
+  },
+  skillsSection: {
+    marginVertical: 24,
+    marginHorizontal: 20,
+  },
+  breathingSection: {
+    marginVertical: 24,
+    marginHorizontal: 20,
+  },
+  sectionTitle: {
+    fontSize: 22,
+    color: '#fff',
+    marginBottom: 24,
+    fontWeight: '600',
+    textShadowColor: 'rgba(0, 0, 0, 0.3)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 2,
   },
 });

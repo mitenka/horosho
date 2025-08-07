@@ -25,10 +25,6 @@ const skillRules = [
 export default function SkillRules() {
   return (
     <View style={styles.container}>
-      <Text style={styles.headerText}>
-        Интенсивность эмоций по десятибальной шкале и навыки
-      </Text>
-
       <View style={styles.rulesContainer}>
         {skillRules.map((rule, index) => (
           <View key={index} style={styles.ruleCard}>
@@ -46,17 +42,8 @@ export default function SkillRules() {
 
 const styles = StyleSheet.create({
   container: {
-    marginVertical: 24,
-    marginHorizontal: 20,
-  },
-  headerText: {
-    fontSize: 22,
-    color: "#fff",
+    marginTop: 24,
     marginBottom: 24,
-    fontWeight: "600",
-    textShadowColor: "rgba(0, 0, 0, 0.3)",
-    textShadowOffset: { width: 0, height: 1 },
-    textShadowRadius: 2,
   },
   rulesContainer: {
     gap: 16,
