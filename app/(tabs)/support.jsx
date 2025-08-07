@@ -4,6 +4,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useScrollToTop } from '@react-navigation/native';
 import SkillRules from '../../components/support/SkillRules';
 import BoxBreathing from '../../components/article/BoxBreathing';
+import TherapyAssumptions from '../../components/support/TherapyAssumptions';
 
 export default function SupportScreen() {
   const scrollViewRef = useRef(null);
@@ -33,6 +34,11 @@ export default function SupportScreen() {
             <Text style={styles.sectionTitle}>Дыхание по квадрату</Text>
             <BoxBreathing color="#ffffff" />
           </View>
+          
+          <View style={styles.assumptionsSection}>
+            <Text style={styles.sectionTitle}>Допущения терапии</Text>
+            <TherapyAssumptions />
+          </View>
         </ScrollView>
       </SafeAreaView>
     </LinearGradient>
@@ -55,6 +61,10 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
   },
   breathingSection: {
+    marginVertical: 24,
+    marginHorizontal: 20,
+  },
+  assumptionsSection: {
     marginVertical: 24,
     marginHorizontal: 20,
   },
