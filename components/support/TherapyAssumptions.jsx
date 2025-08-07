@@ -36,6 +36,9 @@ const { width } = Dimensions.get('window');
 const cardGap = 16;
 const cardWidth = width - 40; // Full width minus section margins
 
+// White border color to match the breathing square
+const cardBorderColor = '#ffffff';
+
 export default function TherapyAssumptions() {
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -62,7 +65,10 @@ export default function TherapyAssumptions() {
         {assumptions.map((assumption, index) => (
           <View key={index} style={[
             styles.card,
-            { marginRight: index === assumptions.length - 1 ? 0 : cardGap }
+            { 
+              marginRight: index === assumptions.length - 1 ? 0 : cardGap,
+              borderColor: cardBorderColor
+            }
           ]}>
             <Text style={styles.cardTitle}>{assumption.title}</Text>
             <View style={styles.divider} />
@@ -102,6 +108,7 @@ const styles = StyleSheet.create({
     paddingVertical: 24,
     backgroundColor: 'rgba(255, 255, 255, 0.05)',
     borderRadius: 12,
+    borderWidth: 2,
     minHeight: 180,
     justifyContent: 'center',
   },
