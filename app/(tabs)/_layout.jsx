@@ -28,30 +28,30 @@ function AnimatedGradientHeart({ focused }) {
 
   return (
     <MaskedView
-      style={{ width: 42, height: 42 }}
+      style={{ width: 52, height: 52 }}
       maskElement={
         <Ionicons
-          name="heart"
-          size={42}
+          name="aperture"
+          size={52}
           color="#fff"
         />
       }
     >
       <Animated.View
         style={{
-          width: 84,
-          height: 84,
+          width: 104,
+          height: 104,
           transform: [{ rotate }],
           position: 'absolute',
-          left: -21,
-          top: -21,
+          left: -26,
+          top: -26,
         }}
       >
         <LinearGradient
           colors={['#ff6b6b', '#feca57', '#ff9ff3', '#48cae4', '#ff6b6b']}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
-          style={{ width: 84, height: 84 }}
+          style={{ width: 104, height: 104 }}
         />
       </Animated.View>
     </MaskedView>
@@ -103,19 +103,13 @@ export default function TabLayout() {
           title: "",
           tabBarIcon: ({ focused, color }) => (
             <View style={{
-              backgroundColor: focused ? 'rgba(255, 255, 255, 0.25)' : 'rgba(255, 255, 255, 0.1)',
-              borderRadius: 28,
-              width: 56,
-              height: 56,
+              backgroundColor: '#323248',
+              borderRadius: 33,
+              width: 66,
+              height: 66,
               justifyContent: 'center',
               alignItems: 'center',
-              borderWidth: 1,
-              borderColor: focused ? 'rgba(255, 255, 255, 0.6)' : 'rgba(255, 255, 255, 0.2)',
-              shadowColor: '#fff',
-              shadowOffset: { width: 0, height: 0 },
-              shadowOpacity: focused ? 0.5 : 0.3,
-              shadowRadius: focused ? 8 : 4,
-              elevation: focused ? 6 : 3,
+              marginTop: -5,
             }}>
               <AnimatedGradientHeart focused={focused} />
             </View>
