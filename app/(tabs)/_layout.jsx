@@ -1,9 +1,9 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { Tabs } from "expo-router";
-import { View, Animated } from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
+import { LinearGradient } from "expo-linear-gradient";
+import { Tabs } from "expo-router";
 import { useEffect, useRef } from "react";
+import { Animated, View } from "react-native";
 
 function AnimatedGradientHeart({ focused }) {
   const rotateAnim = useRef(new Animated.Value(0)).current;
@@ -23,32 +23,26 @@ function AnimatedGradientHeart({ focused }) {
 
   const rotate = rotateAnim.interpolate({
     inputRange: [0, 1],
-    outputRange: ['0deg', '360deg'],
+    outputRange: ["0deg", "360deg"],
   });
 
   return (
     <MaskedView
       style={{ width: 52, height: 52 }}
-      maskElement={
-        <Ionicons
-          name="aperture"
-          size={52}
-          color="#fff"
-        />
-      }
+      maskElement={<Ionicons name="aperture-outline" size={52} color="#fff" />}
     >
       <Animated.View
         style={{
           width: 104,
           height: 104,
           transform: [{ rotate }],
-          position: 'absolute',
+          position: "absolute",
           left: -26,
           top: -26,
         }}
       >
         <LinearGradient
-          colors={['#ff6b6b', '#feca57', '#ff9ff3', '#48cae4', '#ff6b6b']}
+          colors={["#ff6b6b", "#feca57", "#ff9ff3", "#48cae4", "#ff6b6b"]}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
           style={{ width: 104, height: 104 }}
@@ -102,15 +96,17 @@ export default function TabLayout() {
         options={{
           title: "",
           tabBarIcon: ({ focused, color }) => (
-            <View style={{
-              backgroundColor: '#323248',
-              borderRadius: 33,
-              width: 66,
-              height: 66,
-              justifyContent: 'center',
-              alignItems: 'center',
-              marginTop: -5,
-            }}>
+            <View
+              style={{
+                backgroundColor: "#323248",
+                borderRadius: 33,
+                width: 66,
+                height: 66,
+                justifyContent: "center",
+                alignItems: "center",
+                marginTop: -5,
+              }}
+            >
               <AnimatedGradientHeart focused={focused} />
             </View>
           ),
