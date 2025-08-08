@@ -82,6 +82,8 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "500",
     color: "#fff",
+    letterSpacing: 0.2,
+    lineHeight: 22,
     flex: 1,
   },
 });

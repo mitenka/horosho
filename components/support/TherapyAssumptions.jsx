@@ -100,7 +100,7 @@ export default function TherapyAssumptions() {
 const styles = StyleSheet.create({
   container: {
     marginTop: 24,
-    marginBottom: 24,
+    marginBottom: 8,
   },
   scrollView: {
     marginBottom: 16,
@@ -124,9 +124,10 @@ const styles = StyleSheet.create({
     textShadowColor: 'rgba(0, 0, 0, 0.3)',
     textShadowOffset: { width: 0, height: 1 },
     textShadowRadius: 2,
+    letterSpacing: 0.2,
   },
   divider: {
-    width: 48,
+    width: '100%',
     height: StyleSheet.hairlineWidth,
     backgroundColor: dividerColor,
     opacity: 0.9,
@@ -138,6 +139,7 @@ const styles = StyleSheet.create({
     lineHeight: 24,
     fontWeight: '400',
     fontStyle: 'italic',
+    letterSpacing: 0.2,
   },
   indicatorContainer: {
     flexDirection: 'row',
