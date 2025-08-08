@@ -1,7 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import * as Sharing from "expo-sharing";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Alert,
   Modal,
@@ -22,14 +22,25 @@ const ImagePreview = ({ visible, onClose, exportDays, selectedDate, controlAsses
   const [isSharing, setIsSharing] = useState(false);
   const [isLayoutReady, setIsLayoutReady] = useState(false);
   const [isOffscreenReady, setIsOffscreenReady] = useState(false);
+  const [isDataReady, setIsDataReady] = useState(false);
   const imageRef = useRef();
   const offscreenRef = useRef(); // Ref для невидимого компонента экспорта
+
+  // Сбрасываем флаги готовности при открытии превью
+  useEffect(() => {
+    if (visible) {
+      setIsSharing(false);
+      setIsLayoutReady(false);
+      setIsOffscreenReady(false);
+      setIsDataReady(false);
+    }
+  }, [visible]);
 
   const handleShare = async () => {
     try {
       setIsSharing(true);
 
-      if (!isOffscreenReady) {
+      if (!isOffscreenReady || !isDataReady) {
         Alert.alert("Ошибка", "Изображение еще не готово. Попробуйте еще раз.");
         setIsSharing(false);
         return;
@@ -48,7 +59,8 @@ const ImagePreview = ({ visible, onClose, exportDays, selectedDate, controlAsses
 
       // Делимся изображением
       if (await Sharing.isAvailableAsync()) {
-        await Sharing.shareAsync(`file://${uri}`, {
+        const shareUri = uri.startsWith('file://') ? uri : `file://${uri}`;
+        await Sharing.shareAsync(shareUri, {
           mimeType: "image/png",
           dialogTitle: "Поделиться изображением",
         });
@@ -113,10 +125,10 @@ const ImagePreview = ({ visible, onClose, exportDays, selectedDate, controlAsses
           <TouchableOpacity
             style={[
               styles.shareButton,
-              isSharing && styles.shareButtonDisabled,
+              (isSharing || !isOffscreenReady || !isDataReady) && styles.shareButtonDisabled,
             ]}
             onPress={handleShare}
-            disabled={isSharing}
+            disabled={isSharing || !isOffscreenReady || !isDataReady}
           >
             <Ionicons
               name="share"
@@ -125,7 +137,7 @@ const ImagePreview = ({ visible, onClose, exportDays, selectedDate, controlAsses
               style={styles.buttonIcon}
             />
             <Text style={styles.shareButtonText}>
-              {isSharing ? "Подготовка..." : "Поделиться"}
+              {isSharing || !isOffscreenReady || !isDataReady ? "Подготовка..." : "Поделиться"}
             </Text>
           </TouchableOpacity>
         </View>
@@ -145,6 +157,7 @@ const ImagePreview = ({ visible, onClose, exportDays, selectedDate, controlAsses
           thoughtsControl={controlAssessment?.thoughts}
           emotionsControl={controlAssessment?.emotions}
           actionsControl={controlAssessment?.actions}
+          onReady={() => setIsDataReady(true)}
         />
       </View>
     </Modal>

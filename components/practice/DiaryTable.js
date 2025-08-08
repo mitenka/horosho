@@ -14,7 +14,8 @@ const DiaryTable = ({
   isPreview = false,
   thoughtsControl = null,
   emotionsControl = null,
-  actionsControl = null
+  actionsControl = null,
+  onReady,
 }) => {
   const [diaryData, setDiaryData] = useState({});
   const [isLoading, setIsLoading] = useState(true);
@@ -34,6 +35,10 @@ const DiaryTable = ({
       setDiaryData({});
     } finally {
       setIsLoading(false);
+      // Сообщаем родителю, что данные готовы к рендеру
+      if (typeof onReady === 'function') {
+        try { onReady(); } catch {}
+      }
     }
   };
 
@@ -80,11 +85,13 @@ const DiaryTable = ({
     if (!behavior) return null;
     
     const value = behavior[valueType];
-    if (value === null || value === undefined) return null;
+    // Для незаполненных поведений показываем пустую ячейку (без прочерка)
+    if (value === null || value === undefined) return '';
     
     // Для булевых действий возвращаем символы
     if (valueType === 'action' && behavior.type === 'boolean') {
-      return value ? '✓' : '—';
+      // true -> галочка, false -> крестик
+      return value ? '✓' : '×';
     }
     
     return value;
