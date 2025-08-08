@@ -19,6 +19,7 @@ const DiaryTable = ({
 }) => {
   const [diaryData, setDiaryData] = useState({});
   const [isLoading, setIsLoading] = useState(true);
+  const [hasSignaledReady, setHasSignaledReady] = useState(false);
 
   // Загружаем данные дневника при монтировании компонента
   useEffect(() => {
@@ -35,7 +36,18 @@ const DiaryTable = ({
       setDiaryData({});
     } finally {
       setIsLoading(false);
-      // Сообщаем родителю, что данные готовы к рендеру
+    }
+  };
+
+  // Сбрасываем флаг готовности при начале новой загрузки
+  useEffect(() => {
+    if (isLoading) setHasSignaledReady(false);
+  }, [isLoading]);
+
+  // Сообщаем о готовности только когда разметка произошла и данные загружены
+  const handleLayout = () => {
+    if (!isLoading && !hasSignaledReady) {
+      setHasSignaledReady(true);
       if (typeof onReady === 'function') {
         try { onReady(); } catch {}
       }
@@ -79,10 +91,10 @@ const DiaryTable = ({
     const dateKey = formatDateKey(date);
     const dayData = diaryData[dateKey];
     
-    if (!dayData || !dayData.behaviors) return null;
+    if (!dayData || !dayData.behaviors) return '';
     
     const behavior = dayData.behaviors.find(b => b.id === behaviorId);
-    if (!behavior) return null;
+    if (!behavior) return '';
     
     const value = behavior[valueType];
     // Для незаполненных поведений показываем пустую ячейку (без прочерка)
@@ -102,10 +114,10 @@ const DiaryTable = ({
     const dateKey = formatDateKey(date);
     const dayData = diaryData[dateKey];
     
-    if (!dayData || !dayData.dailyState) return null;
+    if (!dayData || !dayData.dailyState) return '';
     
     const value = dayData.dailyState[stateKey];
-    return (value !== null && value !== undefined) ? value : null;
+    return (value !== null && value !== undefined) ? value : '';
   };
 
   // Проверяем, заполнен ли дневник для конкретной даты
@@ -121,10 +133,10 @@ const DiaryTable = ({
     const dateKey = formatDateKey(date);
     const dayData = diaryData[dateKey];
     
-    if (!dayData) return null;
+    if (!dayData) return '';
     
     const value = dayData.skillsAssessment;
-    return (value !== null && value !== undefined) ? value : null;
+    return (value !== null && value !== undefined) ? value : '';
   };
 
   // Получаем значение для ячейки таблицы в зависимости от типа данных
@@ -145,6 +157,10 @@ const DiaryTable = ({
 
   // Форматируем значение для отображения в ячейке
   const formatCellValue = (value) => {
+    // Пустая строка должна оставаться пустой (для незаполненных поведений)
+    if (value === '') {
+      return '';
+    }
     if (value === null || value === undefined) {
       return '—';
     }
@@ -513,7 +529,7 @@ const DiaryTable = ({
   };
 
   return (
-    <View style={dynamicStyles.container}>
+    <View style={dynamicStyles.container} onLayout={handleLayout}>
       {/* Заголовок */}
       <Text style={dynamicStyles.title}>Дневниковая карточка</Text>
       
