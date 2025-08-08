@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
-import { getDiaryEntries } from "../../services/diaryService";
+import { getDiaryEntries, getAvailableSkills } from "../../services/diaryService";
 
 // Константы для фиксированного размера экспорта
 const EXPORT_WIDTH = 900; // Фиксированная ширина экспорта
@@ -84,6 +84,37 @@ const DiaryTable = ({
     });
     
     return Array.from(behaviorMap.values());
+  };
+
+  // Список доступных навыков (плоский вид)
+  const flattenAvailableSkills = () => {
+    const catalog = getAvailableSkills();
+    const list = [];
+    Object.keys(catalog).forEach((key) => {
+      const cat = catalog[key];
+      (cat.skills || []).forEach((name) => {
+        list.push({ name, category: cat.title });
+      });
+    });
+    return list;
+  };
+
+  // Убираем Markdown-выделение ** из видимых названий навыков
+  const sanitizeSkillName = (name) => {
+    try {
+      return String(name).replace(/\*\*/g, "").trim();
+    } catch {
+      return name;
+    }
+  };
+
+  // Проверяем, практиковался ли навык в конкретный день
+  const isSkillUsed = (date, skillName) => {
+    const dateKey = formatDateKey(date);
+    const dayData = diaryData[dateKey];
+    const used = dayData?.usedSkills;
+    if (!Array.isArray(used)) return false;
+    return used.includes(skillName);
   };
 
   // Получаем значение поведения для конкретной даты
@@ -206,6 +237,10 @@ const DiaryTable = ({
       headerHeight: Math.max(28, baseSizes.headerHeight * scaleFactor),
       padding: Math.max(4, baseSizes.padding * scaleFactor),
       cellPadding: Math.max(2, baseSizes.cellPadding * scaleFactor),
+      // Для матрицы навыков используем ещё более компактные размеры
+      skillsRowHeight: Math.max(12, Math.floor(baseSizes.rowHeight * scaleFactor * 0.55)),
+      skillsLabelFontSize: Math.max(6, Math.floor(baseSizes.labelFontSize * scaleFactor * 0.6)),
+      skillsCellFontSize: Math.max(6, Math.floor(baseSizes.cellFontSize * scaleFactor * 0.6)),
     };
   };
 
@@ -308,6 +343,19 @@ const DiaryTable = ({
       rows: [{ label: "Оценка (0-7)", key: "skillsAssessment", type: "skills" }],
     });
 
+    // Добавляем матрицу навыков в конце (максимально компактная)
+    const flatSkills = flattenAvailableSkills();
+    if (flatSkills.length > 0) {
+      sections.push({
+        title: "Практика",
+        rows: flatSkills.map((s) => ({
+          label: sanitizeSkillName(s.name), // показываем без **
+          key: s.name, // сопоставляем по исходной строке (с **)
+          type: "skillMatrix",
+        })),
+      });
+    }
+
     return { sections };
   };
 
@@ -352,13 +400,54 @@ const DiaryTable = ({
 
     // Строки секции
     section.rows.forEach((row) => {
-      allRows.push({
-        type: "data",
-        label: row.label,
-        cells: dates.map((date) => formatCellValue(getCellValue(date, row))),
-      });
+      if (row.type === "skillMatrix") {
+        allRows.push({
+          type: "skillMatrix",
+          label: row.label,
+          cells: dates.map((date) => isSkillUsed(date, row.key)), // boolean
+        });
+      } else {
+        allRows.push({
+          type: "data",
+          label: row.label,
+          cells: dates.map((date) => formatCellValue(getCellValue(date, row))),
+        });
+      }
     });
   });
+
+  // Динамически поджимаем матрицу навыков, чтобы уместить всё в EXPORT_HEIGHT
+  const sectionHeaderCount = allRows.filter((r) => r.type === "section").length;
+  const dataRowCount = allRows.filter((r) => r.type === "data").length;
+  const skillRowCount = allRows.filter((r) => r.type === "skillMatrix").length;
+
+  // Учитываем паддинги контейнера и блок с заголовком и строкой дат/контролей
+  const topBottomPadding = sizes.padding * 2;
+  const titleBlockHeight =
+    Math.ceil(sizes.titleFontSize * 1.2) +
+    Math.ceil(sizes.padding / 2) +
+    Math.ceil(sizes.labelFontSize * 1.2) +
+    sizes.padding;
+
+  const tableAvailableHeight = EXPORT_HEIGHT - topBottomPadding - titleBlockHeight;
+  const nonSkillsRowsHeight = sizes.headerHeight + sectionHeaderCount * sizes.rowHeight + dataRowCount * sizes.rowHeight;
+  const nonSkillsBorders = sectionHeaderCount + dataRowCount; // приблизительно 1px границы на строку
+  const skillsAreaAvailable = tableAvailableHeight - nonSkillsRowsHeight - nonSkillsBorders - 2; // небольшой запас
+
+  let skillsRowHeightFinal = sizes.skillsRowHeight;
+  let skillsLabelFontFinal = sizes.skillsLabelFontSize;
+  // оставляем расчёт для cell-font на будущее (клетки навыков без текста)
+  // let skillsCellFontFinal = sizes.skillsCellFontSize;
+
+  if (skillRowCount > 0 && skillsAreaAvailable > 0) {
+    const perRow = Math.floor(skillsAreaAvailable / skillRowCount);
+    const minRow = 6;
+    const clamped = Math.max(minRow, Math.min(sizes.skillsRowHeight, perRow));
+    skillsRowHeightFinal = clamped;
+    const factor = Math.max(0.35, Math.min(1, clamped / Math.max(1, sizes.skillsRowHeight)));
+    skillsLabelFontFinal = Math.max(3.5, Math.floor(sizes.skillsLabelFontSize * factor));
+    // skillsCellFontFinal = Math.max(3.5, Math.floor(sizes.skillsCellFontSize * factor));
+  }
 
   // Создаем динамические стили на основе адаптивных размеров
   const dynamicStyles = {
@@ -526,6 +615,63 @@ const DiaryTable = ({
       color: "#666",
       textAlign: "center",
     },
+    // Узкие стили для матрицы навыков
+    skillDataRow: {
+      flexDirection: "row",
+      minHeight: isPreview
+        ? Math.max(6, skillsRowHeightFinal * 0.4)
+        : skillsRowHeightFinal,
+      borderBottomWidth: 1,
+      borderBottomColor: "#eee",
+    },
+    skillDataRowLast: {
+      flexDirection: "row",
+      minHeight: isPreview
+        ? Math.max(6, skillsRowHeightFinal * 0.4)
+        : skillsRowHeightFinal,
+    },
+    skillLabelColumn: {
+      flex: 1.6,
+      padding: isPreview ? 0.5 : sizes.cellPadding,
+      justifyContent: "center",
+      borderRightWidth: 1,
+      borderRightColor: "#ddd",
+      alignItems: "flex-start",
+    },
+    skillLabelText: {
+      fontSize: isPreview
+        ? Math.max(3.5, skillsLabelFontFinal * 0.6)
+        : skillsLabelFontFinal,
+      color: "#333",
+      lineHeight: isPreview
+        ? Math.max(4, skillsLabelFontFinal * 0.6 * 1.1)
+        : skillsLabelFontFinal * 1.1,
+    },
+    skillDataCell: {
+      flex: 1,
+      padding: isPreview ? 0.3 : Math.max(1, sizes.cellPadding * 0.6),
+      alignItems: "center",
+      justifyContent: "center",
+      borderRightWidth: 1,
+      borderRightColor: "#eee",
+      backgroundColor: "transparent",
+    },
+    skillDataCellLast: {
+      flex: 1,
+      padding: isPreview ? 0.3 : Math.max(1, sizes.cellPadding * 0.6),
+      alignItems: "center",
+      justifyContent: "center",
+      backgroundColor: "transparent",
+    },
+    skillDataCellUsed: {
+      flex: 1,
+      padding: isPreview ? 0.3 : Math.max(1, sizes.cellPadding * 0.6),
+      alignItems: "center",
+      justifyContent: "center",
+      borderRightWidth: 1,
+      borderRightColor: "#eee",
+      backgroundColor: "#60a5fa", // более насыщенный цвет заливки
+    },
   };
 
   return (
@@ -579,6 +725,36 @@ const DiaryTable = ({
                 }
               >
                 <Text style={dynamicStyles.sectionTitle}>{row.label}</Text>
+              </View>
+            );
+          } else if (row.type === "skillMatrix") {
+            return (
+              <View
+                key={rowIndex}
+                style={
+                  isLastRow
+                    ? dynamicStyles.skillDataRowLast
+                    : dynamicStyles.skillDataRow
+                }
+              >
+                <View style={dynamicStyles.skillLabelColumn}>
+                  <Text
+                    style={dynamicStyles.skillLabelText}
+                    numberOfLines={1}
+                    ellipsizeMode="tail"
+                  >
+                    {row.label}
+                  </Text>
+                </View>
+                {row.cells.map((used, cellIndex) => {
+                  const isLastColumn = cellIndex === row.cells.length - 1;
+                  const cellStyle = used
+                    ? dynamicStyles.skillDataCellUsed
+                    : isLastColumn
+                    ? dynamicStyles.skillDataCellLast
+                    : dynamicStyles.skillDataCell;
+                  return <View key={cellIndex} style={cellStyle} />;
+                })}
               </View>
             );
           } else {
