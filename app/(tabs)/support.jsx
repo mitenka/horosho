@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
-import { View, Text, StyleSheet, SafeAreaView, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useScrollToTop } from '@react-navigation/native';
 import SkillRules from '../../components/support/SkillRules';
@@ -7,6 +8,7 @@ import BoxBreathing from '../../components/article/BoxBreathing';
 import TherapyAssumptions from '../../components/support/TherapyAssumptions';
 
 export default function SupportScreen() {
+  const insets = useSafeAreaInsets();
   const scrollViewRef = useRef(null);
 
   useScrollToTop(scrollViewRef);
@@ -17,39 +19,34 @@ export default function SupportScreen() {
       locations={[0, 0.5, 1]}
       start={{ x: 0, y: 0 }}
       end={{ x: 1, y: 1 }}
-      style={styles.container}
+      style={[styles.container, { paddingTop: insets.top }]}
     >
-      <SafeAreaView style={styles.safeArea}>
-        <ScrollView 
-          ref={scrollViewRef}
-          contentContainerStyle={styles.scrollContent}
-          showsVerticalScrollIndicator={false}
-        >
-          <View style={styles.skillsSection}>
-            <Text style={styles.sectionTitle}>Интенсивность эмоций по десятибальной шкале и навыки</Text>
-            <SkillRules />
-          </View>
-          
-          <View style={styles.breathingSection}>
-            <Text style={styles.sectionTitle}>Дыхание по квадрату</Text>
-            <BoxBreathing color="#ffffff" />
-          </View>
-          
-          <View style={styles.assumptionsSection}>
-            <Text style={styles.sectionTitle}>Допущения терапии</Text>
-            <TherapyAssumptions />
-          </View>
-        </ScrollView>
-      </SafeAreaView>
+      <ScrollView 
+        ref={scrollViewRef}
+        contentContainerStyle={[styles.scrollContent, { paddingBottom: insets.bottom + 40 }]}
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={styles.skillsSection}>
+          <Text style={styles.sectionTitle}>Интенсивность эмоций по десятибальной шкале и навыки</Text>
+          <SkillRules />
+        </View>
+        
+        <View style={styles.breathingSection}>
+          <Text style={styles.sectionTitle}>Дыхание по квадрату</Text>
+          <BoxBreathing color="#ffffff" />
+        </View>
+        
+        <View style={styles.assumptionsSection}>
+          <Text style={styles.sectionTitle}>Допущения терапии</Text>
+          <TherapyAssumptions />
+        </View>
+      </ScrollView>
     </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-  },
-  safeArea: {
     flex: 1,
   },
   scrollContent: {
