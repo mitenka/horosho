@@ -1,5 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 
+import * as Sharing from "expo-sharing";
 import Slider from "@react-native-community/slider";
 import React, { useState } from "react";
 import {
@@ -13,7 +14,7 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import ControlAssessment from "./ControlAssessment";
-import ImagePreview from "./ImagePreview";
+import { exportPracticePdf } from "../../utils/pdfExport";
 
 const ExportModal = ({
   visible,
@@ -26,54 +27,39 @@ const ExportModal = ({
 
   const [isExporting, setIsExporting] = useState(false);
   const [controlAssessment, setControlAssessment] = useState(null);
-  const [showImagePreview, setShowImagePreview] = useState(false);
-  const [modalAnimationType, setModalAnimationType] = useState("slide");
 
   const handleExport = async () => {
     try {
       setIsExporting(true);
 
-      // Короткая задержка для визуального эффекта
-      await new Promise((resolve) => setTimeout(resolve, 500));
+      // Генерация PDF
+      const uri = await exportPracticePdf({
+        exportDays,
+        control: controlAssessment,
+      });
 
-      // Меняем анимацию на none для плавного перехода к превью
-      setModalAnimationType("none");
+      // Шаринг PDF
+      const shareUri = uri.startsWith("file://") ? uri : `file://${uri}`;
+      if (await Sharing.isAvailableAsync()) {
+        await Sharing.shareAsync(shareUri, {
+          mimeType: "application/pdf",
+        });
+      } else {
+        Alert.alert("Готово", "PDF создан");
+      }
 
-      // Небольшая задержка чтобы изменение анимации применилось
-      await new Promise((resolve) => setTimeout(resolve, 50));
-
-      // Сначала закрываем текущую модалку, затем открываем превью
+      // Закрываем модалку после экспорта
       onClose();
-
-      // Небольшая задержка для плавного перехода
-      setTimeout(() => {
-        setShowImagePreview(true);
-      }, 100);
-
-      setIsExporting(false);
     } catch (error) {
       console.error("Export error:", error);
-      Alert.alert("Ошибка", "Не удалось экспортировать данные");
+      Alert.alert("Ошибка", "Не удалось создать PDF");
+    }
+    finally {
+      // Сброс локального состояния
+      try { onExportDaysChange(7); } catch {}
+      setControlAssessment(null);
       setIsExporting(false);
     }
-  };
-
-  const handlePreviewClose = () => {
-    setShowImagePreview(false);
-
-    // Сбрасываем состояние (модалка уже закрыта в handleExport)
-    setTimeout(() => {
-      // Сбрасываем слайдер к 7 дням
-      onExportDaysChange(7);
-
-      // Сбрасываем ControlAssessment
-      setControlAssessment(null);
-
-      // Сбрасываем анимацию обратно к slide
-      setModalAnimationType("slide");
-
-      // onClose() уже вызван в handleExport, повторно не нужен
-    }, 300); // Небольшая задержка для плавности
   };
 
   // Обработчик обычного закрытия (крестик)
@@ -86,7 +72,7 @@ const ExportModal = ({
     <>
       <Modal
         visible={visible}
-        animationType={modalAnimationType}
+        animationType="slide"
         presentationStyle="pageSheet"
       >
         <View style={[styles.container, { paddingTop: insets.top }]}>
@@ -167,15 +153,6 @@ const ExportModal = ({
           </View>
         </View>
       </Modal>
-
-      {/* Компонент превью изображения */}
-      <ImagePreview 
-        visible={showImagePreview} 
-        onClose={handlePreviewClose}
-        exportDays={exportDays}
-        selectedDate={selectedDate}
-        controlAssessment={controlAssessment}
-      />
     </>
   );
 };
