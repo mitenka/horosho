@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <!--
+    Standalone template for PDF export design.
+    - Mirrors the layout/styles from utils/pdfExport.js::makeHtml()
+    - Uses local fonts from assets/fonts
+    - Contains static sample data for previewing design
+    After tweaking, we'll port the final styles/markup back into utils/pdfExport.js
+  -->
+    <style>
+      @page {
+        size: A4 portrait;
+        margin: 18mm;
+      }
+      @font-face {
+        font-family: "JBM";
+        src: url("../fonts/JetBrainsMono-Regular.ttf") format("truetype");
+        font-style: normal;
+        font-weight: 400;
+      }
+      @font-face {
+        font-family: "JBM";
+        src: url("../fonts/JetBrainsMono-Bold.ttf") format("truetype");
+        font-style: normal;
+        font-weight: 700;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "JBM", -apple-system, system-ui, sans-serif;
+        color: #111;
+        font-size: 12px;
+      }
+      .title {
+        font-weight: 700;
+        font-size: 20px;
+        margin-bottom: 6px;
+      }
+      .subtitle {
+        color: #555;
+        margin-bottom: 12px;
+      }
+
+      table.data-table {
+        width: 100%;
+        border-collapse: collapse;
+        table-layout: fixed;
+      }
+      .label-col {
+        width: 42%;
+      }
+      .day-col {
+        width: auto;
+      }
+      thead td {
+        background: #f2f4f7;
+        font-weight: 700;
+      }
+      td {
+        border: 1px solid #e5e7eb;
+        padding: 6px 8px;
+        vertical-align: middle;
+        word-wrap: break-word;
+      }
+      td.label {
+        font-weight: 400;
+        color: #111;
+      }
+      .section-row td {
+        background: #eef2f7;
+        font-weight: 700;
+      }
+      .header-row .day-header {
+        text-align: center;
+      }
+      .dow {
+        font-size: 11px;
+        color: #667085;
+      }
+      .dom {
+        font-size: 14px;
+        font-weight: 700;
+        color: #111;
+      }
+
+      /* Start Practice table on a new page when printing */
+      .practice-page {
+        page-break-before: always;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Main table page -->
+    <div class="title">Дневник поведения</div>
+    <div class="subtitle">
+      1 — 7 августа • Мысли: пример | Эмоции: пример | Действия: пример
+    </div>
+
+    <table class="data-table">
+      <colgroup>
+        <col class="label-col" />
+        <col class="day-col" />
+        <col class="day-col" />
+        <col class="day-col" />
+        <col class="day-col" />
+        <col class="day-col" />
+        <col class="day-col" />
+        <col class="day-col" />
+      </colgroup>
+      <thead>
+        <tr class="header-row">
+          <td class="label"></td>
+          <td class="day-header">
+            <div class="dow">ПН</div>
+            <div class="dom">1</div>
+          </td>
+          <td class="day-header">
+            <div class="dow">ВТ</div>
+            <div class="dom">2</div>
+          </td>
+          <td class="day-header">
+            <div class="dow">СР</div>
+            <div class="dom">3</div>
+          </td>
+          <td class="day-header">
+            <div class="dow">ЧТ</div>
+            <div class="dom">4</div>
+          </td>
+          <td class="day-header">
+            <div class="dow">ПТ</div>
+            <div class="dom">5</div>
+          </td>
+          <td class="day-header">
+            <div class="dow">СБ</div>
+            <div class="dom">6</div>
+          </td>
+          <td class="day-header">
+            <div class="dow">ВС</div>
+            <div class="dom">7</div>
+          </td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="label">Дневник заполнен сегодня?</td>
+          <td>✓</td>
+          <td>—</td>
+          <td>✓</td>
+          <td>✓</td>
+          <td>—</td>
+          <td>✓</td>
+          <td>✓</td>
+        </tr>
+
+        <tr class="section-row">
+          <!-- colspan = 1(label) + 7(days) -->
+          <td class="label" colspan="8">Состояние (0–5)</td>
+        </tr>
+        <tr>
+          <td class="label">Эмоциональное страдание</td>
+          <td>2</td>
+          <td>3</td>
+          <td>4</td>
+          <td>2</td>
+          <td>1</td>
+          <td>5</td>
+          <td>3</td>
+        </tr>
+        <tr>
+          <td class="label">Физическое страдание</td>
+          <td>1</td>
+          <td>2</td>
+          <td>2</td>
+          <td>1</td>
+          <td>2</td>
+          <td>3</td>
+          <td>2</td>
+        </tr>
+        <tr>
+          <td class="label">Удовольствие</td>
+          <td>3</td>
+          <td>3</td>
+          <td>4</td>
+          <td>3</td>
+          <td>4</td>
+          <td>4</td>
+          <td>5</td>
+        </tr>
+
+        <tr class="section-row">
+          <td class="label" colspan="8">
+            Желания, максимальная выраженность в течение дня (0–5)
+          </td>
+        </tr>
+        <tr>
+          <td class="label">Прокрастинация</td>
+          <td>3</td>
+          <td>2</td>
+          <td>1</td>
+          <td>0</td>
+          <td>2</td>
+          <td>1</td>
+          <td>0</td>
+        </tr>
+        <tr>
+          <td class="label">Переедание</td>
+          <td>1</td>
+          <td>0</td>
+          <td>2</td>
+          <td>3</td>
+          <td>1</td>
+          <td>2</td>
+          <td>2</td>
+        </tr>
+        <tr>
+          <td class="label">Социальные сети</td>
+          <td>5</td>
+          <td>4</td>
+          <td>3</td>
+          <td>2</td>
+          <td>4</td>
+          <td>5</td>
+          <td>3</td>
+        </tr>
+
+        <tr class="section-row">
+          <td class="label" colspan="8">Действия</td>
+        </tr>
+        <tr>
+          <td class="label">Прокрастинация</td>
+          <td>0</td>
+          <td>1</td>
+          <td>0</td>
+          <td>0</td>
+          <td>1</td>
+          <td>0</td>
+          <td>0</td>
+        </tr>
+        <tr>
+          <td class="label">Переедание</td>
+          <td>×</td>
+          <td>×</td>
+          <td>✓</td>
+          <td>×</td>
+          <td>×</td>
+          <td>✓</td>
+          <td>×</td>
+        </tr>
+        <tr>
+          <td class="label">Социальные сети</td>
+          <td>2</td>
+          <td>1</td>
+          <td>1</td>
+          <td>0</td>
+          <td>2</td>
+          <td>2</td>
+          <td>1</td>
+        </tr>
+
+        <tr class="section-row">
+          <td class="label" colspan="8">Использованные навыки</td>
+        </tr>
+        <tr>
+          <td class="label">Оценка (0–7)</td>
+          <td>3</td>
+          <td>4</td>
+          <td>3</td>
+          <td>5</td>
+          <td>4</td>
+          <td>6</td>
+          <td>5</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Practice table page -->
+    <div class="practice-page">
+      <div class="title">Дневник навыков</div>
+      <div class="subtitle">1 — 7 августа</div>
+      <table class="data-table">
+        <colgroup>
+          <col class="label-col" />
+          <col class="day-col" />
+          <col class="day-col" />
+          <col class="day-col" />
+          <col class="day-col" />
+          <col class="day-col" />
+          <col class="day-col" />
+          <col class="day-col" />
+        </colgroup>
+        <thead>
+          <tr class="header-row">
+            <td class="label"></td>
+            <td class="day-header">
+              <div class="dow">ПН</div>
+              <div class="dom">1</div>
+            </td>
+            <td class="day-header">
+              <div class="dow">ВТ</div>
+              <div class="dom">2</div>
+            </td>
+            <td class="day-header">
+              <div class="dow">СР</div>
+              <div class="dom">3</div>
+            </td>
+            <td class="day-header">
+              <div class="dow">ЧТ</div>
+              <div class="dom">4</div>
+            </td>
+            <td class="day-header">
+              <div class="dow">ПТ</div>
+              <div class="dom">5</div>
+            </td>
+            <td class="day-header">
+              <div class="dow">СБ</div>
+              <div class="dom">6</div>
+            </td>
+            <td class="day-header">
+              <div class="dow">ВС</div>
+              <div class="dom">7</div>
+            </td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="label">Наблюдение за дыханием</td>
+            <td>●</td>
+            <td></td>
+            <td>●</td>
+            <td></td>
+            <td></td>
+            <td>●</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td class="label">Заземление 5–4–3–2–1</td>
+            <td></td>
+            <td>●</td>
+            <td></td>
+            <td>●</td>
+            <td></td>
+            <td></td>
+            <td>●</td>
+          </tr>
+          <tr>
+            <td class="label">Стоп-мысль</td>
+            <td></td>
+            <td></td>
+            <td>●</td>
+            <td></td>
+            <td>●</td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td class="label">Доброта к себе</td>
+            <td></td>
+            <td>●</td>
+            <td></td>
+            <td>●</td>
+            <td>●</td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td class="label">Дыхание коробочкой</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>●</td>
+            <td></td>
+            <td>●</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td class="label">Радикальное принятие</td>
+            <td>●</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>●</td>
+            <td></td>
+            <td>●</td>
+          </tr>
+          <tr>
+            <td class="label">Делание наоборот</td>
+            <td></td>
+            <td>●</td>
+            <td>●</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td class="label">Планирование удовольствий</td>
+            <td>●</td>
+            <td></td>
+            <td></td>
+            <td>●</td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td class="label">Активное слушание</td>
+            <td></td>
+            <td></td>
+            <td>●</td>
+            <td></td>
+            <td>●</td>
+            <td></td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </body>
+</html>
