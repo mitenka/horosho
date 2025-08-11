@@ -73,7 +73,7 @@
         text-align: left;
       }
       .section-row td {
-        background: #eef2f7;
+        background: #ededed;
         font-weight: 700;
       }
       .header-row .day-header {
@@ -88,7 +88,16 @@
         font-weight: 700;
         color: #111;
       }
-
+      /* Light header row for dates */
+      .header-row td {
+        background: #fcfcfc;
+        color: #111;
+      }
+      .header-row .dow,
+      .header-row .dom {
+        color: #111;
+        letter-spacing: 0.2px;
+      }
       /* Start Practice table on a new page when printing */
       .practice-page {
         page-break-before: always;
