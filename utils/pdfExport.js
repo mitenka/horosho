@@ -186,7 +186,7 @@ function buildMainTableHtml({ dates, entries, behaviors, control }) {
   const controlLine = `Мысли: ${fmt(control?.thoughts)} | Эмоции: ${fmt(control?.emotions)} | Действия: ${fmt(control?.actions)}`;
 
   return `
-  <div class="title">Дневниковая карточка</div>
+  <div class="title">Дневник поведения</div>
   <div class="subtitle">${dateRange} • ${controlLine}</div>
   <table class="data-table">
     <colgroup>
@@ -211,20 +211,13 @@ function buildMainTableHtml({ dates, entries, behaviors, control }) {
 function buildPracticeTableHtml({ dates, entries }) {
   const headers = dayHeaders(dates);
   const skillsCatalog = getAvailableSkills();
-  const flat = [];
-  Object.keys(skillsCatalog).forEach((k) => {
-    const cat = skillsCatalog[k];
-    (cat.skills || []).forEach((name) => {
-      flat.push({
-        label: sanitizeSkillName(name),
-        key: name,
-      });
-    });
-  });
+  // Build rows grouped by categories with section headers.
+  // Use the titles and the category order exactly as provided by the service data.
+  const orderedCategories = Object.keys(skillsCatalog);
 
   const headerRow = `
     <tr class="header-row">
-      <td class="label">Практика</td>
+      <td class="label"></td>
       ${headers
         .map(
           (h) => `
@@ -236,18 +229,29 @@ function buildPracticeTableHtml({ dates, entries }) {
         .join("")}
     </tr>`;
 
-  const rows = flat
-    .map(
-      (r) => `
-      <tr>
-        <td class="label">${r.label}</td>
-        ${dates.map((d) => `<td>${isSkillUsed(entries, d, r.key) ? "●" : ""}</td>`).join("")}
-      </tr>`
-    )
-    .join("");
+  let rows = "";
+  for (const catKey of orderedCategories) {
+    const cat = skillsCatalog[catKey];
+    const sectionTitle = cat?.title || catKey;
+    rows += `
+      <tr class="section-row">
+        <td class="label" colspan="${1 + dates.length}">${sectionTitle}</td>
+      </tr>`;
+    (cat.skills || []).forEach((name) => {
+      const label = sanitizeSkillName(name);
+      rows += `
+        <tr>
+          <td class="label">${label}</td>
+          ${dates
+            .map((d) => `<td>${isSkillUsed(entries, d, name) ? "●" : ""}</td>`)
+            .join("")}
+        </tr>`;
+    });
+  }
 
   return `
   <div class="practice-page">
+    <div class="title">Дневник навыков</div>
     <table class="data-table">
       <colgroup>
         <col class="label-col" />
@@ -277,13 +281,15 @@ function makeHtml({ fontRegularSrc, fontBoldSrc, dates, entries, behaviors, cont
   .label-col { width: 42%; }
   .day-col { width: auto; }
   thead td { background: #f2f4f7; font-weight: 700; }
-  td { border: 1px solid #e5e7eb; padding: 6px 8px; vertical-align: middle; word-wrap: break-word; }
-  td.label { font-weight: 400; color: #111; }
-  .section-row td { background: #eef2f7; font-weight: 700; }
+  td { border: 1px solid #e5e7eb; padding: 6px 8px; vertical-align: middle; word-wrap: break-word; text-align: center; }
+  td.label { font-weight: 400; color: #111; text-align: left; }
+  .section-row td { background: #ededed; font-weight: 700; }
+  .header-row td { background: #fcfcfc; color: #111; }
   .header-row .day-header { text-align: center; }
+  .header-row .dow, .header-row .dom { color: #111; letter-spacing: 0.2px; }
   .dow { font-size: 11px; color: #667085; }
   .dom { font-size: 14px; font-weight: 700; color: #111; }
-  .practice-page { page-break-before: always; }
+  .practice-page { page-break-before: always; padding-top: 6mm; }
 </style>
 </head>
 <body>
