@@ -93,7 +93,7 @@ function getValueBehavior(entries, date, behaviorId, valueType, behaviorType) {
   const v = b[valueType];
   if (v === null || v === undefined) return "";
   if (valueType === "action" && behaviorType === "boolean") {
-    return v ? "✓" : "×"; // keep current app rule
+    return v ? "✓" : "✕"; // keep current app rule
   }
   return String(v);
 }
