@@ -336,7 +336,7 @@ function makeHtml({
   thead td { font-weight: 700; }
   td { border: 1px solid #e5e7eb; padding: 6px 8px; vertical-align: middle; word-wrap: break-word; text-align: center; }
   td.label { font-weight: 400; color: #111; text-align: left; }
-  .section-row td { font-weight: 700; }
+  .section-row td { font-weight: 700; background: #f9fafb; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   .header-row td { color: #111; }
   .header-row .day-header { text-align: center; }
   .header-row .dow, .header-row .dom { color: #111; letter-spacing: 0.2px; }
