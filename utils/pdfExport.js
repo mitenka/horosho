@@ -342,7 +342,7 @@ function makeHtml({
   .header-row .dow, .header-row .dom { color: #111; letter-spacing: 0.2px; }
   .dow { font-size: 11px; color: #667085; }
   .dom { font-size: 14px; font-weight: 700; color: #111; }
-  .danger { color: #b91c1c; }
+  .danger { color: #7f1d1d; font-weight: 700; background: #fee2e2; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   .practice-page { page-break-before: always; padding-top: 6mm; }
 </style>
 </head>
