@@ -1,7 +1,7 @@
-import * as Print from "expo-print";
-import * as FileSystem from "expo-file-system";
 import { Asset } from "expo-asset";
-import { getDiaryEntries, getAvailableSkills } from "../services/diaryService";
+import * as FileSystem from "expo-file-system";
+import * as Print from "expo-print";
+import { getAvailableSkills, getDiaryEntries } from "../services/diaryService";
 
 // Load a font asset and return base64 data URL source for @font-face
 async function loadFontDataUrl(moduleRef, mime = "font/ttf") {
@@ -34,8 +34,12 @@ function formatRuDayRange(dates) {
 }
 
 function humanReadableFileName(dates) {
-  const range = formatRuDayRange(dates);
-  return `diary-${range}.pdf`;
+  if (!dates.length) return "Дневник.pdf";
+  const first = dates[0];
+  const last = dates[dates.length - 1];
+  const fmt = (dt) =>
+    dt.toLocaleDateString("ru-RU", { day: "numeric", month: "long" });
+  return `Дневник с ${fmt(first)} по ${fmt(last)}.pdf`;
 }
 
 function dayHeaders(dates) {
@@ -138,7 +142,11 @@ function buildMainTableHtml({ dates, entries, behaviors, control }) {
   const completedRow = `
     <tr>
       <td class="label">Дневник заполнен сегодня?</td>
-      ${dates.map((d) => (isDiaryCompleted(entries, d) ? "<td>✓</td>" : "<td>—</td>")).join("")}
+      ${dates
+        .map((d) =>
+          isDiaryCompleted(entries, d) ? "<td>✓</td>" : "<td>—</td>"
+        )
+        .join("")}
     </tr>`;
 
   const stateRows = [
@@ -150,7 +158,9 @@ function buildMainTableHtml({ dates, entries, behaviors, control }) {
       (r) => `
       <tr>
         <td class="label">${r.label}</td>
-        ${dates.map((d) => `<td>${getValueDailyState(entries, d, r.key)}</td>`).join("")}
+        ${dates
+          .map((d) => `<td>${getValueDailyState(entries, d, r.key)}</td>`)
+          .join("")}
       </tr>`
     )
     .join("");
@@ -160,7 +170,12 @@ function buildMainTableHtml({ dates, entries, behaviors, control }) {
       (b) => `
       <tr>
         <td class="label">${b.name}</td>
-        ${dates.map((d) => `<td>${getValueBehavior(entries, d, b.id, "desire", b.type)}</td>`).join("")}
+        ${dates
+          .map(
+            (d) =>
+              `<td>${getValueBehavior(entries, d, b.id, "desire", b.type)}</td>`
+          )
+          .join("")}
       </tr>`
     )
     .join("");
@@ -170,7 +185,12 @@ function buildMainTableHtml({ dates, entries, behaviors, control }) {
       (b) => `
       <tr>
         <td class="label">${b.name}</td>
-        ${dates.map((d) => `<td>${getValueBehavior(entries, d, b.id, "action", b.type)}</td>`).join("")}
+        ${dates
+          .map(
+            (d) =>
+              `<td>${getValueBehavior(entries, d, b.id, "action", b.type)}</td>`
+          )
+          .join("")}
       </tr>`
     )
     .join("");
@@ -178,12 +198,16 @@ function buildMainTableHtml({ dates, entries, behaviors, control }) {
   const skillsAssessmentRow = `
     <tr>
       <td class="label">Оценка (0–7)</td>
-      ${dates.map((d) => `<td>${getSkillsAssessment(entries, d)}</td>`).join("")}
+      ${dates
+        .map((d) => `<td>${getSkillsAssessment(entries, d)}</td>`)
+        .join("")}
     </tr>`;
 
   const dateRange = formatRuDayRange(dates);
   const fmt = (v) => (v === null || v === undefined ? "н/д" : v);
-  const controlLine = `Мысли: ${fmt(control?.thoughts)} | Эмоции: ${fmt(control?.emotions)} | Действия: ${fmt(control?.actions)}`;
+  const controlLine = `Мысли: ${fmt(control?.thoughts)} | Эмоции: ${fmt(
+    control?.emotions
+  )} | Действия: ${fmt(control?.actions)}`;
 
   return `
   <div class="title">Дневник поведения</div>
@@ -198,7 +222,11 @@ function buildMainTableHtml({ dates, entries, behaviors, control }) {
       ${completedRow}
       ${section("Состояние (0–5)")}
       ${stateRows}
-      ${behaviors.length ? section("Желания, максимальная выраженность в течение дня (0–5)") : ""}
+      ${
+        behaviors.length
+          ? section("Желания, максимальная выраженность в течение дня (0–5)")
+          : ""
+      }
       ${desireRows}
       ${behaviors.length ? section("Действия") : ""}
       ${actionRows}
@@ -263,7 +291,14 @@ function buildPracticeTableHtml({ dates, entries }) {
   </div>`;
 }
 
-function makeHtml({ fontRegularSrc, fontBoldSrc, dates, entries, behaviors, control }) {
+function makeHtml({
+  fontRegularSrc,
+  fontBoldSrc,
+  dates,
+  entries,
+  behaviors,
+  control,
+}) {
   return `
 <!DOCTYPE html>
 <html lang="ru">
@@ -314,7 +349,14 @@ export async function exportPracticePdf({ exportDays, control }) {
   );
 
   // 3) HTML
-  const html = makeHtml({ fontRegularSrc, fontBoldSrc, dates, entries, behaviors, control });
+  const html = makeHtml({
+    fontRegularSrc,
+    fontBoldSrc,
+    dates,
+    entries,
+    behaviors,
+    control,
+  });
 
   // 4) Print to file
   const { uri } = await Print.printToFileAsync({ html });
