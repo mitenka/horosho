@@ -117,6 +117,15 @@ function isSkillUsed(entries, date, skillKey) {
   return used.includes(skillKey);
 }
 
+// Highlight helpers
+function isHighScore(v) {
+  const n = Number(v);
+  return v !== "" && !Number.isNaN(n) && (n === 4 || n === 5);
+}
+function tdHtml(value, danger) {
+  return `<td${danger ? ' class="danger"' : ''}>${value}</td>`;
+}
+
 function buildMainTableHtml({ dates, entries, behaviors, control }) {
   const headers = dayHeaders(dates);
 
@@ -154,45 +163,54 @@ function buildMainTableHtml({ dates, entries, behaviors, control }) {
     { label: "Физическое страдание", key: "physical" },
     { label: "Удовольствие", key: "pleasure" },
   ]
-    .map(
-      (r) => `
+    .map((r) => {
+      const cells = dates
+        .map((d) => {
+          const v = getValueDailyState(entries, d, r.key);
+          const danger = (r.key === "emotional" || r.key === "physical") && isHighScore(v);
+          return tdHtml(v, danger);
+        })
+        .join("");
+      return `
       <tr>
         <td class="label">${r.label}</td>
-        ${dates
-          .map((d) => `<td>${getValueDailyState(entries, d, r.key)}</td>`)
-          .join("")}
-      </tr>`
-    )
+        ${cells}
+      </tr>`;
+    })
     .join("");
 
   const desireRows = behaviors
-    .map(
-      (b) => `
+    .map((b) => {
+      const cells = dates
+        .map((d) => {
+          const v = getValueBehavior(entries, d, b.id, "desire", b.type);
+          const danger = isHighScore(v);
+          return tdHtml(v, danger);
+        })
+        .join("");
+      return `
       <tr>
         <td class="label">${b.name}</td>
-        ${dates
-          .map(
-            (d) =>
-              `<td>${getValueBehavior(entries, d, b.id, "desire", b.type)}</td>`
-          )
-          .join("")}
-      </tr>`
-    )
+        ${cells}
+      </tr>`;
+    })
     .join("");
 
   const actionRows = behaviors
-    .map(
-      (b) => `
+    .map((b) => {
+      const cells = dates
+        .map((d) => {
+          const v = getValueBehavior(entries, d, b.id, "action", b.type);
+          const danger = isHighScore(v) || v === "✓";
+          return tdHtml(v, danger);
+        })
+        .join("");
+      return `
       <tr>
         <td class="label">${b.name}</td>
-        ${dates
-          .map(
-            (d) =>
-              `<td>${getValueBehavior(entries, d, b.id, "action", b.type)}</td>`
-          )
-          .join("")}
-      </tr>`
-    )
+        ${cells}
+      </tr>`;
+    })
     .join("");
 
   const skillsAssessmentRow = `
@@ -324,6 +342,7 @@ function makeHtml({
   .header-row .dow, .header-row .dom { color: #111; letter-spacing: 0.2px; }
   .dow { font-size: 11px; color: #667085; }
   .dom { font-size: 14px; font-weight: 700; color: #111; }
+  .danger { color: #b91c1c; }
   .practice-page { page-break-before: always; padding-top: 6mm; }
 </style>
 </head>
