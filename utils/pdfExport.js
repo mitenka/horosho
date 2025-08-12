@@ -333,11 +333,11 @@ function makeHtml({
   table.data-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
   .label-col { width: 42%; }
   .day-col { width: auto; }
-  thead td { background: #f2f4f7; font-weight: 700; }
+  thead td { font-weight: 700; }
   td { border: 1px solid #e5e7eb; padding: 6px 8px; vertical-align: middle; word-wrap: break-word; text-align: center; }
   td.label { font-weight: 400; color: #111; text-align: left; }
-  .section-row td { background: #ededed; font-weight: 700; }
-  .header-row td { background: #fcfcfc; color: #111; }
+  .section-row td { font-weight: 700; }
+  .header-row td { color: #111; }
   .header-row .day-header { text-align: center; }
   .header-row .dow, .header-row .dom { color: #111; letter-spacing: 0.2px; }
   .dow { font-size: 11px; color: #667085; }
