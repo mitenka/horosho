@@ -1,5 +1,5 @@
 import { Asset } from "expo-asset";
-import * as FileSystem from "expo-file-system";
+import * as FileSystem from "expo-file-system/legacy";
 import * as Print from "expo-print";
 import { getAvailableSkills, getDiaryEntries } from "../services/diaryService";
 
@@ -77,7 +77,8 @@ function extractUniqueBehaviors(entriesObj, dates) {
     const day = entriesObj[key];
     if (day?.behaviors) {
       for (const b of day.behaviors) {
-        if (!map.has(b.id)) map.set(b.id, { id: b.id, name: b.name, type: b.type });
+        if (!map.has(b.id))
+          map.set(b.id, { id: b.id, name: b.name, type: b.type });
       }
     }
   }
@@ -123,7 +124,7 @@ function isHighScore(v) {
   return v !== "" && !Number.isNaN(n) && (n === 4 || n === 5);
 }
 function tdHtml(value, danger) {
-  return `<td${danger ? ' class="danger"' : ''}>${value}</td>`;
+  return `<td${danger ? ' class="danger"' : ""}>${value}</td>`;
 }
 
 function buildMainTableHtml({ dates, entries, behaviors, control }) {
@@ -167,7 +168,8 @@ function buildMainTableHtml({ dates, entries, behaviors, control }) {
       const cells = dates
         .map((d) => {
           const v = getValueDailyState(entries, d, r.key);
-          const danger = (r.key === "emotional" || r.key === "physical") && isHighScore(v);
+          const danger =
+            (r.key === "emotional" || r.key === "physical") && isHighScore(v);
           return tdHtml(v, danger);
         })
         .join("");
