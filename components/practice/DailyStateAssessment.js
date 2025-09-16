@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
+import React, { useEffect, useState } from "react";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { getDailyState, saveDailyState } from "../../services/diaryService";
 import { formatDateToString } from "../../utils/dateUtils";
 
@@ -80,13 +80,15 @@ const DailyStateAssessment = ({ selectedDate }) => {
       colors={[
         "rgba(255, 215, 0, 0.05)",
         "rgba(255, 255, 255, 0.08)",
-        "rgba(255, 215, 0, 0.03)"
+        "rgba(255, 215, 0, 0.03)",
       ]}
       style={styles.container}
     >
       {renderScale("emotional", "Эмоциональное страдание")}
       {renderScale("physical", "Физическое страдание")}
       {renderScale("pleasure", "Удовольствие")}
+
+      <Text style={styles.helperText}>0 — совсем нет, 5 — максимально</Text>
     </LinearGradient>
   );
 };
@@ -146,6 +148,13 @@ const styles = StyleSheet.create({
   scaleButtonTextActive: {
     color: "#000000",
     fontWeight: "600",
+  },
+  helperText: {
+    color: "rgba(255, 255, 255, 0.6)",
+    fontSize: 14,
+    fontStyle: "italic",
+    textAlign: "center",
+    marginTop: 12,
   },
 });
 
