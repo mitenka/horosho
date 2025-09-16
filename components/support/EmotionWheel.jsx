@@ -1,6 +1,7 @@
 import { LinearGradient } from "expo-linear-gradient";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
+  Animated,
   ScrollView,
   StyleSheet,
   Text,
@@ -135,31 +136,60 @@ const emotionData = {
 
 export default function EmotionWheel() {
   const [selectedEmotion, setSelectedEmotion] = useState("Гнев");
+  const fadeAnim = useRef(new Animated.Value(1)).current;
 
   const basicEmotions = Object.keys(emotionData);
+
+  useEffect(() => {
+    // Smooth slide transition for derivative emotions when selection changes
+    Animated.timing(fadeAnim, {
+      toValue: 0,
+      duration: 0,
+      useNativeDriver: true,
+    }).start(() => {
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 300,
+        useNativeDriver: true,
+      }).start();
+    });
+  }, [selectedEmotion]);
 
   const renderBasicEmotion = (emotion) => {
     const isSelected = selectedEmotion === emotion;
 
     if (isSelected) {
       return (
-        <LinearGradient
-          colors={emotionData[emotion].colors}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
-          style={[
-            styles.basicEmotionButton,
-            { borderColor: emotionData[emotion].colors[0], borderWidth: 2 },
-          ]}
-        >
-          <Text style={styles.basicEmotionTextActive}>{emotion}</Text>
-        </LinearGradient>
+        <View style={styles.festiveBorderContainer}>
+          <LinearGradient
+            colors={[
+              emotionData[emotion].colors[0],
+              emotionData[emotion].colors[1],
+              emotionData[emotion].colors[0],
+            ]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={styles.festiveBorder}
+          >
+            <LinearGradient
+              colors={emotionData[emotion].colors}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              style={styles.basicEmotionButton}
+            >
+              <Text style={styles.basicEmotionTextActive}>{emotion}</Text>
+            </LinearGradient>
+          </LinearGradient>
+        </View>
       );
     }
 
     return (
       <LinearGradient
-        colors={["rgba(255, 255, 255, 0.1)", "rgba(255, 255, 255, 0.05)"]}
+        colors={[
+          `${emotionData[emotion].colors[0]}80`, // 50% opacity for more saturation
+          `${emotionData[emotion].colors[1]}70`, // 44% opacity for more saturation
+        ]}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
         style={[
@@ -202,9 +232,17 @@ export default function EmotionWheel() {
       {/* Derivative emotions */}
       <View style={styles.derivativeGrid}>
         {emotionData[selectedEmotion].derivatives.map((derivative, index) => (
-          <Text key={index} style={styles.derivativeText}>
+          <Animated.Text
+            key={index}
+            style={[
+              styles.derivativeText,
+              {
+                opacity: fadeAnim,
+              },
+            ]}
+          >
             {derivative}
-          </Text>
+          </Animated.Text>
         ))}
       </View>
     </View>
@@ -220,6 +258,7 @@ const styles = StyleSheet.create({
   },
   basicEmotionsContainer: {
     paddingHorizontal: 0,
+    paddingVertical: 4, // Add vertical padding to prevent clipping of active state
     gap: 12,
   },
   emotionButtonWrapper: {
@@ -236,6 +275,13 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 6,
     elevation: 5,
+  },
+  activeEmotionButton: {
+    shadowColor: "#fff",
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.8,
+    shadowRadius: 10,
+    elevation: 10,
   },
   basicEmotionTextActive: {
     fontSize: 19,
@@ -260,5 +306,18 @@ const styles = StyleSheet.create({
     color: "#ffffff",
     letterSpacing: 0.2,
     lineHeight: 26,
+  },
+  festiveBorderContainer: {
+    overflow: "hidden",
+    borderRadius: 32,
+    shadowColor: "#fff",
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.6,
+    shadowRadius: 15,
+    elevation: 15,
+  },
+  festiveBorder: {
+    padding: 4,
+    borderRadius: 32,
   },
 });
