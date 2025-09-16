@@ -23,7 +23,7 @@ import {
  * with suggestion bubbles and type selection.
  */
 const AddBehaviorModal = ({ visible, onClose }) => {
-  const { addBehavior } = useData();
+  const { addBehavior, behaviors } = useData();
   const insets = useSafeAreaInsets();
   const [name, setName] = useState("");
   const [type, setType] = useState("boolean"); // 'boolean' or 'scale'
@@ -47,8 +47,20 @@ const AddBehaviorModal = ({ visible, onClose }) => {
     }
   }, [name, type, addBehavior, onClose]);
 
+  // Check if behavior name already exists
+  const isDuplicate = useMemo(() => {
+    if (!name.trim()) return false;
+    return behaviors.some(
+      (behavior) =>
+        behavior.name.toLowerCase().trim() === name.toLowerCase().trim()
+    );
+  }, [name, behaviors]);
+
   // Check if add button should be enabled
-  const isAddEnabled = useMemo(() => name.trim().length > 0, [name]);
+  const isAddEnabled = useMemo(
+    () => name.trim().length > 0 && !isDuplicate,
+    [name, isDuplicate]
+  );
 
   // Select a suggested behavior
   const handleSelectSuggestion = useCallback((suggestion) => {
@@ -69,126 +81,132 @@ const AddBehaviorModal = ({ visible, onClose }) => {
       visible={visible}
       onRequestClose={onClose}
     >
-      <View
-        style={[
-          styles.modalContainer,
-          { paddingTop: insets.top + 10 },
-        ]}
-      >
-          <View style={styles.header}>
-            <Text style={styles.headerTitle}>Добавить поведение</Text>
-            <TouchableOpacity onPress={onClose} style={styles.closeButton}>
-              <Ionicons name="close" size={24} color="#fff" />
-            </TouchableOpacity>
+      <View style={[styles.modalContainer, { paddingTop: insets.top + 10 }]}>
+        <View style={styles.header}>
+          <Text style={styles.headerTitle}>Добавить поведение</Text>
+          <TouchableOpacity onPress={onClose} style={styles.closeButton}>
+            <Ionicons name="close" size={24} color="#fff" />
+          </TouchableOpacity>
+        </View>
+
+        {/* Fixed top area */}
+        <View style={styles.fixedTopArea}>
+          {/* Behavior name input with clear button */}
+          <View style={styles.inputContainer}>
+            <TextInput
+              style={styles.input}
+              placeholder="Введите название поведения"
+              value={name}
+              onChangeText={setName}
+              autoCorrect={false}
+              placeholderTextColor="rgba(255, 255, 255, 0.5)"
+            />
+            {name.length > 0 && (
+              <TouchableOpacity
+                onPress={() => setName("")}
+                style={styles.clearButton}
+              >
+                <Ionicons
+                  name="close-circle"
+                  size={22}
+                  color="rgba(255, 255, 255, 0.6)"
+                />
+              </TouchableOpacity>
+            )}
           </View>
 
-          {/* Fixed top area */}
-          <View style={styles.fixedTopArea}>
-            {/* Behavior name input with clear button */}
-            <View style={styles.inputContainer}>
-              <TextInput
-                style={styles.input}
-                placeholder="Введите название поведения"
-                value={name}
-                onChangeText={setName}
-                autoCorrect={false}
-                placeholderTextColor="rgba(255, 255, 255, 0.5)"
-              />
-              {name.length > 0 && (
-                <TouchableOpacity
-                  onPress={() => setName("")}
-                  style={styles.clearButton}
-                >
-                  <Ionicons name="close-circle" size={22} color="rgba(255, 255, 255, 0.6)" />
-                </TouchableOpacity>
-              )}  
+          {/* Duplicate warning */}
+          {isDuplicate && (
+            <View style={styles.warningContainer}>
+              <Ionicons name="warning" size={16} color="#ff9500" />
+              <Text style={styles.warningText}>
+                Поведение с таким названием уже существует
+              </Text>
             </View>
+          )}
 
-            {/* Behavior type toggle */}
-            <View style={styles.typeToggle}>
-              <TouchableOpacity
-                style={[
-                  styles.typeButton,
-                  type === "boolean" && styles.typeButtonActive,
-                ]}
-                onPress={() => setType("boolean")}
-              >
-                <Text
-                  style={[
-                    styles.typeButtonText,
-                    type === "boolean" && styles.typeButtonTextActive,
-                  ]}
-                >
-                  Да или нет
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[
-                  styles.typeButton,
-                  type === "scale" && styles.typeButtonActive,
-                ]}
-                onPress={() => setType("scale")}
-              >
-                <Text
-                  style={[
-                    styles.typeButtonText,
-                    type === "scale" && styles.typeButtonTextActive,
-                  ]}
-                >
-                  Шкала от 0 до 5
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-
-          {/* Scrollable suggestions area */}
-          <ScrollView
-            style={styles.suggestionsScrollView}
-            contentContainerStyle={styles.suggestionsScrollContainer}
-            showsVerticalScrollIndicator={false}
-            keyboardShouldPersistTaps="handled"
-          >
-            <View style={suggestionStyles.suggestionsContainer}>
-              {behaviorSuggestions.map((suggestion, index) => {
-                const categoryColor = getCategoryColor(suggestion.category);
-                return (
-                  <TouchableOpacity
-                    key={index}
-                    style={[
-                      suggestionStyles.suggestionBubble,
-                      { backgroundColor: `${categoryColor}30` }, // Light background with 30% opacity
-                    ]}
-                    onPress={() => handleSelectSuggestion(suggestion.name)}
-                  >
-                    <Text
-                      style={suggestionStyles.suggestionText}
-                      numberOfLines={2}
-                    >
-                      {suggestion.name}
-                    </Text>
-                  </TouchableOpacity>
-                );
-              })}
-            </View>
-          </ScrollView>
-
-          <View
-            style={[
-              styles.footer,
-              { paddingBottom: Math.max(insets.bottom, 8) },
-            ]}
-          >
+          {/* Behavior type toggle */}
+          <View style={styles.typeToggle}>
             <TouchableOpacity
               style={[
-                styles.addButton,
-                !isAddEnabled && styles.addButtonDisabled,
+                styles.typeButton,
+                type === "boolean" && styles.typeButtonActive,
               ]}
-              onPress={handleAddBehavior}
-              disabled={!isAddEnabled}
+              onPress={() => setType("boolean")}
             >
-              <Text style={styles.addButtonText}>Добавить</Text>
+              <Text
+                style={[
+                  styles.typeButtonText,
+                  type === "boolean" && styles.typeButtonTextActive,
+                ]}
+              >
+                Да или нет
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                styles.typeButton,
+                type === "scale" && styles.typeButtonActive,
+              ]}
+              onPress={() => setType("scale")}
+            >
+              <Text
+                style={[
+                  styles.typeButtonText,
+                  type === "scale" && styles.typeButtonTextActive,
+                ]}
+              >
+                Шкала от 0 до 5
+              </Text>
             </TouchableOpacity>
           </View>
+        </View>
+
+        {/* Scrollable suggestions area */}
+        <ScrollView
+          style={styles.suggestionsScrollView}
+          contentContainerStyle={styles.suggestionsScrollContainer}
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled"
+        >
+          <View style={suggestionStyles.suggestionsContainer}>
+            {behaviorSuggestions.map((suggestion, index) => {
+              const categoryColor = getCategoryColor(suggestion.category);
+              return (
+                <TouchableOpacity
+                  key={index}
+                  style={[
+                    suggestionStyles.suggestionBubble,
+                    { backgroundColor: `${categoryColor}30` }, // Light background with 30% opacity
+                  ]}
+                  onPress={() => handleSelectSuggestion(suggestion.name)}
+                >
+                  <Text
+                    style={suggestionStyles.suggestionText}
+                    numberOfLines={2}
+                  >
+                    {suggestion.name}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
+          </View>
+        </ScrollView>
+
+        <View
+          style={[styles.footer, { paddingBottom: Math.max(insets.bottom, 8) }]}
+        >
+          <TouchableOpacity
+            style={[
+              styles.addButton,
+              !isAddEnabled && styles.addButtonDisabled,
+            ]}
+            onPress={handleAddBehavior}
+            disabled={!isAddEnabled}
+          >
+            <Text style={styles.addButtonText}>Добавить</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </Modal>
   );
@@ -260,6 +278,19 @@ const styles = StyleSheet.create({
   clearButton: {
     padding: 10,
     marginRight: 8,
+  },
+  warningContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: -12,
+    marginBottom: 12,
+    paddingHorizontal: 4,
+  },
+  warningText: {
+    color: "#ff9500",
+    fontSize: 14,
+    marginLeft: 6,
+    fontWeight: "500",
   },
   typeToggle: {
     flexDirection: "row",
