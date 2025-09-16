@@ -4,6 +4,7 @@ import React, { useRef } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import BoxBreathing from "../../components/article/BoxBreathing";
+import EmotionWheel from "../../components/support/EmotionWheel";
 import SkillRules from "../../components/support/SkillRules";
 import TherapyAssumptions from "../../components/support/TherapyAssumptions";
 
@@ -41,6 +42,11 @@ export default function SupportScreen() {
           <BoxBreathing color="#ffffff" />
         </View>
 
+        <View style={styles.emotionSection}>
+          <Text style={styles.sectionTitle}>Эмоции</Text>
+          <EmotionWheel />
+        </View>
+
         <View style={styles.assumptionsSection}>
           <Text style={styles.sectionTitle}>Допущения терапии</Text>
           <TherapyAssumptions />
@@ -63,6 +69,10 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
   },
   breathingSection: {
+    marginVertical: 24,
+    marginHorizontal: 20,
+  },
+  emotionSection: {
     marginVertical: 24,
     marginHorizontal: 20,
   },
