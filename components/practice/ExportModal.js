@@ -1,7 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 
-import * as Sharing from "expo-sharing";
 import Slider from "@react-native-community/slider";
+import * as Sharing from "expo-sharing";
 import React, { useState } from "react";
 import {
   Alert,
@@ -13,8 +13,8 @@ import {
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import ControlAssessment from "./ControlAssessment";
 import { exportPracticePdf } from "../../utils/pdfExport";
+import ControlAssessment from "./ControlAssessment";
 
 const ExportModal = ({
   visible,
@@ -53,10 +53,11 @@ const ExportModal = ({
     } catch (error) {
       console.error("Export error:", error);
       Alert.alert("Ошибка", "Не удалось создать PDF");
-    }
-    finally {
+    } finally {
       // Сброс локального состояния
-      try { onExportDaysChange(7); } catch {}
+      try {
+        onExportDaysChange(7);
+      } catch {}
       setControlAssessment(null);
       setIsExporting(false);
     }
@@ -73,7 +74,7 @@ const ExportModal = ({
       <Modal
         visible={visible}
         animationType="slide"
-        presentationStyle="pageSheet"
+        presentationStyle="fullScreen"
       >
         <View style={[styles.container, { paddingTop: insets.top }]}>
           <View

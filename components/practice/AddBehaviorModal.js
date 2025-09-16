@@ -77,7 +77,7 @@ const AddBehaviorModal = ({ visible, onClose }) => {
   return (
     <Modal
       animationType="slide"
-      presentationStyle="pageSheet"
+      presentationStyle="fullScreen"
       visible={visible}
       onRequestClose={onClose}
     >
