@@ -14,6 +14,7 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import appJson from "../../app.json";
+import DialecticalThinkingEasterEgg from "../../components/DialecticalThinkingEasterEgg";
 import StorageDataViewer from "../../components/StorageDataViewer";
 import { useData } from "../../contexts/DataContext";
 import {
@@ -41,6 +42,10 @@ export default function Settings() {
     lastUpdateCheck: null,
   });
   const { loadData, settings, updateSetting } = useData();
+
+  const [easterEggVisible, setEasterEggVisible] = useState(false);
+  const [versionTapCount, setVersionTapCount] = useState(0);
+  const versionTapTimeout = useRef(null);
 
   useScrollToTop(scrollViewRef);
 
@@ -189,6 +194,31 @@ export default function Settings() {
     );
   };
 
+  const handleCloseEasterEgg = () => {
+    setEasterEggVisible(false);
+  };
+
+  const handleVersionTap = () => {
+    const newCount = versionTapCount + 1;
+    setVersionTapCount(newCount);
+
+    if (versionTapTimeout.current) {
+      clearTimeout(versionTapTimeout.current);
+    }
+
+    versionTapTimeout.current = setTimeout(() => {
+      setVersionTapCount(0);
+    }, 2000);
+
+    if (newCount >= 7) {
+      setEasterEggVisible(true);
+      setVersionTapCount(0);
+      if (versionTapTimeout.current) {
+        clearTimeout(versionTapTimeout.current);
+      }
+    }
+  };
+
   return (
     <LinearGradient
       colors={["#3a3a5e", "#2d2d4a"]}
@@ -245,7 +275,9 @@ export default function Settings() {
           </View>
           <View style={styles.infoRow}>
             <Text style={styles.infoLabel}>Версия:</Text>
-            <Text style={styles.infoValue}>{APP_VERSION}</Text>
+            <TouchableOpacity onPress={handleVersionTap}>
+              <Text style={styles.infoValue}>{APP_VERSION}</Text>
+            </TouchableOpacity>
           </View>
         </View>
 
@@ -335,6 +367,11 @@ export default function Settings() {
           </View>
         </View>
       </ScrollView>
+
+      <DialecticalThinkingEasterEgg
+        visible={easterEggVisible}
+        onClose={handleCloseEasterEgg}
+      />
     </LinearGradient>
   );
 }
