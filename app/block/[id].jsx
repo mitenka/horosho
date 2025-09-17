@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import CustomBackButton from "../../components/CustomBackButton";
 import { useData } from "../../contexts/DataContext";
 
 export default function BlockArticles() {
@@ -31,12 +32,12 @@ export default function BlockArticles() {
       <Stack.Screen
         options={{
           title: "",
-          headerBackTitle: "Теория",
           headerStyle: {
             backgroundColor: "#3a3a5e",
           },
           headerTintColor: "#f0f0f0",
           headerShadowVisible: false,
+          headerLeft: () => <CustomBackButton title="Теория" color="#f0f0f0" />,
         }}
       />
 

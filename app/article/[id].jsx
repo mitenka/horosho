@@ -19,6 +19,7 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import ArticleElement from "../../components/article/ArticleElement";
+import CustomBackButton from "../../components/CustomBackButton";
 import { useData } from "../../contexts/DataContext";
 
 export default function ArticleScreen() {
@@ -126,12 +127,14 @@ export default function ArticleScreen() {
         <Stack.Screen
           options={{
             title: "",
-            headerBackTitle: "Назад",
             headerStyle: {
               backgroundColor: "#3a3a5e",
             },
             headerTintColor: "#f0f0f0",
             headerShadowVisible: false,
+            headerLeft: () => (
+              <CustomBackButton title="Назад" color="#f0f0f0" />
+            ),
           }}
         />
         <View style={styles.loadingContainer}>
@@ -149,12 +152,14 @@ export default function ArticleScreen() {
         <Stack.Screen
           options={{
             title: "",
-            headerBackTitle: "Назад",
             headerStyle: {
               backgroundColor: "#3a3a5e",
             },
             headerTintColor: "#f0f0f0",
             headerShadowVisible: false,
+            headerLeft: () => (
+              <CustomBackButton title="Назад" color="#f0f0f0" />
+            ),
           }}
         />
         <View style={styles.errorContainer}>
@@ -169,12 +174,12 @@ export default function ArticleScreen() {
       <Stack.Screen
         options={{
           title: "",
-          headerBackTitle: "Назад",
           headerStyle: {
             backgroundColor: "#3a3a5e",
           },
           headerTintColor: "#f0f0f0",
           headerShadowVisible: false,
+          headerLeft: () => <CustomBackButton title="Назад" color="#f0f0f0" />,
         }}
       />
 
