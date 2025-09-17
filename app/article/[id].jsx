@@ -214,7 +214,15 @@ export default function ArticleScreen() {
         <View style={styles.readStatusContainer}>
           <Animated.View style={animatedStyle}>
             <TouchableOpacity
-              style={[styles.readButton, isRead && styles.readButtonActive]}
+              style={[
+                styles.readButton,
+                isRead && {
+                  ...styles.readButtonActive,
+                  backgroundColor: block?.color || "#7CB342",
+                  borderColor: block?.color || "#7CB342",
+                  shadowColor: block?.color || "#7CB342",
+                },
+              ]}
               onPress={toggleReadStatus}
               activeOpacity={0.9}
             >
@@ -330,9 +338,6 @@ const styles = StyleSheet.create({
     minWidth: 240,
   },
   readButtonActive: {
-    backgroundColor: "#7CB342",
-    borderColor: "#7CB342",
-    shadowColor: "#7CB342",
     shadowOpacity: 0.4,
   },
   readIcon: {
