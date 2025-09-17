@@ -30,7 +30,13 @@ export const useReadingProgressContext = () => {
     }
 
     const totalArticles = block.articles.length;
-    const readCount = readArticlesData[blockId]?.length || 0;
+    const currentArticleIds = block.articles.map((article) => article.id);
+
+    const validReadArticles = (readArticlesData[blockId] || []).filter(
+      (articleId) => currentArticleIds.includes(articleId)
+    );
+
+    const readCount = validReadArticles.length;
     return readCount / totalArticles;
   };
 
