@@ -46,6 +46,7 @@ export default function Settings() {
   const [easterEggVisible, setEasterEggVisible] = useState(false);
   const [versionTapCount, setVersionTapCount] = useState(0);
   const versionTapTimeout = useRef(null);
+  const [developerModeActive, setDeveloperModeActive] = useState(false);
 
   useScrollToTop(scrollViewRef);
 
@@ -196,6 +197,7 @@ export default function Settings() {
 
   const handleCloseEasterEgg = () => {
     setEasterEggVisible(false);
+    setDeveloperModeActive(true);
   };
 
   const handleVersionTap = () => {
@@ -225,7 +227,15 @@ export default function Settings() {
       style={[styles.container, { paddingTop: insets.top + 8 }]}
     >
       <View style={styles.titleContainer}>
-        <Text style={styles.pageTitle}>Настройка</Text>
+        <View style={styles.titleRow}>
+          <Text style={styles.pageTitle}>Настройка</Text>
+          {developerModeActive && (
+            <View style={styles.developerBadge}>
+              <Ionicons name="code-outline" size={14} color="#ffffff" />
+              <Text style={styles.developerBadgeText}>Dev</Text>
+            </View>
+          )}
+        </View>
       </View>
 
       <ScrollView
@@ -283,56 +293,58 @@ export default function Settings() {
 
         <View style={styles.actionsContainer}>
           {/* Кнопки */}
-          <View style={styles.buttonsGroup}>
-            <TouchableOpacity
-              style={styles.button}
-              onPress={handleCheckForUpdates}
-              disabled={isLoading}
-            >
-              <View style={styles.iconContainer}>
-                <Ionicons name="refresh-outline" size={20} color="#ffffff" />
-              </View>
-              <Text style={styles.buttonText}>
-                {isLoading ? "Проверка..." : "Проверить обновления"}
-              </Text>
-            </TouchableOpacity>
+          {developerModeActive && (
+            <View style={styles.buttonsGroup}>
+              <TouchableOpacity
+                style={styles.button}
+                onPress={handleCheckForUpdates}
+                disabled={isLoading}
+              >
+                <View style={styles.iconContainer}>
+                  <Ionicons name="refresh-outline" size={20} color="#ffffff" />
+                </View>
+                <Text style={styles.buttonText}>
+                  {isLoading ? "Проверка..." : "Проверить обновления"}
+                </Text>
+              </TouchableOpacity>
 
-            <TouchableOpacity
-              style={styles.button}
-              onPress={handleResetProgress}
-              disabled={isLoading}
-            >
-              <View style={styles.iconContainer}>
-                <Ionicons name="trash-outline" size={20} color="#ffffff" />
-              </View>
-              <Text style={styles.buttonText}>Сбросить прогресс чтения</Text>
-            </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.button}
+                onPress={handleResetProgress}
+                disabled={isLoading}
+              >
+                <View style={styles.iconContainer}>
+                  <Ionicons name="trash-outline" size={20} color="#ffffff" />
+                </View>
+                <Text style={styles.buttonText}>Сбросить прогресс чтения</Text>
+              </TouchableOpacity>
 
-            <TouchableOpacity
-              style={styles.button}
-              onPress={handleClearBehaviors}
-              disabled={isLoading}
-            >
-              <View style={styles.iconContainer}>
-                <Ionicons name="trash-outline" size={20} color="#ffffff" />
-              </View>
-              <Text style={styles.buttonText}>Очистить список поведений</Text>
-            </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.button}
+                onPress={handleClearBehaviors}
+                disabled={isLoading}
+              >
+                <View style={styles.iconContainer}>
+                  <Ionicons name="trash-outline" size={20} color="#ffffff" />
+                </View>
+                <Text style={styles.buttonText}>Очистить список поведений</Text>
+              </TouchableOpacity>
 
-            <TouchableOpacity
-              style={styles.button}
-              onPress={handleClearDiaryHistory}
-              disabled={isLoading}
-            >
-              <View style={styles.iconContainer}>
-                <Ionicons name="trash-outline" size={20} color="#ffffff" />
-              </View>
-              <Text style={styles.buttonText}>Удалить историю дневника</Text>
-            </TouchableOpacity>
-          </View>
+              <TouchableOpacity
+                style={styles.button}
+                onPress={handleClearDiaryHistory}
+                disabled={isLoading}
+              >
+                <View style={styles.iconContainer}>
+                  <Ionicons name="trash-outline" size={20} color="#ffffff" />
+                </View>
+                <Text style={styles.buttonText}>Удалить историю дневника</Text>
+              </TouchableOpacity>
+            </View>
+          )}
 
           {/* Storage Data Viewer Section */}
-          <StorageDataViewer />
+          {developerModeActive && <StorageDataViewer />}
 
           <View style={styles.contactSection}>
             <Text style={styles.sectionTitle}>Написать авторам</Text>
@@ -394,11 +406,31 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 16,
   },
+  titleRow: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
   pageTitle: {
     fontSize: 28,
     fontWeight: "700",
     color: "#fff",
     letterSpacing: 0.5,
+    flex: 1,
+  },
+  developerBadge: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#7CB342",
+    borderRadius: 8,
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    marginLeft: 12,
+  },
+  developerBadgeText: {
+    fontSize: 12,
+    color: "#fff",
+    marginLeft: 4,
+    fontWeight: "600",
   },
   scrollView: {
     flex: 1,
