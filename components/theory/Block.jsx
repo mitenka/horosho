@@ -2,20 +2,32 @@ import { Ionicons } from "@expo/vector-icons";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useData } from "../../contexts/DataContext";
 
-const Block = ({ id, title, description, icon, color, onPress, isLast = false }) => {
+const Block = ({
+  id,
+  title,
+  description,
+  icon,
+  color,
+  onPress,
+  isLast = false,
+}) => {
   const { getBlockProgress } = useData();
-  
+
   // Получаем прогресс для этого блока из контекста
   const progress = getBlockProgress(id);
-  
+
   return (
-    <TouchableOpacity style={[styles.card, isLast && styles.lastCard]} onPress={onPress} activeOpacity={0.75}>
+    <TouchableOpacity
+      style={[styles.card, isLast && styles.lastCard]}
+      onPress={onPress}
+      activeOpacity={0.75}
+    >
       <View style={[styles.iconContainer, { backgroundColor: `${color}30` }]}>
         <Ionicons name={icon} size={28} color={color} />
       </View>
       <View style={styles.content}>
         <Text style={[styles.title, { color: color }]}>{title}</Text>
-        <Text style={styles.description} numberOfLines={2}>
+        <Text style={styles.description} numberOfLines={3}>
           {description}
         </Text>
         <View style={styles.progressContainer}>
@@ -78,10 +90,10 @@ const styles = StyleSheet.create({
     letterSpacing: 0.3,
   },
   description: {
-    fontSize: 15,
+    fontSize: 14,
     color: "rgba(200, 200, 224, 0.9)",
-    lineHeight: 20,
-    marginBottom: 12,
+    lineHeight: 19,
+    marginBottom: 10,
   },
   progressContainer: {
     height: 5,
