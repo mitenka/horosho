@@ -1,6 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { STORAGE_KEYS } from "./storageConfig";
 import { getLocalISOString } from "../utils/dateUtils";
+import { STORAGE_KEYS } from "./storageConfig";
 
 /**
  * Retrieves all behaviors from AsyncStorage
@@ -145,10 +145,6 @@ export const getDiaryEntries = async () => {
   }
 };
 
-
-
-
-
 /**
  * Clears all behaviors data
  * @returns {Promise<boolean>} - Whether the operation was successful
@@ -170,23 +166,35 @@ export const clearBehaviors = async () => {
  * @param {Object} behaviorData - Behavior data with name, type, desire, action
  * @returns {Promise<boolean>} - Whether the operation was successful
  */
-export const saveBehaviorEntry = async (dateString, behaviorId, behaviorData) => {
+export const saveBehaviorEntry = async (
+  dateString,
+  behaviorId,
+  behaviorData
+) => {
   try {
     const entries = await getDiaryEntries();
-    
+
     if (!entries[dateString]) {
       entries[dateString] = { behaviors: [] };
     }
-    
-    const behaviorIndex = entries[dateString].behaviors.findIndex(b => b.id === behaviorId);
-    
+
+    const behaviorIndex = entries[dateString].behaviors.findIndex(
+      (b) => b.id === behaviorId
+    );
+
     if (behaviorIndex >= 0) {
-      entries[dateString].behaviors[behaviorIndex] = { id: behaviorId, ...behaviorData };
+      entries[dateString].behaviors[behaviorIndex] = {
+        id: behaviorId,
+        ...behaviorData,
+      };
     } else {
       entries[dateString].behaviors.push({ id: behaviorId, ...behaviorData });
     }
-    
-    await AsyncStorage.setItem(STORAGE_KEYS.DIARY_ENTRIES, JSON.stringify(entries));
+
+    await AsyncStorage.setItem(
+      STORAGE_KEYS.DIARY_ENTRIES,
+      JSON.stringify(entries)
+    );
     return true;
   } catch (error) {
     console.error("Error saving behavior entry:", error);
@@ -203,19 +211,24 @@ export const saveBehaviorEntry = async (dateString, behaviorId, behaviorData) =>
 export const removeBehaviorEntry = async (dateString, behaviorId) => {
   try {
     const entries = await getDiaryEntries();
-    
+
     if (!entries[dateString]) {
       return true;
     }
-    
-    entries[dateString].behaviors = entries[dateString].behaviors.filter(b => b.id !== behaviorId);
-    
+
+    entries[dateString].behaviors = entries[dateString].behaviors.filter(
+      (b) => b.id !== behaviorId
+    );
+
     // If no behaviors left for this date, remove the date entry
     if (entries[dateString].behaviors.length === 0) {
       delete entries[dateString];
     }
-    
-    await AsyncStorage.setItem(STORAGE_KEYS.DIARY_ENTRIES, JSON.stringify(entries));
+
+    await AsyncStorage.setItem(
+      STORAGE_KEYS.DIARY_ENTRIES,
+      JSON.stringify(entries)
+    );
     return true;
   } catch (error) {
     console.error("Error removing behavior entry:", error);
@@ -232,12 +245,14 @@ export const removeBehaviorEntry = async (dateString, behaviorId) => {
 export const getBehaviorEntry = async (dateString, behaviorId) => {
   try {
     const entries = await getDiaryEntries();
-    
+
     if (!entries[dateString]) {
       return null;
     }
-    
-    return entries[dateString].behaviors.find(b => b.id === behaviorId) || null;
+
+    return (
+      entries[dateString].behaviors.find((b) => b.id === behaviorId) || null
+    );
   } catch (error) {
     console.error("Error getting behavior entry:", error);
     return null;
@@ -267,19 +282,22 @@ export const clearDiaryHistory = async () => {
 export const saveSkillsAssessment = async (dateString, assessmentValue) => {
   try {
     const entries = await getDiaryEntries();
-    
+
     if (!entries[dateString]) {
       entries[dateString] = { behaviors: [] };
     }
-    
+
     if (assessmentValue !== null) {
       entries[dateString].skillsAssessment = assessmentValue;
     } else {
       // Remove the property entirely when value is null
       delete entries[dateString].skillsAssessment;
     }
-    
-    await AsyncStorage.setItem(STORAGE_KEYS.DIARY_ENTRIES, JSON.stringify(entries));
+
+    await AsyncStorage.setItem(
+      STORAGE_KEYS.DIARY_ENTRIES,
+      JSON.stringify(entries)
+    );
     return true;
   } catch (error) {
     console.error("Error saving skills assessment:", error);
@@ -315,25 +333,25 @@ export const getSkillsAssessment = async (dateString) => {
 export const getSkillsAssessmentOptions = (useFeminineVerbs = false) => {
   if (useFeminineVerbs) {
     return [
-      'Не думала о навыках и не использовала',
-      'Думала о навыках, не хотела применять, не использовала',
-      'Думала о навыках, хотела применить, но не использовала',
-      'Старалась, но не смогла применить навыки',
-      'Старалась, смогла применить навыки, но они не помогли',
-      'Старалась, смогла применить навыки, они помогли',
-      'Использовала навыки, не стараясь (автоматически), они не помогли',
-      'Использовала навыки, не стараясь (автоматически), они помогли'
+      "Не думала о навыках и не использовала",
+      "Думала о навыках, не хотела применять, не использовала",
+      "Думала о навыках, хотела применить, но не использовала",
+      "Старалась, но не смогла применить навыки",
+      "Старалась, смогла применить навыки, но они не помогли",
+      "Старалась, смогла применить навыки, они помогли",
+      "Использовала навыки, не стараясь (автоматически), они не помогли",
+      "Использовала навыки, не стараясь (автоматически), они помогли",
     ];
   } else {
     return [
-      'Не думал о навыках и не использовал',
-      'Думал о навыках, не хотел применять, не использовал',
-      'Думал о навыках, хотел применить, но не использовал',
-      'Старался, но не смог применить навыки',
-      'Старался, смог применить навыки, но они не помогли',
-      'Старался, смог применить навыки, они помогли',
-      'Использовал навыки, не стараясь (автоматически), они не помогли',
-      'Использовал навыки, не стараясь (автоматически), они помогли'
+      "Не думал о навыках и не использовал",
+      "Думал о навыках, не хотел применять, не использовал",
+      "Думал о навыках, хотел применить, но не использовал",
+      "Старался, но не смог применить навыки",
+      "Старался, смог применить навыки, но они не помогли",
+      "Старался, смог применить навыки, они помогли",
+      "Использовал навыки, не стараясь (автоматически), они не помогли",
+      "Использовал навыки, не стараясь (автоматически), они помогли",
     ];
   }
 };
@@ -347,19 +365,22 @@ export const getSkillsAssessmentOptions = (useFeminineVerbs = false) => {
 export const saveDiaryCompletionStatus = async (dateString, isCompleted) => {
   try {
     const entries = await getDiaryEntries();
-    
+
     if (!entries[dateString]) {
       entries[dateString] = { behaviors: [] };
     }
-    
+
     if (isCompleted) {
       entries[dateString].isCompleted = true;
     } else {
       // Remove the property entirely when false
       delete entries[dateString].isCompleted;
     }
-    
-    await AsyncStorage.setItem(STORAGE_KEYS.DIARY_ENTRIES, JSON.stringify(entries));
+
+    await AsyncStorage.setItem(
+      STORAGE_KEYS.DIARY_ENTRIES,
+      JSON.stringify(entries)
+    );
     return true;
   } catch (error) {
     console.error("Error saving diary completion status:", error);
@@ -398,8 +419,8 @@ export const getAvailableSkills = () => {
         "**Участие:** погружаться в происходящее",
         "**Безоценочность**",
         "**Однонаправленность:** здесь и сейчас",
-        "**Эффективность:** фокусировка на том, что работает"
-      ]
+        "**Эффективность:** фокусировка на том, что работает",
+      ],
     },
     emotionRegulation: {
       title: "Эмоциональная регуляция",
@@ -411,8 +432,8 @@ export const getAvailableSkills = () => {
         "**B:** мастерство",
         "**C:** заблаговременный поиск решений",
         "**PLEASE:** снижение уязвимости",
-        "**Осознанное отношение к текущей эмоции**"
-      ]
+        "**Осознанное отношение к текущей эмоции**",
+      ],
     },
     stressTolerance: {
       title: "Стрессоустойчивость",
@@ -425,20 +446,19 @@ export const getAvailableSkills = () => {
         "**IMPROVE:** улучшить момент",
         "**Радикальное принятие**",
         "**Готовность, полуулыбка, раскрытые ладони**",
-        "**Осознанное отношение к текущим мыслям**"
-      ]
+        "**Осознанное отношение к текущим мыслям**",
+      ],
     },
     interpersonal: {
       title: "Межличностная эффективность",
       skills: [
-        "**DEAR:** объективная эффективность",
-        "**MAN:** осознанность в достижении цели",
-        "**GIVE:** эффективность отношений",
-        "**FAST:** эффективность самоуважения",
+        "**Попроси (DEAR MAN):** навык эффективной просьбы",
+        "**Друг (GIVE):** эффективность отношений",
+        "**Честь (FAST):** эффективность самоуважения",
         "**Валидация**",
-        "**Стратегии изменения поведения**"
-      ]
-    }
+        "**Стратегии изменения поведения**",
+      ],
+    },
   };
 };
 
@@ -451,19 +471,22 @@ export const getAvailableSkills = () => {
 export const saveUsedSkills = async (dateString, usedSkills) => {
   try {
     const entries = await getDiaryEntries();
-    
+
     if (!entries[dateString]) {
       entries[dateString] = { behaviors: [] };
     }
-    
+
     if (usedSkills && usedSkills.length > 0) {
       entries[dateString].usedSkills = usedSkills;
     } else {
       // Remove the property entirely when empty
       delete entries[dateString].usedSkills;
     }
-    
-    await AsyncStorage.setItem(STORAGE_KEYS.DIARY_ENTRIES, JSON.stringify(entries));
+
+    await AsyncStorage.setItem(
+      STORAGE_KEYS.DIARY_ENTRIES,
+      JSON.stringify(entries)
+    );
     return true;
   } catch (error) {
     console.error("Error saving used skills:", error);
@@ -495,34 +518,46 @@ export const getUsedSkills = async (dateString) => {
  */
 export const saveDailyState = async (dateString, dailyState) => {
   try {
-    if (!dailyState || typeof dailyState !== 'object') {
-      throw new Error('Invalid daily state data');
+    if (!dailyState || typeof dailyState !== "object") {
+      throw new Error("Invalid daily state data");
     }
 
     const { emotional, physical, pleasure } = dailyState;
-    
+
     // Validate state values - allow null or numbers between 0 and 5
     const validateValue = (value) => {
-      return value === null || (typeof value === "number" && value >= 0 && value <= 5);
+      return (
+        value === null ||
+        (typeof value === "number" && value >= 0 && value <= 5)
+      );
     };
-    
-    if (!validateValue(emotional) || !validateValue(physical) || !validateValue(pleasure)) {
-      throw new Error("Invalid state values. Values must be null or numbers between 0 and 5");
+
+    if (
+      !validateValue(emotional) ||
+      !validateValue(physical) ||
+      !validateValue(pleasure)
+    ) {
+      throw new Error(
+        "Invalid state values. Values must be null or numbers between 0 and 5"
+      );
     }
 
     const entries = await getDiaryEntries();
-    
+
     if (!entries[dateString]) {
       entries[dateString] = { behaviors: [] };
     }
-    
+
     entries[dateString].dailyState = {
       emotional,
       physical,
       pleasure,
     };
-    
-    await AsyncStorage.setItem(STORAGE_KEYS.DIARY_ENTRIES, JSON.stringify(entries));
+
+    await AsyncStorage.setItem(
+      STORAGE_KEYS.DIARY_ENTRIES,
+      JSON.stringify(entries)
+    );
     return true;
   } catch (error) {
     console.error("Error saving daily state:", error);
