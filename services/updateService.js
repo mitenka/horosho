@@ -14,7 +14,7 @@ export const updateLastCheckTime = async () => {
     );
     return timestamp;
   } catch (error) {
-    console.error("Error updating last check time:", error);
+    if (__DEV__) console.error("Error updating last check time:", error);
     return null;
   }
 };
@@ -30,7 +30,7 @@ export const getLastUpdateCheckTime = async () => {
     );
     return timestamp ? parseInt(timestamp) : null;
   } catch (error) {
-    console.error("Error getting last update check time:", error);
+    if (__DEV__) console.error("Error getting last update check time:", error);
     return null;
   }
 };
@@ -41,7 +41,7 @@ export const getLastUpdateCheckTime = async () => {
  */
 export const checkForUpdates = async () => {
   try {
-    console.log("Checking for updates from GitHub... 📡");
+    if (__DEV__) console.log("Checking for updates from GitHub... 📡");
 
     // Fetch meta.json from CDN with cache-busting parameter
     const response = await fetch(`${API_BASE_URL}/meta.json?v=${Date.now()}`);
@@ -52,8 +52,8 @@ export const checkForUpdates = async () => {
     const serverMeta = await response.json();
     const localVersions = await getDataVersions();
 
-    console.log("Server versions:", serverMeta);
-    console.log("Local versions:", localVersions);
+    if (__DEV__) console.log("Server versions:", serverMeta);
+    if (__DEV__) console.log("Local versions:", localVersions);
 
     // Check if updates are needed
     const needDictionaryUpdate =
@@ -65,19 +65,23 @@ export const checkForUpdates = async () => {
 
     // If no updates needed
     if (!needDictionaryUpdate && !needTheoryUpdate) {
-      console.log("No updates available");
+      if (__DEV__) console.log("No updates available");
 
       // Update last check timestamp even when no updates are available
       await updateLastCheckTime();
 
-      return { checked: true, updated: false, message: "No updates available" };
+      return {
+        checked: true,
+        updated: false,
+        message: "У вас актуальная версия данных",
+      };
     }
 
     const storageOperations = [];
 
     // Update dictionary if needed
     if (needDictionaryUpdate) {
-      console.log("Updating dictionary from GitHub...");
+      if (__DEV__) console.log("Updating dictionary from GitHub...");
       const dictionaryResponse = await fetch(
         `${API_BASE_URL}/dictionary.json?v=${Date.now()}`
       );
@@ -101,7 +105,7 @@ export const checkForUpdates = async () => {
 
     // Update theory if needed
     if (needTheoryUpdate) {
-      console.log("Updating theory from GitHub...");
+      if (__DEV__) console.log("Updating theory from GitHub...");
       const theoryResponse = await fetch(
         `${API_BASE_URL}/theory.json?v=${Date.now()}`
       );
@@ -123,9 +127,9 @@ export const checkForUpdates = async () => {
     // Execute all storage operations in parallel
     if (storageOperations.length > 0) {
       await Promise.all(storageOperations);
-      console.log("Data successfully updated from GitHub");
+      if (__DEV__) console.log("Data successfully updated from GitHub");
     } else {
-      console.log("No updates needed");
+      if (__DEV__) console.log("No updates needed");
     }
 
     // Update last check timestamp after successful check
@@ -138,7 +142,7 @@ export const checkForUpdates = async () => {
       theoryUpdated: needTheoryUpdate,
     };
   } catch (error) {
-    console.error("Error checking for updates:", error);
+    if (__DEV__) console.error("Error checking for updates:", error);
     return { checked: true, updated: false, error: error.message };
   }
 };

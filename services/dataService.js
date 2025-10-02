@@ -55,7 +55,7 @@ const checkStorageData = async () => {
       ...versions,
     };
   } catch (error) {
-    console.error("Error checking AsyncStorage data:", error);
+    if (__DEV__) console.error("Error checking AsyncStorage data:", error);
     return {
       hasDictionary: false,
       hasTheory: false,
@@ -68,10 +68,10 @@ const checkStorageData = async () => {
 // Initialize data function
 export const initializeData = async () => {
   try {
-    console.log("Initializing data...");
+    if (__DEV__) console.log("Initializing data...");
 
     const storageData = await checkStorageData();
-    console.log("Current AsyncStorage data:", storageData);
+    if (__DEV__) console.log("Current AsyncStorage data:", storageData);
 
     const storageOperations = [];
 
@@ -82,7 +82,7 @@ export const initializeData = async () => {
         parseInt(storageData.dictionaryVersion) <
           parseInt(meta.dictionaryVersion))
     ) {
-      console.log("Loading dictionary from file...");
+      if (__DEV__) console.log("Loading dictionary from file...");
       storageOperations.push(
         AsyncStorage.setItem(
           STORAGE_KEYS.DICTIONARY,
@@ -101,7 +101,7 @@ export const initializeData = async () => {
       (storageData.theoryVersion &&
         parseInt(storageData.theoryVersion) < parseInt(meta.theoryVersion))
     ) {
-      console.log("Loading theory from file...");
+      if (__DEV__) console.log("Loading theory from file...");
       storageOperations.push(
         AsyncStorage.setItem(STORAGE_KEYS.THEORY, JSON.stringify(theory)),
         AsyncStorage.setItem(STORAGE_KEYS.THEORY_VERSION, meta.theoryVersion)
@@ -113,9 +113,9 @@ export const initializeData = async () => {
 
     if (storageOperations.length > 0) {
       await Promise.all(storageOperations);
-      console.log("Data successfully updated in AsyncStorage");
+      if (__DEV__) console.log("Data successfully updated in AsyncStorage");
     } else {
-      console.log("Data in AsyncStorage is up to date");
+      if (__DEV__) console.log("Data in AsyncStorage is up to date");
     }
   } catch (error) {
     console.error("Error initializing data:", error);
@@ -127,19 +127,19 @@ export {
   addBehavior,
   checkForUpdates,
   deleteBehavior,
+  // From settingsService
+  getAvailableSkills,
   // From diaryService
   getBehaviorEntry,
   getBehaviors,
   getDataVersions,
+  getDiaryCompletionStatus,
   getDiaryEntries,
   // From dictionaryService
   getDictionary,
   getLastUpdateCheckTime,
   // From readingProgressService
   getReadArticles,
-  // From settingsService
-  getAvailableSkills,
-  getDiaryCompletionStatus,
   getSettings,
   getSkillsAssessment,
   getSkillsAssessmentOptions,
@@ -152,8 +152,8 @@ export {
   resetReadingProgress,
   saveBehaviorEntry,
   saveDiaryCompletionStatus,
-  saveSkillsAssessment,
   saveSettings,
+  saveSkillsAssessment,
   saveUsedSkills,
   updateBehavior,
   // From updateService
