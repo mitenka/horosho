@@ -8,6 +8,10 @@
     "scheme": "horosho",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
+    "description": "Приложение для изучения и практики навыков диалектической поведенческой терапии (DBT). Включает теоретические материалы, дневник эмоций и инструменты для развития эмоциональной регуляции.",
+    "privacy": "public",
+    "primaryColor": "#2d2d4a",
+    "privacyPolicyUrl": "https://mitenka.github.io/horosho/privacy-policy.html",
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "app.mitenka.sojdet",
