@@ -12,137 +12,122 @@
       body {
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
           "Helvetica Neue", sans-serif;
-        line-height: 1.7;
-        max-width: 750px;
+        line-height: 1.8;
+        max-width: 800px;
         margin: 0 auto;
-        padding: 40px 24px;
-        color: #1f2937;
-        background: #fafafa;
-        font-size: 16px;
+        padding: 60px 40px;
+        color: #1a1a1a;
+        background: #ffffff;
+        font-size: 18px;
       }
 
       h1 {
-        color: #2d2d4a;
-        font-size: 2.25rem;
+        color: #000000;
+        font-size: 2.5rem;
         font-weight: 700;
-        margin: 0 0 12px 0;
+        margin: 0 0 8px 0;
         line-height: 1.2;
-        letter-spacing: -0.02em;
+        letter-spacing: -0.03em;
       }
 
       h2 {
-        color: #2d2d4a;
+        color: #000000;
         font-size: 1.5rem;
         font-weight: 600;
-        margin: 40px 0 16px 0;
+        margin: 48px 0 20px 0;
         line-height: 1.3;
-        letter-spacing: -0.01em;
+        padding-top: 24px;
+        border-top: 1px solid #e0e0e0;
+      }
+
+      h2:first-of-type {
+        border-top: none;
+        padding-top: 0;
       }
 
       p {
-        margin: 12px 0;
-        color: #374151;
+        margin: 16px 0;
+        color: #333333;
       }
 
       strong {
-        color: #1f2937;
+        color: #000000;
         font-weight: 600;
       }
 
       .header-meta {
-        display: inline-block;
-        background: white;
-        padding: 16px 20px;
-        border-radius: 12px;
-        margin-bottom: 32px;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-        border: 1px solid #e5e7eb;
+        margin: 24px 0 40px 0;
+        padding: 20px 0;
+        border-bottom: 2px solid #000000;
       }
 
       .header-meta p {
-        margin: 4px 0;
-        font-size: 0.95rem;
+        margin: 6px 0;
+        font-size: 1rem;
+        color: #333333;
       }
 
       .highlight {
-        background: linear-gradient(135deg, #eef2ff 0%, #e0e7ff 100%);
-        padding: 24px;
-        border-radius: 12px;
-        margin: 32px 0;
-        border-left: 4px solid #667eea;
-        box-shadow: 0 2px 8px rgba(102, 126, 234, 0.1);
+        background: #f5f5f5;
+        padding: 28px 32px;
+        margin: 40px 0;
+        border-left: 4px solid #000000;
       }
 
-      .highlight strong {
-        color: #2d2d4a;
+      .highlight p {
+        margin: 0;
         font-size: 1.1rem;
+        line-height: 1.7;
       }
 
       ul {
-        margin: 16px 0;
-        padding-left: 0;
-        list-style: none;
+        margin: 20px 0;
+        padding-left: 24px;
+        list-style: disc;
       }
 
       ul li {
-        position: relative;
-        padding-left: 28px;
-        margin: 10px 0;
-        color: #4b5563;
-      }
-
-      ul li:before {
-        content: "●";
-        position: absolute;
-        left: 8px;
-        color: #667eea;
-        font-size: 0.9rem;
+        margin: 12px 0;
+        color: #333333;
+        padding-left: 8px;
       }
 
       a {
-        color: #667eea;
-        text-decoration: none;
+        color: #000000;
+        text-decoration: underline;
         font-weight: 500;
-        transition: color 0.2s;
       }
 
       a:hover {
-        color: #4c51bf;
-        text-decoration: underline;
+        opacity: 0.7;
       }
 
       section {
-        background: white;
-        padding: 24px;
-        border-radius: 12px;
-        margin: 24px 0;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-        border: 1px solid #e5e7eb;
+        margin: 0;
       }
 
-      section h2 {
-        margin-top: 0;
+      .no-collect {
+        font-weight: 600;
+        font-style: italic;
       }
 
       @media (max-width: 640px) {
         body {
-          padding: 24px 16px;
+          padding: 40px 20px;
+          font-size: 17px;
         }
 
         h1 {
-          font-size: 1.875rem;
+          font-size: 2rem;
         }
 
         h2 {
           font-size: 1.375rem;
+          margin-top: 40px;
         }
 
         .highlight {
-          padding: 20px;
-        }
-
-        section {
-          padding: 20px;
+          padding: 24px;
         }
       }
     </style>
@@ -156,13 +141,16 @@
     </div>
 
     <div class="highlight">
-      <strong>Главное:</strong> Мы НЕ собираем, НЕ храним и НЕ передаем ваши
-      личные данные. Все ваши записи остаются только на вашем устройстве.
+      <p>
+        <strong>Главное:</strong> Мы <span class="no-collect">не собираем</span>, 
+        <span class="no-collect">не храним</span> и <span class="no-collect">не передаём</span> 
+        ваши личные данные. Все ваши записи остаются только на вашем устройстве.
+      </p>
     </div>
 
     <section>
       <h2>1. Какие данные мы собираем</h2>
-      <p><strong>Мы НЕ собираем никаких личных данных.</strong></p>
+      <p><strong>Мы <span class="no-collect">не собираем</span> никаких личных данных.</strong></p>
       <p>
         Приложение работает полностью офлайн. Все ваши записи в дневнике,
         настройки и прогресс чтения хранятся только на вашем устройстве.
@@ -180,7 +168,7 @@
 
     <section>
       <h2>3. Передача данных третьим лицам</h2>
-      <p><strong>Мы НЕ передаем данные третьим лицам.</strong></p>
+      <p><strong>Мы <span class="no-collect">не передаём</span> данные третьим лицам.</strong></p>
       <p>В приложении нет:</p>
       <ul>
         <li>Аналитических систем</li>
@@ -197,9 +185,9 @@
         нашего сервера. При этом:
       </p>
       <ul>
-        <li>Мы НЕ отслеживаем, кто загружает обновления</li>
-        <li>Мы НЕ собираем информацию об устройстве</li>
-        <li>Мы НЕ ведем логи запросов</li>
+        <li>Мы не отслеживаем, кто загружает обновления</li>
+        <li>Мы не собираем информацию об устройстве</li>
+        <li>Мы не ведём логи запросов</li>
       </ul>
     </section>
 
@@ -248,9 +236,10 @@
     </section>
 
     <div class="highlight">
-      <strong>Резюме:</strong> Ваши данные принадлежат только вам. Мы их не
-      видим, не собираем и не используем. Приложение создано с уважением к вашей
-      приватности.
+      <p>
+        <strong>Резюме:</strong> Ваши данные принадлежат только вам. Мы их не видим, 
+        не собираем и не используем. Приложение создано с уважением к вашей приватности.
+      </p>
     </div>
   </body>
 </html>
