@@ -1,13 +1,12 @@
-<link
-  href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@300;400;500&family=Inter:wght@300;400;500&display=swap"
-  rel="stylesheet"
-
-  <!DOCTYPE html>
-/>
+<!DOCTYPE html>
 <html lang="ru">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Horosho - Приложение для изучения Диалектической Поведенческой Терапии (ДПТ)"
+    />
     <title>Horosho - Приложение для изучения ДПТ</title>
     <style>
       * {
@@ -233,81 +232,18 @@
         align-items: flex-start;
       }
 
-      /* DBT Quote Section */
-      .dbt-quote-section {
-        margin-bottom: 60px;
-        max-width: 480px;
-        text-align: left;
-        position: relative;
+      /* Logo Section */
+      .logo-section {
+        margin-bottom: 40px;
+        text-align: center;
       }
 
-      .quote-text {
-        font-family: "Playfair Display", serif;
-        font-size: 56px;
-        line-height: 1.15;
-        font-weight: 300;
+      .app-logo {
+        font-size: 48px;
         color: white;
-        margin-bottom: 24px;
-        text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4),
-          0 0 30px rgba(255, 255, 255, 0.15);
-        letter-spacing: -1.2px;
-        position: relative;
-        opacity: 0;
-        transform: translateX(-30px);
-        animation: quoteSlideIn 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.3s
-          forwards;
-      }
-
-      .quote-author {
-        font-family: "Inter", sans-serif;
-        font-size: 14px;
-        color: rgba(255, 255, 255, 0.65);
-        font-weight: 300;
-        letter-spacing: 0.5px;
-        opacity: 0;
-        transform: translateY(15px);
-        animation: authorFadeUp 0.8s ease-out 1.2s forwards;
-        position: relative;
-        padding-left: 20px;
-      }
-
-      .quote-author::before {
-        content: "";
-        position: absolute;
-        left: 0;
-        top: 50%;
-        transform: translateY(-50%);
-        width: 12px;
-        height: 1px;
-        background: linear-gradient(
-          90deg,
-          rgba(255, 255, 255, 0.6),
-          rgba(255, 255, 255, 0.2)
-        );
-      }
-
-      @keyframes quoteSlideIn {
-        0% {
-          opacity: 0;
-          transform: translateX(-30px) scale(0.98);
-          filter: blur(2px);
-        }
-        100% {
-          opacity: 1;
-          transform: translateX(0) scale(1);
-          filter: blur(0);
-        }
-      }
-
-      @keyframes authorFadeUp {
-        0% {
-          opacity: 0;
-          transform: translateY(15px);
-        }
-        100% {
-          opacity: 1;
-          transform: translateY(0);
-        }
+        font-weight: 600;
+        text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        letter-spacing: 1px;
       }
 
       /* Store Buttons */
@@ -315,6 +251,7 @@
         display: flex;
         flex-direction: column;
         gap: 16px;
+        margin-bottom: 24px;
       }
 
       .store-btn {
@@ -363,6 +300,26 @@
       .store-name {
         font-size: 18px;
         font-weight: 600;
+      }
+
+      /* Footer Links */
+      .footer-links {
+        display: flex;
+        gap: 16px;
+        justify-content: center;
+        margin-top: 24px;
+      }
+
+      .footer-link {
+        color: rgba(255, 255, 255, 0.8);
+        text-decoration: none;
+        font-size: 14px;
+        transition: color 0.3s ease;
+      }
+
+      .footer-link:hover {
+        color: white;
+        text-decoration: underline;
       }
 
       /* Phone Demo Section */
@@ -523,13 +480,8 @@
           min-width: auto;
         }
 
-        .dbt-quote-section {
-          margin-bottom: 40px;
-          text-align: left;
-        }
-
-        .quote-text {
-          font-size: 44px;
+        .app-logo {
+          font-size: 40px;
         }
       }
     </style>
@@ -539,32 +491,39 @@
     <div class="main-container">
       <!-- Left Content Section -->
       <div class="content-section">
-        <!-- DBT Quote Section -->
-        <div class="dbt-quote-section">
-          <div class="quote-text" id="quote-text">
-            Каждый человек старается настолько хорошо, насколько может
-          </div>
-          <div class="quote-author">
-            Постулат Диалектической Поведенческой Терапии
-          </div>
+        <!-- Logo Section -->
+        <div class="logo-section">
+          <div class="app-logo">Horosho</div>
         </div>
 
         <!-- Store Buttons -->
         <div class="store-buttons">
-          <a href="#" class="store-btn">
+          <a href="#" class="store-btn" aria-label="Скачать в App Store">
             <div class="store-icon">🍎</div>
             <div class="store-text">
               <div class="store-label">Скачать в</div>
               <div class="store-name">App Store</div>
             </div>
           </a>
-          <a href="#" class="store-btn">
+          <a href="#" class="store-btn" aria-label="Доступно в Google Play">
             <div class="store-icon">🤖</div>
             <div class="store-text">
               <div class="store-label">Доступно в</div>
               <div class="store-name">Google Play</div>
             </div>
           </a>
+          <a href="#" class="store-btn" aria-label="Скачать в RuStore">
+            <div class="store-icon">🇷🇺</div>
+            <div class="store-text">
+              <div class="store-label">Доступно в</div>
+              <div class="store-name">RuStore</div>
+            </div>
+          </a>
+        </div>
+
+        <!-- Footer Links -->
+        <div class="footer-links">
+          <a href="#" class="footer-link">Политика конфиденциальности</a>
         </div>
       </div>
 
@@ -608,50 +567,6 @@
     </div>
 
     <script>
-      // DBT quotes array with proper typography
-      const dbtQuotes = [
-        "Каждый человек старается настолько хорошо, насколько может",
-        "Все люди стремятся к&nbsp;улучшению и&nbsp;счастью",
-        "Эмоции содержат важную информацию",
-        "Принятие не&nbsp;означает одобрение",
-        "Вы&nbsp;не&nbsp;можете контролировать других, но&nbsp;можете контролировать себя",
-        "Жизнь стоит того, чтобы её&nbsp;прожить",
-        "Изменения возможны в&nbsp;любой момент",
-        "Вы&nbsp;достойны любви и&nbsp;принятия",
-        "Настоящий момент&nbsp;— это единственное время, когда можно жить",
-        "Уязвимость&nbsp;— это не&nbsp;слабость, а&nbsp;мужество",
-        "Мудрый разум объединяет эмоции и&nbsp;логику",
-        "Противоположности могут быть истинными одновременно",
-      ];
-
-      let currentQuoteIndex = 0;
-
-      // Function to change quote with proper typography
-      function changeQuote() {
-        const quoteElement = document.getElementById("quote-text");
-        const authorElement = document.querySelector(".quote-author");
-        currentQuoteIndex = (currentQuoteIndex + 1) % dbtQuotes.length;
-
-        // Reset animations
-        quoteElement.style.animation = "none";
-        authorElement.style.animation = "none";
-        quoteElement.offsetHeight; // Trigger reflow
-
-        // Set new content with innerHTML to preserve &nbsp; and restart animations
-        quoteElement.innerHTML = dbtQuotes[currentQuoteIndex];
-        quoteElement.style.animation =
-          "quoteSlideIn 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards";
-        authorElement.style.animation =
-          "authorFadeUp 0.8s ease-out 0.4s forwards";
-      }
-
-      // Initialize random quote with proper typography
-      function initRandomQuote() {
-        currentQuoteIndex = Math.floor(Math.random() * dbtQuotes.length);
-        document.getElementById("quote-text").innerHTML =
-          dbtQuotes[currentQuoteIndex];
-      }
-
       // Create particles from different screen edges - fixed positioning
       function createFloatingParticles() {
         const directions = ["bottom", "top", "left", "right"];
@@ -689,7 +604,6 @@
 
       // Initialize everything
       createFloatingParticles();
-      initRandomQuote();
 
       // Update time in status bar
       function updateTime() {
