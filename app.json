@@ -13,7 +13,7 @@
     "primaryColor": "#2d2d4a",
     "privacyPolicyUrl": "https://mitenka.github.io/horosho/privacy-policy.html",
     "ios": {
-      "supportsTablet": true,
+      "supportsTablet": false,
       "bundleIdentifier": "app.mitenka.sojdet",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
