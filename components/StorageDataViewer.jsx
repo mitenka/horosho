@@ -1,6 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   ActivityIndicator,
   Alert,
@@ -252,9 +252,8 @@ const StorageDataViewer = () => {
                     <Text style={styles.categoriesTitle}>
                       Словарь содержит {data.items} терминов
                     </Text>
-                    <View style={styles.divider} />
-                    <Text style={styles.dataText}>
-                      {formatData(data.value)}
+                    <Text style={styles.categoryName}>
+                      Полный JSON не отображается (слишком большой объем данных)
                     </Text>
                   </View>
                 ) : null}
@@ -276,8 +275,8 @@ const StorageDataViewer = () => {
                       </View>
                     ))}
                     <View style={styles.divider} />
-                    <Text style={styles.dataText}>
-                      {formatData(data.value)}
+                    <Text style={styles.categoryName}>
+                      Полный JSON не отображается (слишком большой объем данных)
                     </Text>
                   </View>
                 ) : null}
@@ -304,11 +303,17 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     padding: 16,
     marginVertical: 16,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 3,
+    ...Platform.select({
+      ios: {
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 8,
+      },
+      android: {
+        elevation: 0,
+      },
+    }),
   },
   header: {
     flexDirection: "row",

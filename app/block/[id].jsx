@@ -3,6 +3,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { router, Stack, useLocalSearchParams } from "expo-router";
 import { useRef } from "react";
 import {
+  Platform,
   ScrollView,
   StyleSheet,
   Text,
@@ -38,6 +39,9 @@ export default function BlockArticles() {
           headerTintColor: "#f0f0f0",
           headerShadowVisible: false,
           headerLeft: () => <CustomBackButton title="Теория" color="#f0f0f0" />,
+          contentStyle: {
+            backgroundColor: "#2d2d4a",
+          },
         }}
       />
 
@@ -145,11 +149,17 @@ const styles = StyleSheet.create({
     marginBottom: 14,
     borderWidth: 1,
     borderColor: "rgba(255, 255, 255, 0.08)",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.15,
-    shadowRadius: 4,
-    elevation: 2,
+    ...Platform.select({
+      ios: {
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.15,
+        shadowRadius: 4,
+      },
+      android: {
+        elevation: 0,
+      },
+    }),
   },
   articleCardRead: {
     backgroundColor: "rgba(124, 179, 66, 0.08)",

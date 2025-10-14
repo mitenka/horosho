@@ -1,6 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { Platform, StyleSheet, Text, View } from "react-native";
 
 export default function Checklist({ items, title, color = "#7CB342" }) {
   const backgroundColor = "rgba(45, 45, 65, 0.65)";
@@ -11,11 +11,17 @@ export default function Checklist({ items, title, color = "#7CB342" }) {
         styles.checklistContainer,
         {
           borderColor: `${color}50`,
-          shadowColor: color,
-          shadowOpacity: 0.3,
-          shadowRadius: 8,
-          shadowOffset: { width: 0, height: 4 },
-          elevation: 5,
+          ...Platform.select({
+            ios: {
+              shadowColor: color,
+              shadowOpacity: 0.3,
+              shadowRadius: 8,
+              shadowOffset: { width: 0, height: 4 },
+            },
+            android: {
+              elevation: 0,
+            },
+          }),
         },
       ]}
     >

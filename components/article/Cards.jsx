@@ -1,6 +1,6 @@
 import * as Haptics from "expo-haptics";
 import React, { useCallback, useEffect, useState } from "react";
-import { Dimensions, StyleSheet, Text, View } from "react-native";
+import { Dimensions, Platform, StyleSheet, Text, View } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, {
   Easing,
@@ -87,20 +87,24 @@ export default function Cards({ cards = [], color = "#7CB342" }) {
 
   // Swipe gesture for navigating between cards
   const swipe = Gesture.Pan()
-    .activeOffsetX([-15, 15])
+    .activeOffsetX([-20, 20])
+    .failOffsetY([-10, 10])
     .onEnd((event) => {
       "worklet";
-      if (event.velocityX < -200) {
+      const distance = Math.abs(event.translationX);
+      
+      // Require both velocity and distance for swipe
+      if (event.velocityX < -150 || (event.translationX < -50 && distance > 30)) {
         // Left swipe - go to next card
         runOnJS(goToNextCard)();
-      } else if (event.velocityX > 200) {
+      } else if (event.velocityX > 150 || (event.translationX > 50 && distance > 30)) {
         // Right swipe - go to previous card
         runOnJS(goToPrevCard)();
       }
     });
 
-  // Combine gestures
-  const gesture = Gesture.Exclusive(swipe, tap);
+  // Combine gestures - Race allows first successful gesture to win
+  const gesture = Gesture.Race(tap, swipe);
 
   // Animated styles for front face
   const frontAnimatedStyle = useAnimatedStyle(() => {
@@ -223,12 +227,17 @@ const styles = StyleSheet.create({
     alignItems: "center",
     position: "absolute",
     backgroundColor: "white",
-    // Enhanced shadow for more elegance
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.12,
-    shadowRadius: 6,
-    elevation: 3,
+    ...Platform.select({
+      ios: {
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 3 },
+        shadowOpacity: 0.12,
+        shadowRadius: 6,
+      },
+      android: {
+        elevation: 0,
+      },
+    }),
   },
   backCard: {
     borderWidth: 1,

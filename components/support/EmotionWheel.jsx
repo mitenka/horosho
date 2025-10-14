@@ -3,6 +3,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import React, { useEffect, useRef, useState } from "react";
 import {
   Animated,
+  Platform,
   ScrollView,
   StyleSheet,
   Text,
@@ -207,42 +208,50 @@ export default function EmotionWheel() {
           },
         ]}
       >
-        <LinearGradient
-          colors={
-            isSelected
-              ? emotionData[emotion].colors
-              : [
-                  `${emotionData[emotion].colors[0]}40`, // 25% opacity для неактивных
-                  `${emotionData[emotion].colors[1]}35`, // 21% opacity для неактивных
-                ]
-          }
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
+        <View
           style={[
-            styles.basicEmotionButton,
-            isSelected && styles.activeEmotionButton,
-            !isSelected && {
-              borderColor: emotionData[emotion].colors[0],
-              borderWidth: 1.5,
-            },
+            styles.borderWrapper,
+            isSelected
+              ? { borderWidth: 0 }
+              : {
+                  borderColor: emotionData[emotion].colors[0],
+                  borderWidth: 1.5,
+                },
           ]}
         >
-          <Text
-            style={[
+          <LinearGradient
+            colors={
               isSelected
-                ? styles.basicEmotionTextActive
-                : styles.basicEmotionTextInactive,
-              !isSelected && { color: emotionData[emotion].colors[0] },
-              isSelected && {
-                textShadowColor: "rgba(0,0,0,0.3)",
-                textShadowOffset: { width: 0, height: 1 },
-                textShadowRadius: 2,
-              },
+                ? emotionData[emotion].colors
+                : [
+                    `${emotionData[emotion].colors[0]}40`, // 25% opacity для неактивных
+                    `${emotionData[emotion].colors[1]}35`, // 21% opacity для неактивных
+                  ]
+            }
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={[
+              styles.basicEmotionButton,
+              isSelected && styles.activeEmotionButton,
             ]}
           >
-            {emotion}
-          </Text>
-        </LinearGradient>
+            <Text
+              style={[
+                isSelected
+                  ? styles.basicEmotionTextActive
+                  : styles.basicEmotionTextInactive,
+                !isSelected && { color: emotionData[emotion].colors[0] },
+                isSelected && {
+                  textShadowColor: "rgba(0,0,0,0.3)",
+                  textShadowOffset: { width: 0, height: 1 },
+                  textShadowRadius: 2,
+                },
+              ]}
+            >
+              {emotion}
+            </Text>
+          </LinearGradient>
+        </View>
       </Animated.View>
     );
   };
@@ -270,17 +279,17 @@ export default function EmotionWheel() {
       {/* Derivative emotions */}
       <View style={styles.derivativeGrid}>
         {emotionData[selectedEmotion].derivatives.map((derivative, index) => (
-          <Animated.Text
+          <Animated.View
             key={index}
             style={[
-              styles.derivativeText,
+              styles.derivativeTextWrapper,
               {
                 opacity: fadeAnim,
               },
             ]}
           >
-            {derivative}
-          </Animated.Text>
+            <Text style={styles.derivativeText}>{derivative}</Text>
+          </Animated.View>
         ))}
       </View>
     </View>
@@ -305,24 +314,40 @@ const styles = StyleSheet.create({
   emotionButtonContainer: {
     // Контейнер для анимации
   },
+  borderWrapper: {
+    borderRadius: 32,
+    overflow: "hidden",
+  },
   basicEmotionButton: {
     paddingHorizontal: 32,
     paddingVertical: 18,
     borderRadius: 32,
     minWidth: 110,
     alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.15,
-    shadowRadius: 8,
-    elevation: 6,
+    ...Platform.select({
+      ios: {
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.15,
+        shadowRadius: 8,
+      },
+      android: {
+        elevation: 0,
+      },
+    }),
   },
   activeEmotionButton: {
-    shadowColor: "#fff",
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.4,
-    shadowRadius: 12,
-    elevation: 12,
+    ...Platform.select({
+      ios: {
+        shadowColor: "#fff",
+        shadowOffset: { width: 0, height: 6 },
+        shadowOpacity: 0.4,
+        shadowRadius: 12,
+      },
+      android: {
+        elevation: 0,
+      },
+    }),
   },
   basicEmotionTextActive: {
     fontSize: 20,
@@ -340,19 +365,24 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
     gap: 16,
     paddingHorizontal: 4,
+    marginBottom: 24,
+  },
+  derivativeTextWrapper: {
+    backgroundColor: "rgba(255, 255, 255, 0.04)",
+    borderRadius: 8,
+    paddingHorizontal: 8,
+    paddingVertical: 6,
+    height: 34,
+    justifyContent: "center",
   },
   derivativeText: {
     fontSize: 19,
     fontWeight: "500",
     color: "#ffffff",
     letterSpacing: 0.3,
-    lineHeight: 26,
-    backgroundColor: "rgba(255, 255, 255, 0.04)",
-    borderRadius: 8,
-    paddingHorizontal: 8,
-    paddingVertical: 2,
     textShadowColor: "rgba(0, 0, 0, 0.3)",
     textShadowOffset: { width: 0, height: 1 },
     textShadowRadius: 2,
+    includeFontPadding: false,
   },
 });

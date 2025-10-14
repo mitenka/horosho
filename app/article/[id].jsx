@@ -135,6 +135,9 @@ export default function ArticleScreen() {
             headerLeft: () => (
               <CustomBackButton title="Назад" color="#f0f0f0" />
             ),
+            contentStyle: {
+              backgroundColor: "#2d2d4a",
+            },
           }}
         />
         <View style={styles.loadingContainer}>
@@ -160,6 +163,9 @@ export default function ArticleScreen() {
             headerLeft: () => (
               <CustomBackButton title="Назад" color="#f0f0f0" />
             ),
+            contentStyle: {
+              backgroundColor: "#2d2d4a",
+            },
           }}
         />
         <View style={styles.errorContainer}>
@@ -180,6 +186,9 @@ export default function ArticleScreen() {
           headerTintColor: "#f0f0f0",
           headerShadowVisible: false,
           headerLeft: () => <CustomBackButton title="Назад" color="#f0f0f0" />,
+          contentStyle: {
+            backgroundColor: "#2d2d4a",
+          },
         }}
       />
 
