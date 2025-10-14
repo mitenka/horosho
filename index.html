@@ -417,11 +417,13 @@
 
       // Store button interactions
       document.addEventListener("DOMContentLoaded", function () {
-        // Store button interactions
+        // Show alert only for placeholder links
         document.querySelectorAll(".store-btn").forEach((btn) => {
           btn.addEventListener("click", function (e) {
-            e.preventDefault();
-            alert("Приложение скоро будет доступно в магазинах!");
+            if (this.getAttribute("href") === "#") {
+              e.preventDefault();
+              alert("Приложение скоро будет доступно в магазинах!");
+            }
           });
         });
       });
