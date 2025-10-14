@@ -6,6 +6,7 @@ import {
   ActivityIndicator,
   FlatList,
   Modal,
+  Platform,
   ScrollView,
   StyleSheet,
   Text,
@@ -356,11 +357,18 @@ const styles = StyleSheet.create({
     borderStyle: "solid",
     borderColor: "rgba(160, 160, 208, 0.2)",
     padding: 2,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
+    overflow: "hidden",
+    ...Platform.select({
+      ios: {
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+      },
+      android: {
+        elevation: 0,
+      },
+    }),
   },
   exampleText: {
     fontSize: 17,
@@ -369,7 +377,14 @@ const styles = StyleSheet.create({
     color: "#d0d0e0",
     letterSpacing: 0.3,
     padding: 18,
-    backgroundColor: "rgba(45, 45, 65, 0.2)",
+    ...Platform.select({
+      ios: {
+        backgroundColor: "rgba(45, 45, 65, 0.2)",
+      },
+      android: {
+        backgroundColor: "transparent",
+      },
+    }),
     borderRadius: 10,
     fontWeight: "500",
   },

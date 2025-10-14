@@ -7,6 +7,7 @@ import { useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
   Dimensions,
+  Platform,
   ScrollView,
   StyleSheet,
   Text,
@@ -339,15 +340,29 @@ const styles = StyleSheet.create({
     paddingHorizontal: 28,
     borderWidth: 1,
     borderColor: "rgba(255, 255, 255, 0.15)",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.25,
-    shadowRadius: 6,
-    elevation: 4,
+    overflow: "hidden",
     minWidth: 240,
+    ...Platform.select({
+      ios: {
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 3 },
+        shadowOpacity: 0.25,
+        shadowRadius: 6,
+      },
+      android: {
+        elevation: 0,
+      },
+    }),
   },
   readButtonActive: {
-    shadowOpacity: 0.4,
+    ...Platform.select({
+      ios: {
+        shadowOpacity: 0.4,
+      },
+      android: {
+        elevation: 0,
+      },
+    }),
   },
   readIcon: {
     marginRight: 10,
