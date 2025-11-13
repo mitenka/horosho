@@ -103,6 +103,7 @@
       .store-text {
         display: flex;
         flex-direction: column;
+        text-align: left;
       }
 
       .store-label {
@@ -114,6 +115,26 @@
       .store-name {
         font-size: 18px;
         font-weight: 600;
+      }
+
+      /* Disabled Store Button */
+      .store-btn.disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        pointer-events: none;
+        background: rgba(0, 0, 0, 0.4);
+      }
+
+      .store-btn.disabled:hover {
+        transform: none;
+        box-shadow: none;
+      }
+
+      .coming-soon {
+        font-size: 11px;
+        opacity: 0.7;
+        margin-top: 2px;
+        font-style: italic;
       }
 
       /* Footer Links */
@@ -335,13 +356,13 @@
               <div class="store-name">App Store</div>
             </div>
           </a>
-          <!-- <a href="#" class="store-btn" aria-label="Доступно в Google Play">
+          <a href="#" class="store-btn disabled" aria-label="Google Play - скоро будет доступно">
             <div class="store-icon">🤖</div>
             <div class="store-text">
-              <div class="store-label">Доступно в</div>
+              <div class="store-label">Скоро будет доступно в</div>
               <div class="store-name">Google Play</div>
             </div>
-          </a> -->
+          </a>
           <a href="https://www.rustore.ru/catalog/app/app.mitenka.sojdet" class="store-btn" aria-label="Скачать в RuStore">
             <div class="store-icon">🇷🇺</div>
             <div class="store-text">
