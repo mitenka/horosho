@@ -1,25 +1,11 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { Tabs } from "expo-router";
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { Animated, Easing, View } from "react-native";
 
-function YinYang({ color, focused }) {
-  const rotateAnim = useRef(new Animated.Value(0)).current;
-
-  useEffect(() => {
-    if (focused) {
-      rotateAnim.setValue(0);
-      Animated.timing(rotateAnim, {
-        toValue: 1,
-        duration: 800,
-        easing: Easing.out(Easing.cubic),
-        useNativeDriver: true,
-      }).start();
-    }
-  }, [focused]);
-
-  const rotate = rotateAnim.interpolate({
+function YinYang({ color, spin }) {
+  const rotate = spin.interpolate({
     inputRange: [0, 1],
     outputRange: ["0deg", "360deg"],
   });
@@ -32,8 +18,29 @@ function YinYang({ color, focused }) {
 }
 
 export default function TabLayout() {
+  // The tab bar renders two copies of each icon (active and inactive) and
+  // cross-fades them, so the animation lives here and is shared by both.
+  const yinYangSpin = useRef(new Animated.Value(0)).current;
+
+  const spinYinYang = () => {
+    yinYangSpin.setValue(0);
+    Animated.timing(yinYangSpin, {
+      toValue: 1,
+      duration: 800,
+      easing: Easing.out(Easing.cubic),
+      useNativeDriver: true,
+    }).start();
+  };
+
   return (
     <Tabs
+      screenListeners={{
+        tabPress: (e) => {
+          if (e.target?.startsWith("support")) {
+            spinYinYang();
+          }
+        },
+      }}
       screenOptions={{
         headerShown: false,
         tabBarActiveTintColor: "#ffd700",
@@ -86,7 +93,7 @@ export default function TabLayout() {
                 marginTop: -5,
               }}
             >
-              <YinYang color={color} focused={focused} />
+              <YinYang color={color} spin={yinYangSpin} />
             </View>
           ),
         }}
