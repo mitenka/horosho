@@ -69,7 +69,7 @@ const emotionData = {
       "Жалость",
       "Отрешенность",
       "Отчаяние",
-      "Беспоспощность",
+      "Беспомощность",
       "Душевная боль",
       "Безнадежность",
       "Отчужденность",
@@ -136,9 +136,17 @@ const emotionData = {
   },
 };
 
+const MAX_DERIVATIVES = Math.max(
+  ...Object.values(emotionData).map((d) => d.derivatives.length)
+);
+
 export default function EmotionWheel() {
   const [selectedEmotion, setSelectedEmotion] = useState("Гнев");
-  const fadeAnim = useRef(new Animated.Value(1)).current;
+
+  // Один Animated.Value на чип, чтобы появление шло каскадом
+  const derivativeAnims = useRef(
+    Array.from({ length: MAX_DERIVATIVES }, () => new Animated.Value(1))
+  ).current;
 
   // Создаем анимации для каждой базовой эмоции
   const buttonAnimations = useRef(
@@ -154,18 +162,19 @@ export default function EmotionWheel() {
   const basicEmotions = Object.keys(emotionData);
 
   useEffect(() => {
-    // Smooth slide transition for derivative emotions when selection changes
-    Animated.timing(fadeAnim, {
-      toValue: 0,
-      duration: 0,
-      useNativeDriver: true,
-    }).start(() => {
-      Animated.timing(fadeAnim, {
-        toValue: 1,
-        duration: 300,
-        useNativeDriver: true,
-      }).start();
-    });
+    // Каскадное появление чипов производных эмоций
+    const count = emotionData[selectedEmotion].derivatives.length;
+    derivativeAnims.forEach((anim) => anim.setValue(0));
+    Animated.stagger(
+      18,
+      derivativeAnims.slice(0, count).map((anim) =>
+        Animated.timing(anim, {
+          toValue: 1,
+          duration: 220,
+          useNativeDriver: true,
+        })
+      )
+    ).start();
 
     // Анимируем кнопки при изменении выбранной эмоции
     basicEmotions.forEach((emotion) => {
@@ -284,7 +293,19 @@ export default function EmotionWheel() {
             style={[
               styles.derivativeTextWrapper,
               {
-                opacity: fadeAnim,
+                backgroundColor: `${emotionData[selectedEmotion].colors[0]}1f`,
+                borderColor: `${emotionData[selectedEmotion].colors[0]}55`,
+              },
+              {
+                opacity: derivativeAnims[index],
+                transform: [
+                  {
+                    translateY: derivativeAnims[index].interpolate({
+                      inputRange: [0, 1],
+                      outputRange: [6, 0],
+                    }),
+                  },
+                ],
               },
             ]}
           >
@@ -368,9 +389,9 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   derivativeTextWrapper: {
-    backgroundColor: "rgba(255, 255, 255, 0.04)",
     borderRadius: 8,
-    paddingHorizontal: 8,
+    borderWidth: 1,
+    paddingHorizontal: 10,
     paddingVertical: 6,
     height: 34,
     justifyContent: "center",
