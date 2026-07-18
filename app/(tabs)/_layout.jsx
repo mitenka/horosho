@@ -1,25 +1,23 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
-import MaskedView from "@react-native-masked-view/masked-view";
-import { LinearGradient } from "expo-linear-gradient";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { Tabs } from "expo-router";
 import { useEffect, useRef } from "react";
-import { Animated, View } from "react-native";
+import { Animated, Easing, View } from "react-native";
 
-function AnimatedGradientHeart({ focused }) {
+function YinYang({ color, focused }) {
   const rotateAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    const animate = () => {
-      Animated.loop(
-        Animated.timing(rotateAnim, {
-          toValue: 1,
-          duration: 3000,
-          useNativeDriver: true,
-        })
-      ).start();
-    };
-    animate();
-  }, []);
+    if (focused) {
+      rotateAnim.setValue(0);
+      Animated.timing(rotateAnim, {
+        toValue: 1,
+        duration: 800,
+        easing: Easing.out(Easing.cubic),
+        useNativeDriver: true,
+      }).start();
+    }
+  }, [focused]);
 
   const rotate = rotateAnim.interpolate({
     inputRange: [0, 1],
@@ -27,28 +25,9 @@ function AnimatedGradientHeart({ focused }) {
   });
 
   return (
-    <MaskedView
-      style={{ width: 52, height: 52 }}
-      maskElement={<Ionicons name="aperture-outline" size={52} color="#fff" />}
-    >
-      <Animated.View
-        style={{
-          width: 104,
-          height: 104,
-          transform: [{ rotate }],
-          position: "absolute",
-          left: -26,
-          top: -26,
-        }}
-      >
-        <LinearGradient
-          colors={["#ff6b6b", "#feca57", "#ff9ff3", "#48cae4", "#ff6b6b"]}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
-          style={{ width: 104, height: 104 }}
-        />
-      </Animated.View>
-    </MaskedView>
+    <Animated.View style={{ transform: [{ rotate }] }}>
+      <MaterialCommunityIcons name="yin-yang" size={48} color={color} />
+    </Animated.View>
   );
 }
 
@@ -107,7 +86,7 @@ export default function TabLayout() {
                 marginTop: -5,
               }}
             >
-              <AnimatedGradientHeart focused={focused} />
+              <YinYang color={color} focused={focused} />
             </View>
           ),
         }}
