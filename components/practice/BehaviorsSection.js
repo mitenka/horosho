@@ -11,6 +11,7 @@ import ActionButtons from "./ActionButtons";
 import AddBehaviorModal from "./AddBehaviorModal";
 import AddButton from "./AddButton";
 import BehaviorsList from "./BehaviorsList";
+import DailyComment from "./DailyComment";
 import DailyStateAssessment from "./DailyStateAssessment";
 import DiaryCompletionToggle from "./DiaryCompletionToggle";
 import EmptyState from "./EmptyState";
@@ -180,6 +181,8 @@ const BehaviorsSection = ({ selectedDate }) => {
       <SkillsAssessment selectedDate={selectedDate} />
 
       <UsedSkills />
+
+      <DailyComment selectedDate={selectedDate} />
 
       <AddBehaviorModal
         visible={showAddModal}

@@ -50,6 +50,7 @@ export default function Index() {
         ]}
         showsVerticalScrollIndicator={false}
         bounces={true}
+        automaticallyAdjustKeyboardInsets
       >
         <BehaviorsSection selectedDate={selectedDate} onAddBehavior={handleOpenAddBehaviorModal} />
       </ScrollView>

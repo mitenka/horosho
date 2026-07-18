@@ -220,8 +220,11 @@ export const removeBehaviorEntry = async (dateString, behaviorId) => {
       (b) => b.id !== behaviorId
     );
 
-    // If no behaviors left for this date, remove the date entry
-    if (entries[dateString].behaviors.length === 0) {
+    // If nothing left for this date (no behaviors and no other data), remove the date entry
+    if (
+      entries[dateString].behaviors.length === 0 &&
+      Object.keys(entries[dateString]).length === 1
+    ) {
       delete entries[dateString];
     }
 
@@ -507,6 +510,55 @@ export const getUsedSkills = async (dateString) => {
   } catch (error) {
     console.error("Error getting used skills:", error);
     return [];
+  }
+};
+
+/**
+ * Saves a free-text daily comment for a specific date
+ * @param {string} dateString - Date in YYYY-MM-DD format
+ * @param {string} comment - Comment text (empty or whitespace-only removes the property)
+ * @returns {Promise<boolean>} - Whether the operation was successful
+ */
+export const saveDailyComment = async (dateString, comment) => {
+  try {
+    const entries = await getDiaryEntries();
+
+    if (!entries[dateString]) {
+      entries[dateString] = { behaviors: [] };
+    }
+
+    const trimmed = typeof comment === "string" ? comment.trim() : "";
+
+    if (trimmed) {
+      entries[dateString].comment = trimmed;
+    } else {
+      // Remove the property entirely when empty
+      delete entries[dateString].comment;
+    }
+
+    await AsyncStorage.setItem(
+      STORAGE_KEYS.DIARY_ENTRIES,
+      JSON.stringify(entries)
+    );
+    return true;
+  } catch (error) {
+    console.error("Error saving daily comment:", error);
+    return false;
+  }
+};
+
+/**
+ * Gets the daily comment for a specific date
+ * @param {string} dateString - Date in YYYY-MM-DD format
+ * @returns {Promise<string>} - Comment text or empty string
+ */
+export const getDailyComment = async (dateString) => {
+  try {
+    const entries = await getDiaryEntries();
+    return entries[dateString]?.comment || "";
+  } catch (error) {
+    console.error("Error getting daily comment:", error);
+    return "";
   }
 };
 

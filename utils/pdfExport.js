@@ -51,6 +51,14 @@ function dayHeaders(dates) {
   });
 }
 
+function escapeHtml(text) {
+  return String(text)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
 function sanitizeSkillName(name) {
   try {
     return String(name).replace(/\*\*/g, "").trim();
@@ -311,6 +319,38 @@ function buildPracticeTableHtml({ dates, entries }) {
   </div>`;
 }
 
+function buildCommentsHtml({ dates, entries }) {
+  const items = dates
+    .map((date) => ({ date, comment: entries[toDateKey(date)]?.comment }))
+    .filter((item) => typeof item.comment === "string" && item.comment.trim());
+
+  if (!items.length) return "";
+
+  const fmt = (dt) =>
+    dt.toLocaleDateString("ru-RU", {
+      weekday: "short",
+      day: "numeric",
+      month: "long",
+    });
+
+  return `
+  <div class="comments">
+    <div class="comments-title">Комментарии</div>
+    ${items
+      .map(
+        (item) => `
+    <div class="comment-item">
+      <div class="comment-date">${fmt(item.date)}</div>
+      <div class="comment-text">${escapeHtml(item.comment).replace(
+        /\n/g,
+        "<br/>"
+      )}</div>
+    </div>`
+      )
+      .join("")}
+  </div>`;
+}
+
 function makeHtml({
   fontRegularSrc,
   fontBoldSrc,
@@ -346,10 +386,16 @@ function makeHtml({
   .dom { font-size: 14px; font-weight: 700; color: #111; white-space: nowrap; }
   .danger { color: #7f1d1d; font-weight: 700; background: #fee2e2; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   .practice-page { page-break-before: always; padding-top: 6mm; }
+  .comments { margin-top: 16px; }
+  .comments-title { font-weight: 700; font-size: 14px; margin-bottom: 8px; }
+  .comment-item { margin-bottom: 8px; page-break-inside: avoid; }
+  .comment-date { font-weight: 700; font-size: 11px; color: #667085; margin-bottom: 2px; }
+  .comment-text { font-size: 12px; }
 </style>
 </head>
 <body>
   ${buildMainTableHtml({ dates, entries, behaviors, control })}
+  ${buildCommentsHtml({ dates, entries })}
   ${buildPracticeTableHtml({ dates, entries })}
 </body>
 </html>`;
