@@ -125,10 +125,10 @@ const styles = StyleSheet.create({
   scaleButtons: {
     flexDirection: "row",
     justifyContent: "space-between",
-    paddingHorizontal: 4,
+    gap: 6,
   },
   scaleButton: {
-    width: 44,
+    flex: 1,
     height: 44,
     borderRadius: 12,
     backgroundColor: "rgba(255, 255, 255, 0.1)",
