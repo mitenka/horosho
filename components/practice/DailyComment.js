@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import {
   AppState,
+  Keyboard,
   Platform,
   StyleSheet,
   Text,
@@ -12,12 +13,17 @@ import { formatDateToString } from "../../utils/dateUtils";
 
 const MAX_COMMENT_LENGTH = 2000;
 
-const DailyComment = ({ selectedDate }) => {
+const DailyComment = ({ selectedDate, scrollViewRef }) => {
   const [comment, setComment] = useState("");
   // Refs so flush() sees the latest values when called from cleanup or AppState
   const commentRef = useRef("");
   const dateStringRef = useRef(null);
   const lastSavedRef = useRef("");
+  const isFocusedRef = useRef(false);
+
+  const scrollToInput = () => {
+    scrollViewRef?.current?.scrollToEnd({ animated: true });
+  };
 
   const flush = async () => {
     if (!dateStringRef.current) return;
@@ -68,6 +74,29 @@ const DailyComment = ({ selectedDate }) => {
     };
   }, []);
 
+  // Scroll the input above the keyboard once it has appeared; the small delay
+  // lets the ScrollView apply its keyboard padding/insets first
+  useEffect(() => {
+    const subscription = Keyboard.addListener("keyboardDidShow", () => {
+      if (isFocusedRef.current) {
+        setTimeout(() => {
+          scrollViewRef?.current?.scrollToEnd({ animated: true });
+        }, 100);
+      }
+    });
+
+    return () => subscription.remove();
+  }, [scrollViewRef]);
+
+  const handleFocus = () => {
+    isFocusedRef.current = true;
+  };
+
+  const handleBlur = () => {
+    isFocusedRef.current = false;
+    flush();
+  };
+
   const handleChangeText = (text) => {
     setComment(text);
     commentRef.current = text;
@@ -85,8 +114,15 @@ const DailyComment = ({ selectedDate }) => {
           style={styles.input}
           value={comment}
           onChangeText={handleChangeText}
-          onBlur={flush}
-          placeholder="Что повлияло на ваше состояние сегодня?"
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          onContentSizeChange={() => {
+            // Keep the cursor visible while the multiline input grows
+            if (isFocusedRef.current) {
+              scrollToInput();
+            }
+          }}
+          placeholder="Заметка о дне…"
           placeholderTextColor="rgba(255, 255, 255, 0.5)"
           multiline
           scrollEnabled={false}
@@ -103,7 +139,6 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "700",
     color: "#fff",
-    marginTop: 24,
     marginBottom: 16,
     textAlign: "left",
     letterSpacing: 0.4,

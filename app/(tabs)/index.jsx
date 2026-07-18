@@ -1,7 +1,14 @@
 import { useScrollToTop } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
-import { useRef, useState } from "react";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { useEffect, useRef, useState } from "react";
+import {
+  Keyboard,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import AddBehaviorModal from "../../components/practice/AddBehaviorModal";
 import BehaviorsSection from "../../components/practice/BehaviorsSection";
@@ -14,8 +21,28 @@ export default function Index() {
   const [isAddBehaviorModalVisible, setIsAddBehaviorModalVisible] =
     useState(false);
   const { selectedDate, selectDate } = useData();
+  const [keyboardPadding, setKeyboardPadding] = useState(0);
 
   useScrollToTop(scrollViewRef);
+
+  // With edge-to-edge enabled the Android keyboard overlays the window instead
+  // of resizing it, so reserve space for it manually (iOS is handled by
+  // automaticallyAdjustKeyboardInsets on the ScrollView)
+  useEffect(() => {
+    if (Platform.OS !== "android") return;
+
+    const showSubscription = Keyboard.addListener("keyboardDidShow", (e) =>
+      setKeyboardPadding(e.endCoordinates.height)
+    );
+    const hideSubscription = Keyboard.addListener("keyboardDidHide", () =>
+      setKeyboardPadding(0)
+    );
+
+    return () => {
+      showSubscription.remove();
+      hideSubscription.remove();
+    };
+  }, []);
 
   const handleDaySelected = (date) => {
     selectDate(date);
@@ -46,13 +73,20 @@ export default function Index() {
         style={styles.scrollView}
         contentContainerStyle={[
           styles.scrollViewContent,
-          { paddingBottom: insets.bottom + 16 },
+          {
+            paddingBottom:
+              keyboardPadding > 0 ? keyboardPadding + 16 : insets.bottom + 16,
+          },
         ]}
         showsVerticalScrollIndicator={false}
         bounces={true}
         automaticallyAdjustKeyboardInsets
       >
-        <BehaviorsSection selectedDate={selectedDate} onAddBehavior={handleOpenAddBehaviorModal} />
+        <BehaviorsSection
+          selectedDate={selectedDate}
+          onAddBehavior={handleOpenAddBehaviorModal}
+          scrollViewRef={scrollViewRef}
+        />
       </ScrollView>
 
       <AddBehaviorModal

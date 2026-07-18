@@ -19,7 +19,7 @@ import ExportModal from "./ExportModal";
 import SkillsAssessment from "./SkillsAssessment";
 import UsedSkills from "./UsedSkills";
 
-const BehaviorsSection = ({ selectedDate }) => {
+const BehaviorsSection = ({ selectedDate, scrollViewRef }) => {
   const { behaviors, deleteBehavior, isLoadingBehaviors } = useData();
   const [isDeleting, setIsDeleting] = useState(false);
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -182,7 +182,7 @@ const BehaviorsSection = ({ selectedDate }) => {
 
       <UsedSkills />
 
-      <DailyComment selectedDate={selectedDate} />
+      <DailyComment selectedDate={selectedDate} scrollViewRef={scrollViewRef} />
 
       <AddBehaviorModal
         visible={showAddModal}

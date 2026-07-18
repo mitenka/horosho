@@ -285,9 +285,7 @@ const UsedSkills = () => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    marginBottom: 24,
-  },
+  container: {},
   titleContainer: {
     flexDirection: "column",
     alignItems: "flex-start",
