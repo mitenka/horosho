@@ -1,5 +1,5 @@
 import * as Haptics from "expo-haptics";
-import { LinearGradient } from "expo-linear-gradient";
+import GradientBackground from "../GradientBackground";
 import React, { useEffect, useRef, useState } from "react";
 import {
   Animated,
@@ -219,7 +219,7 @@ export default function EmotionWheel() {
                 },
           ]}
         >
-          <LinearGradient
+          <GradientBackground
             colors={
               isSelected
                 ? emotionData[emotion].colors
@@ -250,7 +250,7 @@ export default function EmotionWheel() {
             >
               {emotion}
             </Text>
-          </LinearGradient>
+          </GradientBackground>
         </View>
       </Animated.View>
     );

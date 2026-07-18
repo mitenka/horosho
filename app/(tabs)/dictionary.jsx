@@ -1,6 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useScrollToTop } from "@react-navigation/native";
-import { LinearGradient } from "expo-linear-gradient";
+import GradientBackground from "../../components/GradientBackground";
 import { useMemo, useRef, useState } from "react";
 import {
   ActivityIndicator,
@@ -79,7 +79,7 @@ export default function Dictionary() {
   // Show loading indicator if data is being loaded
   if (isLoading) {
     return (
-      <LinearGradient
+      <GradientBackground
         colors={["#3a3a5e", "#2d2d4a"]}
         style={[styles.container, { paddingTop: insets.top + 8 }]}
       >
@@ -90,14 +90,14 @@ export default function Dictionary() {
           <ActivityIndicator size="large" color="#a0a0d0" />
           <Text style={styles.loadingText}>Загрузка словаря...</Text>
         </View>
-      </LinearGradient>
+      </GradientBackground>
     );
   }
 
   // Show error message if something went wrong
   if (error) {
     return (
-      <LinearGradient
+      <GradientBackground
         colors={["#3a3a5e", "#2d2d4a"]}
         style={[styles.container, { paddingTop: insets.top + 8 }]}
       >
@@ -109,12 +109,12 @@ export default function Dictionary() {
             Произошла ошибка при загрузке словаря
           </Text>
         </View>
-      </LinearGradient>
+      </GradientBackground>
     );
   }
 
   return (
-    <LinearGradient
+    <GradientBackground
       colors={["#3a3a5e", "#2d2d4a"]}
       style={[styles.container, { paddingTop: insets.top + 8 }]}
     >
@@ -240,7 +240,7 @@ export default function Dictionary() {
           </View>
         </View>
       </Modal>
-    </LinearGradient>
+    </GradientBackground>
   );
 }
 

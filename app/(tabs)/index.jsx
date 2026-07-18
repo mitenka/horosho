@@ -1,5 +1,5 @@
 import { useScrollToTop } from "@react-navigation/native";
-import { LinearGradient } from "expo-linear-gradient";
+import GradientBackground from "../../components/GradientBackground";
 import { useEffect, useRef, useState } from "react";
 import {
   Keyboard,
@@ -56,7 +56,7 @@ export default function Index() {
     setIsAddBehaviorModalVisible(false);
   };
   return (
-    <LinearGradient
+    <GradientBackground
       colors={["#3a3a5e", "#2d2d4a"]}
       style={[styles.container, { paddingTop: insets.top + 8 }]}
     >
@@ -93,7 +93,7 @@ export default function Index() {
         visible={isAddBehaviorModalVisible}
         onClose={handleCloseAddBehaviorModal}
       />
-    </LinearGradient>
+    </GradientBackground>
   );
 }
 

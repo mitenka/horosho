@@ -1,5 +1,5 @@
 import { useScrollToTop } from "@react-navigation/native";
-import { LinearGradient } from "expo-linear-gradient";
+import GradientBackground from "../../components/GradientBackground";
 import React, { useRef } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -15,7 +15,7 @@ export default function SupportScreen() {
   useScrollToTop(scrollViewRef);
 
   return (
-    <LinearGradient
+    <GradientBackground
       colors={["#4a5568", "#667eea", "#b794f6"]}
       locations={[0, 0.5, 1]}
       start={{ x: 0, y: 0 }}
@@ -52,7 +52,7 @@ export default function SupportScreen() {
           <TherapyAssumptions />
         </View>
       </ScrollView>
-    </LinearGradient>
+    </GradientBackground>
   );
 }
 

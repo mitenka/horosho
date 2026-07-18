@@ -1,6 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useScrollToTop } from "@react-navigation/native";
-import { LinearGradient } from "expo-linear-gradient";
+import GradientBackground from "../../components/GradientBackground";
 import { useEffect, useRef, useState } from "react";
 import {
   Alert,
@@ -222,7 +222,7 @@ export default function Settings() {
   };
 
   return (
-    <LinearGradient
+    <GradientBackground
       colors={["#3a3a5e", "#2d2d4a"]}
       style={[styles.container, { paddingTop: insets.top + 8 }]}
     >
@@ -400,7 +400,7 @@ export default function Settings() {
         visible={easterEggVisible}
         onClose={handleCloseEasterEgg}
       />
-    </LinearGradient>
+    </GradientBackground>
   );
 }
 

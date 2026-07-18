@@ -1,5 +1,5 @@
 import { useScrollToTop } from "@react-navigation/native";
-import { LinearGradient } from "expo-linear-gradient";
+import GradientBackground from "../../components/GradientBackground";
 import { router } from "expo-router";
 import { useRef } from "react";
 import {
@@ -30,7 +30,7 @@ export default function Theory() {
   // Show loading indicator if data is being loaded
   if (isLoading) {
     return (
-      <LinearGradient
+      <GradientBackground
         colors={["#3a3a5e", "#2d2d4a"]}
         style={[styles.container, { paddingTop: insets.top + 8 }]}
       >
@@ -41,14 +41,14 @@ export default function Theory() {
           <ActivityIndicator size="large" color="#c8c8e0" />
           <Text style={styles.loadingText}>Загрузка данных...</Text>
         </View>
-      </LinearGradient>
+      </GradientBackground>
     );
   }
 
   // Show error message if something went wrong
   if (error) {
     return (
-      <LinearGradient
+      <GradientBackground
         colors={["#3a3a5e", "#2d2d4a"]}
         style={[styles.container, { paddingTop: insets.top + 8 }]}
       >
@@ -58,12 +58,12 @@ export default function Theory() {
         <View style={styles.errorContainer}>
           <Text style={styles.errorText}>Произошла ошибка при загрузке</Text>
         </View>
-      </LinearGradient>
+      </GradientBackground>
     );
   }
 
   return (
-    <LinearGradient
+    <GradientBackground
       colors={["#3a3a5e", "#2d2d4a"]}
       style={[styles.container, { paddingTop: insets.top + 8 }]}
     >
@@ -121,7 +121,7 @@ export default function Theory() {
           ))
         )}
       </ScrollView>
-    </LinearGradient>
+    </GradientBackground>
   );
 }
 

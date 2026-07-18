@@ -1,6 +1,6 @@
-import { LinearGradient } from "expo-linear-gradient";
 import React, { useEffect, useState } from "react";
 import { Platform, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import GradientBackground from "../GradientBackground";
 import { getDailyState, saveDailyState } from "../../services/diaryService";
 import { formatDateToString } from "../../utils/dateUtils";
 
@@ -76,7 +76,7 @@ const DailyStateAssessment = ({ selectedDate }) => {
   };
 
   return (
-    <LinearGradient
+    <GradientBackground
       colors={[
         "rgba(255, 215, 0, 0.05)",
         "rgba(255, 255, 255, 0.08)",
@@ -89,7 +89,7 @@ const DailyStateAssessment = ({ selectedDate }) => {
       {renderScale("pleasure", "Удовольствие")}
 
       <Text style={styles.helperText}>0 — совсем нет, 5 — максимально</Text>
-    </LinearGradient>
+    </GradientBackground>
   );
 };
 

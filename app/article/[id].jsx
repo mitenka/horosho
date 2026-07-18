@@ -1,6 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import * as Haptics from "expo-haptics";
-import { LinearGradient } from "expo-linear-gradient";
+import GradientBackground from "../../components/GradientBackground";
 import { Stack, useLocalSearchParams } from "expo-router";
 import LottieView from "lottie-react-native";
 import { useEffect, useRef, useState } from "react";
@@ -124,7 +124,7 @@ export default function ArticleScreen() {
   // Show loading indicator if data is being loaded
   if (isLoading) {
     return (
-      <LinearGradient colors={["#3a3a5e", "#2d2d4a"]} style={styles.container}>
+      <GradientBackground colors={["#3a3a5e", "#2d2d4a"]} style={styles.container}>
         <Stack.Screen
           options={{
             title: "",
@@ -145,14 +145,14 @@ export default function ArticleScreen() {
           <ActivityIndicator size="large" color="#c8c8e0" />
           <Text style={styles.loadingText}>Загрузка статьи...</Text>
         </View>
-      </LinearGradient>
+      </GradientBackground>
     );
   }
 
   // Show message if article not found
   if (!article) {
     return (
-      <LinearGradient colors={["#3a3a5e", "#2d2d4a"]} style={styles.container}>
+      <GradientBackground colors={["#3a3a5e", "#2d2d4a"]} style={styles.container}>
         <Stack.Screen
           options={{
             title: "",
@@ -172,12 +172,12 @@ export default function ArticleScreen() {
         <View style={styles.errorContainer}>
           <Text style={styles.errorText}>Статья не найдена</Text>
         </View>
-      </LinearGradient>
+      </GradientBackground>
     );
   }
 
   return (
-    <LinearGradient colors={["#3a3a5e", "#2d2d4a"]} style={styles.container}>
+    <GradientBackground colors={["#3a3a5e", "#2d2d4a"]} style={styles.container}>
       <Stack.Screen
         options={{
           title: "",
@@ -268,7 +268,7 @@ export default function ArticleScreen() {
           />
         </View>
       )}
-    </LinearGradient>
+    </GradientBackground>
   );
 }
 

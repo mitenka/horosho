@@ -1,5 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
-import { LinearGradient } from "expo-linear-gradient";
+import GradientBackground from "../../components/GradientBackground";
 import { router, Stack, useLocalSearchParams } from "expo-router";
 import { useRef } from "react";
 import {
@@ -29,7 +29,7 @@ export default function BlockArticles() {
   };
 
   return (
-    <LinearGradient colors={["#3a3a5e", "#2d2d4a"]} style={styles.container}>
+    <GradientBackground colors={["#3a3a5e", "#2d2d4a"]} style={styles.container}>
       <Stack.Screen
         options={{
           title: "",
@@ -115,7 +115,7 @@ export default function BlockArticles() {
           })
         )}
       </ScrollView>
-    </LinearGradient>
+    </GradientBackground>
   );
 }
 
