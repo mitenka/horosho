@@ -136,17 +136,8 @@ const emotionData = {
   },
 };
 
-const MAX_DERIVATIVES = Math.max(
-  ...Object.values(emotionData).map((d) => d.derivatives.length)
-);
-
 export default function EmotionWheel() {
   const [selectedEmotion, setSelectedEmotion] = useState("Гнев");
-
-  // Один Animated.Value на чип, чтобы появление шло каскадом
-  const derivativeAnims = useRef(
-    Array.from({ length: MAX_DERIVATIVES }, () => new Animated.Value(1))
-  ).current;
 
   // Создаем анимации для каждой базовой эмоции
   const buttonAnimations = useRef(
@@ -162,20 +153,6 @@ export default function EmotionWheel() {
   const basicEmotions = Object.keys(emotionData);
 
   useEffect(() => {
-    // Каскадное появление чипов производных эмоций
-    const count = emotionData[selectedEmotion].derivatives.length;
-    derivativeAnims.forEach((anim) => anim.setValue(0));
-    Animated.stagger(
-      18,
-      derivativeAnims.slice(0, count).map((anim) =>
-        Animated.timing(anim, {
-          toValue: 1,
-          duration: 220,
-          useNativeDriver: true,
-        })
-      )
-    ).start();
-
     // Анимируем кнопки при изменении выбранной эмоции
     basicEmotions.forEach((emotion) => {
       const isSelected = emotion === selectedEmotion;
@@ -288,7 +265,7 @@ export default function EmotionWheel() {
       {/* Derivative emotions */}
       <View style={styles.derivativeGrid}>
         {emotionData[selectedEmotion].derivatives.map((derivative, index) => (
-          <Animated.View
+          <View
             key={index}
             style={[
               styles.derivativeTextWrapper,
@@ -296,21 +273,10 @@ export default function EmotionWheel() {
                 backgroundColor: `${emotionData[selectedEmotion].colors[0]}1f`,
                 borderColor: `${emotionData[selectedEmotion].colors[0]}55`,
               },
-              {
-                opacity: derivativeAnims[index],
-                transform: [
-                  {
-                    translateY: derivativeAnims[index].interpolate({
-                      inputRange: [0, 1],
-                      outputRange: [6, 0],
-                    }),
-                  },
-                ],
-              },
             ]}
           >
             <Text style={styles.derivativeText}>{derivative}</Text>
-          </Animated.View>
+          </View>
         ))}
       </View>
     </View>
