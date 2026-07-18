@@ -1,8 +1,19 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import * as Haptics from "expo-haptics";
 import { Tabs } from "expo-router";
 import { useRef } from "react";
 import { Animated, Easing, View } from "react-native";
+
+function TabIcon({ name, focused, color }) {
+  return (
+    <Ionicons
+      name={focused ? name : `${name}-outline`}
+      size={24}
+      color={color}
+    />
+  );
+}
 
 function YinYang({ color, spin }) {
   const rotate = spin.interpolate({
@@ -36,6 +47,7 @@ export default function TabLayout() {
     <Tabs
       screenListeners={{
         tabPress: (e) => {
+          Haptics.selectionAsync();
           if (e.target?.startsWith("support")) {
             spinYinYang();
           }
@@ -45,6 +57,12 @@ export default function TabLayout() {
         headerShown: false,
         tabBarActiveTintColor: "#ffd700",
         tabBarInactiveTintColor: "#cccccc",
+        tabBarHideOnKeyboard: true,
+        tabBarLabelStyle: {
+          fontSize: 11,
+          fontWeight: "500",
+          letterSpacing: 0.2,
+        },
         tabBarStyle: {
           backgroundColor: "#323248",
           borderTopWidth: 0,
@@ -56,11 +74,7 @@ export default function TabLayout() {
         options={{
           title: "Практика",
           tabBarIcon: ({ focused, color }) => (
-            <Ionicons
-              name={focused ? "flask" : "flask-outline"}
-              size={24}
-              color={color}
-            />
+            <TabIcon name="flask" focused={focused} color={color} />
           ),
         }}
       />
@@ -69,11 +83,7 @@ export default function TabLayout() {
         options={{
           title: "Теория",
           tabBarIcon: ({ focused, color }) => (
-            <Ionicons
-              name={focused ? "school" : "school-outline"}
-              size={24}
-              color={color}
-            />
+            <TabIcon name="school" focused={focused} color={color} />
           ),
         }}
       />
@@ -103,11 +113,7 @@ export default function TabLayout() {
         options={{
           title: "Словарь",
           tabBarIcon: ({ focused, color }) => (
-            <Ionicons
-              name={focused ? "book" : "book-outline"}
-              size={24}
-              color={color}
-            />
+            <TabIcon name="book" focused={focused} color={color} />
           ),
         }}
       />
@@ -116,11 +122,7 @@ export default function TabLayout() {
         options={{
           title: "Настройка",
           tabBarIcon: ({ focused, color }) => (
-            <Ionicons
-              name={focused ? "settings" : "settings-outline"}
-              size={24}
-              color={color}
-            />
+            <TabIcon name="settings" focused={focused} color={color} />
           ),
         }}
       />
