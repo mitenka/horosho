@@ -1,10 +1,12 @@
 import { Ionicons } from "@expo/vector-icons";
+import DateTimePicker from "@react-native-community/datetimepicker";
 import { useScrollToTop } from "@react-navigation/native";
 import GradientBackground from "../../components/GradientBackground";
 import { useEffect, useRef, useState } from "react";
 import {
   Alert,
   Linking,
+  Platform,
   ScrollView,
   StyleSheet,
   Switch,
@@ -24,6 +26,26 @@ import {
   resetReadingProgress,
 } from "../../services/dataService";
 import { clearBehaviors, clearDiaryHistory } from "../../services/diaryService";
+import {
+  cancelDiaryReminders,
+  ensureNotificationPermissions,
+  rescheduleDiaryReminders,
+} from "../../services/reminderService";
+
+const parseReminderTimeToDate = (timeString) => {
+  const [hours = 20, minutes = 0] = (timeString || "20:00")
+    .split(":")
+    .map(Number);
+  const date = new Date();
+  date.setHours(hours, minutes, 0, 0);
+  return date;
+};
+
+const formatReminderTime = (date) => {
+  const hours = String(date.getHours()).padStart(2, "0");
+  const minutes = String(date.getMinutes()).padStart(2, "0");
+  return `${hours}:${minutes}`;
+};
 
 const APP_VERSION = appJson.expo.version;
 
@@ -42,6 +64,8 @@ export default function Settings() {
     lastUpdateCheck: null,
   });
   const { loadData, settings, updateSetting } = useData();
+
+  const [showReminderTimePicker, setShowReminderTimePicker] = useState(false);
 
   const [easterEggVisible, setEasterEggVisible] = useState(false);
   const [versionTapCount, setVersionTapCount] = useState(0);
@@ -71,6 +95,48 @@ export default function Settings() {
 
   const handleOpenLink = (url) => {
     Linking.openURL(url);
+  };
+
+  const handleReminderToggle = async (value) => {
+    if (value) {
+      const granted = await ensureNotificationPermissions();
+      if (!granted) {
+        Alert.alert(
+          "Нет доступа к уведомлениям",
+          "Разрешите уведомления в настройках системы, чтобы получать напоминания.",
+          [
+            { text: "Отмена", style: "cancel" },
+            {
+              text: "Открыть настройки",
+              onPress: () => Linking.openSettings(),
+            },
+          ]
+        );
+        return;
+      }
+    }
+
+    await updateSetting("diaryReminderEnabled", value);
+    if (value) {
+      await rescheduleDiaryReminders();
+    } else {
+      await cancelDiaryReminders();
+    }
+  };
+
+  const handleReminderTimeChange = async (event, date) => {
+    if (Platform.OS === "android") {
+      setShowReminderTimePicker(false);
+      if (event.type !== "set" || !date) {
+        return;
+      }
+    }
+    if (!date) {
+      return;
+    }
+
+    await updateSetting("diaryReminderTime", formatReminderTime(date));
+    await rescheduleDiaryReminders();
   };
 
   const handleResetProgress = async () => {
@@ -264,6 +330,56 @@ export default function Settings() {
               style={styles.settingSwitch}
             />
           </View>
+
+          <View style={styles.settingRow}>
+            <Text style={styles.settingLabel}>
+              Напоминать о дневниковой карточке
+            </Text>
+            <Switch
+              value={settings?.diaryReminderEnabled}
+              onValueChange={handleReminderToggle}
+              trackColor={{ false: "#3a3a5e", true: "#6e6ea0" }}
+              thumbColor={
+                settings?.diaryReminderEnabled ? "#f0f0f0" : "#a0a0c0"
+              }
+              ios_backgroundColor="#3a3a5e"
+              style={styles.settingSwitch}
+            />
+          </View>
+
+          {settings?.diaryReminderEnabled && (
+            <View style={styles.settingRow}>
+              <Text style={styles.settingLabel}>Время напоминания</Text>
+              {Platform.OS === "ios" ? (
+                <DateTimePicker
+                  mode="time"
+                  display="compact"
+                  themeVariant="dark"
+                  value={parseReminderTimeToDate(settings?.diaryReminderTime)}
+                  onChange={handleReminderTimeChange}
+                />
+              ) : (
+                <TouchableOpacity
+                  style={styles.timeButton}
+                  onPress={() => setShowReminderTimePicker(true)}
+                >
+                  <Text style={styles.timeButtonText}>
+                    {settings?.diaryReminderTime || "20:00"}
+                  </Text>
+                </TouchableOpacity>
+              )}
+            </View>
+          )}
+
+          {showReminderTimePicker && Platform.OS === "android" && (
+            <DateTimePicker
+              mode="time"
+              display="default"
+              is24Hour={true}
+              value={parseReminderTimeToDate(settings?.diaryReminderTime)}
+              onChange={handleReminderTimeChange}
+            />
+          )}
         </View>
 
         <View style={styles.infoContainer}>
@@ -572,6 +688,17 @@ const styles = StyleSheet.create({
   },
   settingSwitch: {
     transform: [{ scaleX: 1.1 }, { scaleY: 1.1 }],
+  },
+  timeButton: {
+    backgroundColor: "rgba(74, 74, 106, 0.9)",
+    borderRadius: 10,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+  },
+  timeButtonText: {
+    color: "#f0f0f0",
+    fontSize: 17,
+    fontFamily: "monospace",
   },
   infoContainer: {
     backgroundColor: "rgba(50, 50, 72, 0.9)",

@@ -2,7 +2,7 @@
   "expo": {
     "name": "Сойдёт",
     "slug": "horosho",
-    "version": "1.5.0",
+    "version": "1.6.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "horosho",
@@ -47,7 +47,13 @@
       ],
       "expo-asset",
       "expo-font",
-      "expo-web-browser"
+      "expo-web-browser",
+      [
+        "expo-notifications",
+        {
+          "color": "#6e6ea0"
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true

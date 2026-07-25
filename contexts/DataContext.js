@@ -5,6 +5,7 @@ import {
   initializeData,
   updateSetting,
 } from "../services/dataService";
+import { rescheduleDiaryReminders } from "../services/reminderService";
 
 import { useBehaviorsContext } from "./behaviorsContext";
 import { useContentContext } from "./contentContext";
@@ -17,7 +18,11 @@ const DataContext = createContext();
 export const DataProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [settings, setSettings] = useState({ useFeminineVerbs: true });
+  const [settings, setSettings] = useState({
+    useFeminineVerbs: true,
+    diaryReminderEnabled: false,
+    diaryReminderTime: "20:00",
+  });
 
   const contentContext = useContentContext();
   const readingProgressContext = useReadingProgressContext();
@@ -64,6 +69,8 @@ export const DataProvider = ({ children }) => {
         const currentSettings = await getSettings();
         setSettings(currentSettings);
 
+        rescheduleDiaryReminders();
+
         await loadData();
 
         await Promise.all([
@@ -96,6 +103,7 @@ export const DataProvider = ({ children }) => {
           loadReadingProgress,
           updateBlockProgress
         );
+        rescheduleDiaryReminders();
       }
 
       appStateRef.current = nextAppState;

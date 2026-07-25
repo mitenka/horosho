@@ -41,6 +41,8 @@ export const initializeSettings = async () => {
     // Define default settings
     const defaultSettings = {
       useFeminineVerbs: true,
+      diaryReminderEnabled: false,
+      diaryReminderTime: "20:00",
     };
     
     // Merge existing settings with defaults for any missing settings

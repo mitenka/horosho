@@ -6,7 +6,8 @@ import {
   getDiaryCompletionStatus,
   saveDiaryCompletionStatus,
 } from "../../services/dataService";
-import { formatDateToString } from "../../utils/dateUtils";
+import { rescheduleDiaryReminders } from "../../services/reminderService";
+import { formatDateToString, getTodayDateString } from "../../utils/dateUtils";
 
 const DiaryCompletionToggle = () => {
   const { selectedDate } = useData();
@@ -40,6 +41,11 @@ const DiaryCompletionToggle = () => {
 
     try {
       await saveDiaryCompletionStatus(dateString, newStatus);
+
+      // Completing today's diary cancels today's reminder (and vice versa)
+      if (dateString === getTodayDateString()) {
+        rescheduleDiaryReminders();
+      }
     } catch (error) {
       console.error("Error saving diary completion status:", error);
       // Revert on error
