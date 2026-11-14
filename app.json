@@ -53,7 +53,8 @@
         {
           "color": "#6e6ea0"
         }
-      ]
+      ],
+      "./plugins/withPodDeploymentTarget"
     ],
     "experiments": {
       "typedRoutes": true
