@@ -15,6 +15,7 @@
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "app.mitenka.sojdet",
+      "appleTeamId": "6FK4988KQK",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
       }
