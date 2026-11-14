@@ -20,9 +20,6 @@ const { width: SCREEN_WIDTH } = Dimensions.get("window");
 const QUIZ_WIDTH = Math.min(SCREEN_WIDTH - 48, 400);
 
 export default function Quiz({ questions = [], color = "#7CB342" }) {
-  // Empty check - don't render anything if no questions provided
-  if (!questions.length) return null;
-
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedOptions, setSelectedOptions] = useState([]);
   const [showFeedback, setShowFeedback] = useState(false);
@@ -34,10 +31,6 @@ export default function Quiz({ questions = [], color = "#7CB342" }) {
   const scale = useSharedValue(1);
   const correctBgOpacity = useSharedValue(0);
   const incorrectBgOpacity = useSharedValue(0);
-
-  // Current question data
-  const currentQuestion = questions[currentQuestionIndex];
-  const isMultipleChoice = currentQuestion.multiple;
 
   // Animated styles for score counters
   const correctScoreAnimatedStyle = useAnimatedStyle(() => {
@@ -55,6 +48,14 @@ export default function Quiz({ questions = [], color = "#7CB342" }) {
         `rgba(244, 67, 54, ${incorrectBgOpacity.value})`,
     };
   });
+
+  // Empty check - don't render anything if no questions provided.
+  // Must stay below every hook: hooks have to run in the same order on each render.
+  if (!questions.length) return null;
+
+  // Current question data
+  const currentQuestion = questions[currentQuestionIndex];
+  const isMultipleChoice = currentQuestion.multiple;
 
   // Handle option select
   const handleOptionSelect = (optionIndex) => {

@@ -25,9 +25,6 @@ export default function Scenario({
   options = [],
   color = "#7CB342",
 }) {
-  // Empty check - don't render anything if no options provided
-  if (!options.length) return null;
-
   const [selectedOption, setSelectedOption] = useState(null);
   const [showFeedback, setShowFeedback] = useState(false);
 
@@ -42,6 +39,10 @@ export default function Scenario({
       transform: [{ scale: scale.value }],
     };
   });
+
+  // Empty check - don't render anything if no options provided.
+  // Must stay below every hook: hooks have to run in the same order on each render.
+  if (!options.length) return null;
 
   // Handle option select
   const handleOptionSelect = (index) => {

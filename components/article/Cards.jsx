@@ -16,9 +16,6 @@ const { width: SCREEN_WIDTH } = Dimensions.get("window");
 const CARD_WIDTH = Math.min(SCREEN_WIDTH - 48, 350);
 
 export default function Cards({ cards = [], color = "#7CB342" }) {
-  // Empty check - don't render anything if no cards provided
-  if (!cards.length) return null;
-
   const [currentIndex, setCurrentIndex] = useState(0);
 
   // Animation values
@@ -135,6 +132,10 @@ export default function Cards({ cards = [], color = "#7CB342" }) {
       backfaceVisibility: "hidden",
     };
   });
+
+  // Empty check - don't render anything if no cards provided.
+  // Must stay below every hook: hooks have to run in the same order on each render.
+  if (!cards.length) return null;
 
   // Get current card data
   const currentCard = cards[currentIndex];
