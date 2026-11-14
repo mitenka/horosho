@@ -9,5 +9,7 @@ module.exports = ({ config }) => {
     name: `${config.name} (dev)`,
     ios: { ...config.ios, bundleIdentifier: `${config.ios.bundleIdentifier}.dev` },
     android: { ...config.android, package: `${config.android.package}.dev` },
+    // Dev builds are made locally with Xcode 27, which requires the UIScene life cycle
+    plugins: [...(config.plugins ?? []), "./plugins/withSceneLifecycle"],
   };
 };
